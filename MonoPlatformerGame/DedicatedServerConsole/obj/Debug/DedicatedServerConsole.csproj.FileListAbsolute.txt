@@ -1,0 +1,7 @@
+I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Debug\DedicatedServerConsole.exe.config
+I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Debug\DedicatedServerConsole.exe
+I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Debug\DedicatedServerConsole.pdb
+I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Debug\Lidgren.Network.dll
+I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Debug\DedicatedServerConsole.csprojResolveAssemblyReference.cache
+I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Debug\DedicatedServerConsole.exe
+I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Debug\DedicatedServerConsole.pdb

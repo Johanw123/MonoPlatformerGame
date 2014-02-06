@@ -1,0 +1,130 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework.Content;
+using Squared.Tiled;
+
+namespace MonoPlatformerGame
+{
+    public class Level
+    {
+        ContentManager mContent;
+        Map mCurrentMap;
+        public Map Map { get { return mCurrentMap; } }
+
+        public Level(ContentManager content)
+        {
+            mContent = content;
+
+        }
+        public void LoadLevel(string level)
+        {
+            mCurrentMap = Map.Load(System.IO.Path.Combine(mContent.RootDirectory, level), mContent);
+            Runtime.LevelHeight = mCurrentMap.Height * mCurrentMap.TileHeight;
+            Runtime.LevelWidth = mCurrentMap.Width * mCurrentMap.TileWidth;
+            Runtime.TileSize = mCurrentMap.TileWidth;
+
+            LoadCurrentLevel();
+        }
+        public void LoadCurrentLevel()
+        {
+            EntityManager.ClearAll();
+
+            loadMap(mCurrentMap);
+        }
+
+
+        //Private functions
+
+        private void loadMap(Map map)
+        {
+            foreach (var layer in map.Layers)
+            {
+                switch (layer.Key)
+                {
+                    case "Blocks":
+                        int x = -1;
+                        int y = 0;
+                        foreach (var tile in map.Layers["Blocks"].Tiles)
+                        {
+                            ++x;
+                            if (x >= map.Layers["Blocks"].Width)
+                            {
+                                x = 0;
+                                ++y;
+                            }
+
+                            if (tile == 1)
+                            {
+                                Block block = new Block(x * Runtime.TileSize, y * Runtime.TileSize);
+                                // mEntities.Add(block);
+                                EntityManager.AddStaticEntity(x, y, block);
+                            }
+                            else if (tile == 2)
+                            {
+                                Spike spike = new Spike(x * Runtime.TileSize, y * Runtime.TileSize);
+                                // mEntities.Add(block);
+                                EntityManager.AddStaticEntity(x, y, spike);
+                            }
+                            else if (tile == 3)
+                            {
+                                //TODO
+                                //Player is here for now
+                                Player p = new Player(x * Runtime.TileSize, y * Runtime.TileSize);
+                                EntityManager.AddDynamicEntity(p);
+
+                                Start start = new Start(x * Runtime.TileSize, y * Runtime.TileSize);
+                                EntityManager.AddNetEntity(start);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            //objects
+            foreach (var objectGroup in map.ObjectGroups)
+            {
+                switch (objectGroup.Key)
+                {
+                    case "Objects":
+
+                        foreach (var aObject in objectGroup.Value.Objects)
+                        {
+                            switch (aObject.Name)
+                            {
+                                case "Start":
+
+                                    //TODO
+                                    //new Start();
+                                    
+
+                                    break;
+                                case "Finish":
+                                    //TODO
+                                    //new Finish();
+                                    Finish finish = new Finish(aObject.X, aObject.Y);
+                                    EntityManager.AddDynamicEntity(finish);
+                                    break;
+                                case "MovingPlatform":
+                                    //TODO
+                                    //new Finish();
+                                    MovingPlatform platform = new MovingPlatform(aObject.X, aObject.Y, aObject.Width, 
+                                        float.Parse(aObject.Properties["startOffset"]),
+                                        float.Parse(aObject.Properties["speed"])
+                                        );
+                                    EntityManager.AddDynamicEntity(platform);
+                                    break;
+                            }
+
+                            
+                        }
+                        break;
+                   
+                }
+            }
+        }
+
+
+    }
+}

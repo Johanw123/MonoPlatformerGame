@@ -1,0 +1,137 @@
+﻿
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Squared.Tiled;
+using Lidgren.Network;
+
+namespace MonoPlatformerGame
+{
+    public enum GameMode
+    {
+
+        //You have a cerain time to finish the course and the best time wins (track-mania style).
+        TimeTrial,
+
+        //First to the goal is the winner.
+        Race,
+
+        //Screen scrolls the same for all players. One life only, survivers that reach the goal are rewarded.
+        //(Coop/Versus?)
+        Survival,
+
+
+
+    }
+
+    public class Game1 : Game
+    {
+        private readonly GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        private Level level;
+        private GameplayNetComponent gameplayNetComponent;
+        bool isHost = false;
+        
+        Texture2D PauseTexture;
+                
+        public Game1(String[] args)
+        {
+            _graphics = new GraphicsDeviceManager(this)
+                            {
+                                PreferredBackBufferHeight = 720,
+                                PreferredBackBufferWidth = 1280,
+                                IsFullScreen = false
+                            };
+
+            string ip = "127.0.0.1";
+
+            if (args.GetLength(0) > 0)
+            {
+                if (args[0] == "Host")
+                    isHost = true;
+                if (args[1] != null)
+                    ip = args[1];
+            }
+
+            NetManager.Init(isHost, ip);
+
+            if(isHost)
+                gameplayNetComponent = new HostGameplayNetComponent();
+            else
+                gameplayNetComponent = new ClientGameplayNetComponent();
+
+            NetManager.AddComponent(gameplayNetComponent);
+        }
+
+        protected override void LoadContent()
+        {
+            // Create a new SpriteBatch, which can be used to draw textures.
+            _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
+            Content.RootDirectory = "Content";
+            ResourceManager.Initialize(Content);
+            //japeLog = new JapeLog(this);
+            //Components.Add(japeLog);
+            PauseTexture = new Texture2D(GraphicsDevice, 1, 1);
+            PauseTexture.SetData(new Color[] { Color.White });
+            EntityManager.Init(GraphicsDevice);
+            level = new Level(Content);
+            level.LoadLevel("Level.tmx");
+
+            EntityManager.SetupBounds(level.Map);
+            
+            JapeLog.WriteLine("IsHost: " + isHost);
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            NetManager.Listen();
+            Input.Update();
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                Exit();
+            if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed(Keys.S)) && !NetManager.GameStarted)
+                NetManager.StartGame();
+
+
+            if (!NetManager.GameStarted)
+                return;
+            
+            EntityManager.Update(deltaTime);
+            
+            EntityManager.Collisions();
+
+            EntityManager.UpdateCamera();
+
+            gameplayNetComponent.Update();
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+           // GraphicsDevice.Clear(Color.FromNonPremultiplied(51, 51, 51, 255));
+            GraphicsDevice.Clear(Color.Gray);
+
+            EntityManager.Draw(_spriteBatch);
+
+
+            if (!NetManager.GameStarted)
+            {
+                
+                _spriteBatch.Begin();
+                _spriteBatch.Draw(PauseTexture, new Rectangle(0, 0, 1280, 720), Color.Black * 0.5f);
+                _spriteBatch.End();
+            }
+
+            base.Draw(gameTime);
+        }
+    }
+
+}

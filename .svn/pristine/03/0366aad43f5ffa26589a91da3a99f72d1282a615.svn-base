@@ -1,0 +1,316 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace MonoPlatformerGame
+{
+    public static class EntityManager
+    {
+        static MatrixSpacePartition<Entity> matrix;
+        static List<Entity> staticEntities;
+        static List<Entity> dynamicEntities;
+        static List<Entity> netEntities;
+        public static RectangleTree<Entity> rectangleTree;
+        static Player player;
+        static Camera camera;
+        private static Vector2 startPosition;
+
+        public static List<Entity> DynamicEntities
+        {
+            get { return dynamicEntities; }
+        }
+        public static List<Entity> NetEntities
+        {
+            get { return netEntities; }
+        }
+        public static Player GetPlayer()
+        {
+            return player;
+        }
+        //Public function
+
+        public static void ResetPlayer()
+        {
+            player.Position = startPosition;
+            player.UpdateBoundingBox();
+            player.ElapsedTimer.Restart();
+        }
+        public static void LocalPlayerFinish(TimeSpan time)
+        {
+
+            EntityManager.ResetPlayer();
+
+            NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
+                          (int)DataType.BroadcastMessage,
+                          (int)DataType.ChatMessage,
+                          "Player reached finish: " + time.ToString()
+                          );
+
+
+            NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
+                        (int)DataType.PlayerFinish,
+                        NetManager.RemoteUID,
+                        time.TotalMilliseconds
+                        );
+
+            NetManager.PlayerReachedFinish(0, (int)time.TotalMilliseconds);
+        }
+        
+
+        public static void Init(GraphicsDevice graphics)
+        {
+            matrix = new MatrixSpacePartition<Entity>();
+            dynamicEntities = new List<Entity>();
+            staticEntities = new List<Entity>();
+            netEntities = new List<Entity>();
+            camera = new Camera(graphics.Viewport);        
+        }
+
+        public static void SetupBounds(Squared.Tiled.Map map)
+        {
+            int width = (map.Width + 2) * map.TileWidth;
+            int height = (map.Height + 2) * map.TileHeight;
+
+            rectangleTree = new RectangleTree<Entity>(lol, new Rectangle(-Runtime.TileSize, -Runtime.TileSize, width, height));
+
+            foreach (Entity entity in dynamicEntities)
+            {
+                rectangleTree.Add(entity);
+            }
+        }
+
+        private static Rectangle lol(Entity e)
+        {
+            return e.BoundingBox;
+        }
+
+        public static void Collisions()
+        {
+            Entity[] bigList = GetBigList();
+
+            foreach (Entity entityA in bigList)
+            {
+                if (entityA.IsDead)
+                    continue;
+
+                foreach (Entity entityB in GetSmallList(entityA))
+                {
+                    if (entityB.IsDead)
+                        continue;
+                    
+                    if (entityA.GetName() != entityB.GetName() && entityA.BoundingBox.Intersects(entityB.BoundingBox))
+                    {
+                        entityA.HandleCollide(entityB);
+                        entityB.HandleCollide(entityA);
+                    }
+                }
+
+                SortedList<float, Entity> collisionsByDepth = new SortedList<float, Entity>();
+
+                foreach (Entity entityB in GetCloseStatics(entityA))
+                {
+                    if (entityB != null)
+                    {
+                        if (entityA.BoundingBox.Intersects(entityB.BoundingBox))
+                        {
+                            Vector2 depth = RectangleExtensions.GetIntersectionDepth(entityA.BoundingBox, entityB.BoundingBox);
+
+                            float depthSum = Math.Abs(depth.X) + Math.Abs(depth.Y);
+                            try
+                            {
+                                if (UsePixelCollisions(entityA) || UsePixelCollisions(entityB))
+                                {
+                                    Color[] bitsA = new Color[entityA.Texture.Width * entityA.Texture.Height];
+                                    entityA.Texture.GetData<Color>(bitsA);
+
+                                    Color[] bitsB = new Color[entityB.Texture.Width * entityB.Texture.Height];
+                                    entityB.Texture.GetData<Color>(bitsB);
+
+                                    if (IntersectPixels(entityA.BoundingBox, bitsA, entityB.BoundingBox, bitsB))
+                                        collisionsByDepth.Add(depthSum, entityB);
+                                }
+                                else
+                                    collisionsByDepth.Add(depthSum, entityB);
+                            }
+                            catch (Exception) { }
+                        }
+                    }
+                }
+                //resolve
+                for (int i = collisionsByDepth.Count - 1; i >= 0; --i)
+                {
+                    Entity entityB = collisionsByDepth.Values[i];
+                    entityA.HandleCollide(entityB);
+                    entityB.HandleCollide(entityA);
+                }
+            }
+        }
+
+        private static bool UsePixelCollisions(Entity entity)
+        {
+            switch (entity.GetName())
+            {
+                case "Enemy":
+                case "Player":
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        private static bool IntersectPixels(Rectangle rectangleA, Color[] dataA, Rectangle rectangleB, Color[] dataB)
+        {
+            // Find the bounds of the rectangle intersection
+            int top = Math.Max(rectangleA.Top, rectangleB.Top);
+            int bottom = Math.Min(rectangleA.Bottom, rectangleB.Bottom);
+            int left = Math.Max(rectangleA.Left, rectangleB.Left);
+            int right = Math.Min(rectangleA.Right, rectangleB.Right);
+
+            // Check every point within the intersection bounds
+            for (int y = top; y < bottom; y++)
+            {
+                for (int x = left; x < right; x++)
+                {
+                    // Get the color of both pixels at this point
+                    Color colorA = dataA[(x - rectangleA.Left) +
+                                         (y - rectangleA.Top) * rectangleA.Width];
+                    Color colorB = dataB[(x - rectangleB.Left) +
+                                         (y - rectangleB.Top) * rectangleB.Width];
+
+                    // If both pixels are not completely transparent,
+                    if (colorA.A != 0 && colorB.A != 0)
+                    {
+                        // then an intersection has been found
+                        return true;
+                    }
+                }
+            }
+
+            // No intersection found
+            return false;
+        }
+        
+        public static void ClearAll()
+        {
+            staticEntities.Clear();
+            dynamicEntities.Clear();
+            matrix = new MatrixSpacePartition<Entity>();
+        }
+
+        public static void Update(float deltaTime)
+        {
+            Entity[] bigList = GetBigList();
+
+            foreach (Entity entity in bigList)
+            {
+                entity.Update(deltaTime);
+                rectangleTree.UpdatePosition(entity);
+            }
+            //JapeLog.WriteLine(bigList.Count());
+            RemoveDeadEntities(bigList);
+        }
+        private static void RemoveDeadEntities(Entity[] list)
+        {
+            for (int i = 0; i < list.Count(); i++)
+            {
+                if (list[i].IsDead)
+                {
+                    EntityManager.rectangleTree.Remove(list[i]);
+                    dynamicEntities.Remove(list[i]);
+                }
+            }
+
+        }
+
+        public static void UpdateCamera()
+        {
+            camera.Update();
+        }
+
+        public static void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, camera.GetViewMatrix(new Vector2(1f)));
+
+            foreach (Entity entity in staticEntities)
+            {
+                entity.Draw(spriteBatch);
+            }
+
+            foreach (Entity entity in GetBigList())
+            {
+                entity.Draw(spriteBatch);
+            }
+
+            foreach (Entity entity in netEntities)
+            {
+                entity.Draw(spriteBatch);
+            }
+
+            spriteBatch.End();
+        }
+
+        public static void AddStaticEntity(int x, int y, Entity e)
+        {
+            staticEntities.Add(e);
+            matrix.Set(new Point(x,y), e);
+        }
+        public static void AddNetEntity(Entity e)
+        {
+            netEntities.Add(e);
+            if (e.GetName() == "Start")
+            {
+                startPosition = e.Position;
+            }
+        }
+        public static void AddDynamicEntity(Entity e)
+        {
+            dynamicEntities.Add(e);
+            if(rectangleTree != null)
+                rectangleTree.Add(e);
+
+            //TODO
+            //FIxa snyggare kanske
+            if (e.GetName() == "Player")
+            {
+                player = (Player)e;
+                camera.SetFollow(player);
+            }
+            
+
+        }
+
+        //Private functions
+        private static bool deadEntity(Entity entity)
+        {
+            return entity.IsDead;
+        }
+
+        private static Entity[] GetBigList()
+        {
+            Rectangle playerBigArea = player.BoundingBox;
+            playerBigArea.Inflate(1000000, 1000000);
+            
+            return rectangleTree.GetItems(playerBigArea);
+        }
+
+        private static Entity[] GetSmallList(Entity e)
+        {
+            Rectangle entitySmallEntity = e.BoundingBox;
+            entitySmallEntity.Inflate(50, 50);
+
+            return rectangleTree.GetItems(entitySmallEntity);
+        }
+
+        private static Entity[,] GetCloseStatics(Entity e)
+        {
+            int x = (int)(e.X / Runtime.TileSize);
+            int y = (int)(e.Y / Runtime.TileSize);
+
+            return matrix.GetRegion(new Rectangle(x-1, y-1, 3, 3));
+        }
+    }
+}

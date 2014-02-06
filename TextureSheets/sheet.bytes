@@ -1,0 +1,37 @@
+i tk2d 1
+w 704
+h 64
+~
+n Block
+s 0 0 64 64
+~
+n Finish
+s 64 0 64 64
+~
+n SmallSpike
+s 128 0 64 64
+~
+n SmallSpikeLeft
+s 192 0 64 64
+~
+n SmallSpikeRight
+s 256 0 64 64
+~
+n SmallSpikeTop
+s 320 0 64 64
+~
+n Spike
+s 384 0 64 64
+~
+n SpikeLeft
+s 448 0 64 64
+~
+n SpikeRight
+s 512 0 64 64
+~
+n SpikeTop
+s 576 0 64 64
+~
+n Start
+s 640 0 64 64
+~
