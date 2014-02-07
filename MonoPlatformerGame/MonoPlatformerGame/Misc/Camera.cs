@@ -8,8 +8,7 @@ namespace MonoPlatformerGame
         private Vector2 _position;
         private Rectangle? _limits;
         private Entity _entityToFollow;
-
-
+		
         public Camera(Viewport viewport)
         {
             _viewport = viewport;
