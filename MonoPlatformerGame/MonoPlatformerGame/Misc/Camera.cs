@@ -41,9 +41,7 @@ namespace MonoPlatformerGame
         }
 
         public Vector2 Origin { get; set; }
-
         public float Zoom { get; set; }
-
         public float Rotation { get; set; }
 
 
