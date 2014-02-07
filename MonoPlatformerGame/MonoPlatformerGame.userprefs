@@ -1,4 +1,4 @@
-﻿<Properties>
+﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|Mixed Platforms" />
   <MonoDevelop.Ide.Workbench ActiveDocument="MonoPlatformerGame/Misc/JapeLogMono.cs">
     <Files>
@@ -13,7 +13,7 @@
       <File FileName="MonoPlatformerGame/Entities/Enemies/FlyingEnemy.cs" Line="1" Column="1" />
       <File FileName="MonoPlatformerGame/Entities/Enemies/Enemy.cs" Line="11" Column="81" />
       <File FileName="MonoPlatformerGame/Entities/Enemies/WalkingEnemy.cs" Line="24" Column="3" />
-      <File FileName="MonoPlatformerGame/Entities/Entity.cs" Line="22" Column="34" />
+      <File FileName="MonoPlatformerGame/Entities/Entity.cs" Line="22" Column="1" />
       <File FileName="MonoPlatformerGame/Entities/Finish.cs" Line="11" Column="60" />
       <File FileName="MonoPlatformerGame/Entities/NetPlayer.cs" Line="1" Column="1" />
       <File FileName="MonoPlatformerGame/Entities/Player.cs" Line="29" Column="82" />
@@ -28,11 +28,11 @@
       <File FileName="MonoPlatformerGame/Misc/JapeLog.cs" Line="2" Column="34" />
       <File FileName="MonoPlatformerGame/Level.cs" Line="81" Column="16" />
       <File FileName="MonoPlatformerGame/Misc/Constants.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/Misc/JapeLogMono.cs" Line="49" Column="4" />
+      <File FileName="MonoPlatformerGame/Misc/JapeLogMono.cs" Line="44" Column="36" />
       <File FileName="MonoPlatformerGame/Misc/Log.cs" Line="7" Column="5" />
       <File FileName="MonoPlatformerGame/Misc/MatrixSpacePartition.cs" Line="24" Column="24" />
       <File FileName="MonoPlatformerGame/Misc/RectangleTree.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/ParticleSystem/ParticleSystem.cs" Line="64" Column="25" />
+      <File FileName="MonoPlatformerGame/ParticleSystem/ParticleSystem.cs" Line="64" Column="10" />
       <File FileName="MonoPlatformerGame/Misc/Runtime.cs" Line="2" Column="34" />
       <File FileName="MonoPlatformerGame/NetStuff/ConnectionInfo.cs" Line="16" Column="10" />
       <File FileName="MonoPlatformerGame/NetStuff/ClientGameplayNetComponent.cs" Line="3" Column="34" />
@@ -47,7 +47,7 @@
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
+        <State expanded="True" selected="True">
           <Node name="MonoPlatformerGame" expanded="True">
             <Node name="References" expanded="True" />
             <Node name="Content" expanded="True">
@@ -56,9 +56,7 @@
             <Node name="Entities" expanded="True">
               <Node name="Blocks" expanded="True" />
             </Node>
-            <Node name="Misc" expanded="True">
-              <Node name="JapeLogMono.cs" selected="True" />
-            </Node>
+            <Node name="Misc" expanded="True" />
           </Node>
         </State>
       </Pad>

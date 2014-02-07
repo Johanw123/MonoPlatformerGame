@@ -59,10 +59,12 @@ namespace MonoPlatformerGame
             }
             mPlayerInfo = playerInfo;
         }
+
         public static void SaveCurrentPlayerData()
         {
             SavePlayerData(mPlayerInfo);
         }
+
         private static void SavePlayerData(PlayerInfo playerInfo)
         {
             XElement xmlTree = new XElement("Player");
