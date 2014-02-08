@@ -39,3 +39,5 @@ I:\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Releas
 I:\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\Content\Sprites\SpikeLeft.png
 I:\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\Content\Sprites\SpikeRight.png
 I:\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\Content\Sprites\Finish.png
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.exe
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.pdb

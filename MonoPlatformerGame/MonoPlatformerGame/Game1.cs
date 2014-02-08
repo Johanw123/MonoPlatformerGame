@@ -14,7 +14,6 @@ namespace MonoPlatformerGame
 {
     public enum GameMode
     {
-
         //You have a cerain time to finish the course and the best time wins (track-mania style).
         TimeTrial,
 
