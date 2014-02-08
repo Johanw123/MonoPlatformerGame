@@ -45,27 +45,108 @@ namespace DedicatedServerConsole
                         commandArgs.Add(seperatedInput[i]);
                 }
 
-                switch (command)
+                switch (command.ToUpper())
                 {
-                    case "Start":
-                        NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
-                            (int)DataType.StartGame
-                            );
-                        break;
-                    case "Level":
-                        if (commandArgs.Count > 0)
-                        {
-                            string levelName = commandArgs[0] + ".tmx";
+				case "START":
+					StartCommand ();
+                    break;
+				case "KICK":
+					KickCommand (commandArgs);
+					break;
+				case "BAN":
+					BanCommand (commandArgs);
+					break;
+				case "CLIENTS":
+				case "LISTCLIENTS":
+				case "CONNECTEDCLIENTS":
 
-                            NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
-                                (int)DataType.ChangeLevel,
-                                levelName
-                                );
-                        }
-                        break;
+					break;
+				case "/T":
+				case "/W":
+				case "CHAT":
+				case "SPEAK":
+				case "TELL":
+				case "SAY":
+					SayCommand (commandArgs);
+					break;
+				case "CHANGEMAP":
+				case "MAP":
+				case "CHANGELEVEL":
+				case "LEVEL":
+					ChangeLevelCommand (commandArgs);
+                    break;
                 }
             }
         }
+
+		private void StartCommand()
+		{
+			NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
+			                             (int)DataType.StartGame
+			                             );
+		}
+		private void ChangeLevelCommand(List<string> commandArgs)
+		{
+			if (commandArgs.Count > 0)
+			{
+				string levelName = commandArgs[0] + ".tmx";
+
+				NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
+				                             (int)DataType.ChangeLevel,
+				                             levelName
+				                             );
+			}
+		}
+
+		private void KickCommand(List<string> commandArgs)
+		{
+			if (commandArgs.Count > 0)
+			{
+				string playerName = commandArgs [0];
+
+				var client = NetManager.GetClientFromName (playerName);
+				//NetManager.KickPlayer(playerName);
+				//NetManager.KickPlayer(client);
+			}
+		}
+
+		private void BanCommand(List<string> commandArgs)
+		{
+			if (commandArgs.Count > 0)
+			{
+				string playerName = commandArgs [0];
+
+
+
+
+			}
+		}
+
+		private void SayCommand(List<string> commandArgs)
+		{
+			if (commandArgs.Count > 0)
+			{
+				string message = commandArgs[0];
+
+				NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
+			                             		(int)DataType.ChatMessage,
+	                             				message
+				                             	);
+			}
+		}
+
+		private void ListClientsCommand(List<string> commandArgs)
+		{
+			foreach (var client in NetManager.connectedClients)
+			{
+				string name = client.Value.Name;
+				string id = client.Value.UID.ToString();
+
+
+				Console.WriteLine ("{0} : {1}", name, id);
+			}
+		}
+
         public void Run()
         {
             while (run)

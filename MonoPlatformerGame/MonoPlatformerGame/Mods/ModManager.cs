@@ -66,7 +66,7 @@ namespace MonoPlatformerGame
 			return value;
 		}
 
-		private static float ParseFloat(string s)
+		private static float? ParseFloat(string s)
 		{
 			float value;
 			if (float.TryParse(s, out value))
@@ -75,7 +75,7 @@ namespace MonoPlatformerGame
 			}
 			else
 			{
-				// Parse failed. value will be 0.
+				return null;
 			}
 
 			return value;

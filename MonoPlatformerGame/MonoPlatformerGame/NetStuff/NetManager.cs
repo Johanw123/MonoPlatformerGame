@@ -88,6 +88,18 @@ namespace MonoPlatformerGame
             return clientInfo;
         }
 
+		public static ClientInfo GetClientFromName(string name)
+		{
+			foreach (var item in connectedClients)
+			{
+				if (item.Value.Name == name)
+				{
+					return item.Value;
+				}
+			}
+			return null;
+		}
+
         public static void SendMessageParams(NetDeliveryMethod method, params object[] parameters)
         {
             SendMessageParams(method, null, parameters);
