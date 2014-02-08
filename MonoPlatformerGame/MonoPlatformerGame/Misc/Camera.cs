@@ -85,10 +85,7 @@ namespace MonoPlatformerGame
 
         public void Update()
         {
-            LookAt(_entityToFollow.Position);
-
-
-            
+            LookAt(_entityToFollow.Position); 
         }
 
         public void LookAt(Vector2 position)
@@ -105,7 +102,5 @@ namespace MonoPlatformerGame
 
             Position += displacement;
         }
-
-
     }
 }

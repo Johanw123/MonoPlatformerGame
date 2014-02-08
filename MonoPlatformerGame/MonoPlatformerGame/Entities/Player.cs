@@ -15,7 +15,6 @@ namespace MonoPlatformerGame
         private bool wasJumping;
         private float jumpTime;
         private int currentNumberOfJumps = 0;
-        //private int maxNumberOfJumps = 0;
         private bool onPlatform = false;
         private float platformX;
         private Vector2 platformVel;
@@ -71,8 +70,7 @@ namespace MonoPlatformerGame
                     onPlatform = true;
                     platformX = other.X;
                     platformVel = other.Velocity;
-                    //mAccel = other.Accel;
-                    //Velocity = other.Velocity;
+
                     HandleBlockCollision(other);
 
 
@@ -93,8 +91,6 @@ namespace MonoPlatformerGame
         {
             if (onPlatform)
             {
-                //this.X = platformX;
-                //this.Velocity = new Vector2(platformVel.X, this.Velocity.Y);
                 X += platformVel.X *deltaTime;
             }
             
@@ -103,17 +99,13 @@ namespace MonoPlatformerGame
             Vector2 previousPosition = Position;
 
             mVelocity.X += mAccel.X * Constants.MOVE_ACC * deltaTime;
-            //mVelocity.X += 50;
-            //mVelocity.Y = MathHelper.Clamp(mVelocity.Y + Constants.GRAVITY_ACC * deltaTime, -Constants.MAX_FALL_SPEED, Constants.MAX_FALL_SPEED);
-            //mVelocity.Y = 900;
+
             DoJump(deltaTime);
             mVelocity.Y += MathHelper.Clamp(ModManager.Gravity, 2000, 50000) * deltaTime;
-            //mVelocity.Y += -3000 * deltaTime;
-            //mVelocity.Y = 50000 * deltaTime;
+
             mVelocity.Y = MathHelper.Clamp(mVelocity.Y, -Constants.MAX_FALL_SPEED, Constants.MAX_FALL_SPEED);
             //mVelocity.Y = -mVelocity.Y;
             mVelocity.X *= Constants.AIR_FRICTION;
-            Console.WriteLine(mVelocity.Y);
 
             if (ModManager.CantStop)
             {
@@ -179,7 +171,7 @@ namespace MonoPlatformerGame
                 }
                 else
                 {
-                    if (mVelocity.Y < -Constants.MAX_FALL_SPEED * 0.5f && !wasJumping && currentNumberOfJumps < ModManager.DoubleJump)
+                    if (/*mVelocity.Y < -Constants.MAX_FALL_SPEED * 0.5f && */!wasJumping && currentNumberOfJumps < ModManager.DoubleJump)
                     {
                         mVelocity.Y = Constants.JUMP_LAUNCH_VELOCITY * (0.5f - (float)Math.Pow(jumpTime / Constants.MAX_JUMP_TIME, Constants.JUMP_CONTROL_POWER));
                         jumpTime += deltaTime;

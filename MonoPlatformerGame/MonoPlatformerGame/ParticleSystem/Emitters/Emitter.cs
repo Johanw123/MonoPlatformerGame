@@ -36,6 +36,8 @@ namespace MonoPlatformerGame
         {
             Particle[] active = activeParticles.ToArray();
             Particle[] frozen = frozenParticles.ToArray();
+
+			Console.WriteLine (activeParticles.Count);
             
             foreach (Particle particle in active)
             {

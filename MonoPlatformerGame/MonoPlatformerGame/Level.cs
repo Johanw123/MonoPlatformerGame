@@ -32,8 +32,14 @@ namespace MonoPlatformerGame
                 Runtime.TileSize = mCurrentMap.TileWidth;
 
                 LoadCurrentLevel();
+				ParseMapProperties ();
             }
         }
+
+		private void ParseMapProperties()
+		{
+			ModManager.SetupMods(this); 
+		}
 
         public void LoadCurrentLevel()
         {

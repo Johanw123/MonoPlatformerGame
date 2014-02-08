@@ -87,8 +87,6 @@ namespace MonoPlatformerGame
             EntityManager.Init(GraphicsDevice);
             level = new Level(Content);
             level.LoadLevel("Level10.tmx");
-
-            ParseMapProperties(level);
             
             JapeLog.WriteLine("IsHost: " + isHost);
 
@@ -102,11 +100,6 @@ namespace MonoPlatformerGame
             gameplayNetComponent.ChangeLevelEvent += gameplayNetComponent_ChangeLevelEvent;
 
             NetManager.AddComponent(gameplayNetComponent);
-        }
-
-        private void ParseMapProperties(Level level)
-        {
-            ModManager.SetupMods(level); 
         }
 
         protected override void Update(GameTime gameTime)

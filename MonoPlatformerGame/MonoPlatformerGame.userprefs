@@ -1,54 +1,22 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|Mixed Platforms" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MonoPlatformerGame/DataStorage.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MonoPlatformerGame/Mods/ModManager.cs">
     <Files>
-      <File FileName="DedicatedServerConsole/Server.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Game1.cs" Line="84" Column="16" />
-      <File FileName="MonoPlatformerGame/Misc/TimeList.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/DataStorage.cs" Line="27" Column="10" />
-      <File FileName="MonoPlatformerGame/NetStuff/NetManager.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Blocks/Block.cs" Line="11" Column="81" />
-      <File FileName="MonoPlatformerGame/CollisionManager.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Blocks/MovingPlatform.cs" Line="16" Column="142" />
-      <File FileName="MonoPlatformerGame/Entities/Enemies/FlyingEnemy.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Enemies/Enemy.cs" Line="11" Column="81" />
-      <File FileName="MonoPlatformerGame/Entities/Enemies/WalkingEnemy.cs" Line="24" Column="3" />
-      <File FileName="MonoPlatformerGame/Entities/Entity.cs" Line="22" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Finish.cs" Line="11" Column="60" />
-      <File FileName="MonoPlatformerGame/Entities/NetPlayer.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Player.cs" Line="29" Column="82" />
-      <File FileName="MonoPlatformerGame/Entities/Spike.cs" Line="6" Column="1" />
-      <File FileName="DedicatedServerConsole/NetStuff/DedicatedServerNetComponent.cs" Line="1" Column="1" />
-      <File FileName="DedicatedServerConsole/Program.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/Misc/Camera.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/ParticleSystem/ParticleSystem.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/ParticleSystem/Particle.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/ParticleSystem/Emitters/Emitter.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/Entities/Player.cs" Line="110" Column="56" />
       <File FileName="MonoPlatformerGame/ParticleSystem/Emitters/CircleEmitter.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/NetStuff/HostGameplayNetComponent.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/NetStuff/NetComponent.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Start.cs" Line="11" Column="81" />
-      <File FileName="MonoPlatformerGame/Input.cs" Line="14" Column="6" />
-      <File FileName="MonoPlatformerGame/Misc/JapeLog.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/Level.cs" Line="81" Column="16" />
-      <File FileName="MonoPlatformerGame/Misc/Constants.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/Misc/JapeLogMono.cs" Line="44" Column="36" />
-      <File FileName="MonoPlatformerGame/Misc/Log.cs" Line="7" Column="5" />
-      <File FileName="MonoPlatformerGame/Misc/MatrixSpacePartition.cs" Line="24" Column="24" />
-      <File FileName="MonoPlatformerGame/Misc/RectangleTree.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/ParticleSystem/ParticleSystem.cs" Line="64" Column="10" />
-      <File FileName="MonoPlatformerGame/Misc/Runtime.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/NetStuff/ConnectionInfo.cs" Line="16" Column="10" />
-      <File FileName="MonoPlatformerGame/NetStuff/ClientGameplayNetComponent.cs" Line="3" Column="34" />
-      <File FileName="MonoPlatformerGame/NetStuff/GameplayNetComponent.cs" Line="3" Column="34" />
-      <File FileName="MonoPlatformerGame/ParticleSystem/Emitters/Emitter.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/ParticleSystem/Particle.cs" Line="2" Column="34" />
-      <File FileName="MonoPlatformerGame/Tiled.cs" Line="181" Column="61" />
-      <File FileName="MonoPlatformerGame/Content/Level10.tmx" Line="9" Column="12" />
-      <File FileName="MonoPlatformerGame/Content/Level.tmx" Line="230" Column="2" />
-      <File FileName="MonoPlatformerGame/Content/Level2.tmx" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Program.cs" Line="20" Column="20" />
+      <File FileName="MonoPlatformerGame/Level.cs" Line="41" Column="22" />
+      <File FileName="MonoPlatformerGame/Game1.cs" Line="89" Column="26" />
+      <File FileName="MonoPlatformerGame/Mods/ModManager.cs" Line="32" Column="18" />
+      <File FileName="MonoPlatformerGame/Content/Level10.tmx" Line="5" Column="36" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="MonoPlatformerGame" expanded="True" selected="True">
+          <Node name="MonoPlatformerGame" expanded="True">
             <Node name="References" expanded="True" />
             <Node name="Content" expanded="True">
               <Node name="Fonts" expanded="True" />
@@ -57,6 +25,12 @@
               <Node name="Blocks" expanded="True" />
             </Node>
             <Node name="Misc" expanded="True" />
+            <Node name="Mods" expanded="True">
+              <Node name="ModManager.cs" selected="True" />
+            </Node>
+            <Node name="ParticleSystem" expanded="True">
+              <Node name="Emitters" expanded="True" />
+            </Node>
           </Node>
         </State>
       </Pad>
