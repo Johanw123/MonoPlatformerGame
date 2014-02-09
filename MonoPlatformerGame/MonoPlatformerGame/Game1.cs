@@ -59,8 +59,8 @@ namespace MonoPlatformerGame
 			base.Initialize();
 
 			//_graphics.PreferredBackBufferHeight = 720;
-			//_graphics.PreferredBackBufferWidth = 1280
-			_graphics.IsFullScreen = false;
+			//_graphics.PreferredBackBufferWidth = 1280;
+			_graphics.IsFullScreen = true;
 		}
 		protected override void BeginRun ()
 		{
