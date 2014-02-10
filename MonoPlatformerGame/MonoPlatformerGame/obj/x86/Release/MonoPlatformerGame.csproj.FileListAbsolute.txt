@@ -41,3 +41,5 @@ I:\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Releas
 I:\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\Content\Sprites\Finish.png
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.exe
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.pdb
+C:\dev\git\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.exe
+C:\dev\git\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.pdb
