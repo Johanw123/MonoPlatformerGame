@@ -73,7 +73,6 @@ E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Re
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\Content\Fonts\Verdana.xnb
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\MonoPlatformerGame.exe
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\MonoPlatformerGame.pdb
-E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\IgnoreMe.dll
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\Lidgren.Network.dll
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\MonoGame.Framework.dll
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\OpenTK.dll
