@@ -1,1 +1,0 @@
-start MonoPlatformerGame.Exe "Host"
