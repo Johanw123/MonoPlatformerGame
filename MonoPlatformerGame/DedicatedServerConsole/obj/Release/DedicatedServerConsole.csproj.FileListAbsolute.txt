@@ -5,3 +5,11 @@ I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Release\Lidg
 I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Release\DedicatedServerConsole.csprojResolveAssemblyReference.cache
 I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Release\DedicatedServerConsole.exe
 I:\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Release\DedicatedServerConsole.pdb
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Release\Maps\Level10.tmx
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Release\DedicatedServerConsole.exe.config
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Release\DedicatedServerConsole.exe
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Release\DedicatedServerConsole.pdb
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\bin\Release\Lidgren.Network.dll
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Release\DedicatedServerConsole.csprojResolveAssemblyReference.cache
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Release\DedicatedServerConsole.exe
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\DedicatedServerConsole\obj\Release\DedicatedServerConsole.pdb

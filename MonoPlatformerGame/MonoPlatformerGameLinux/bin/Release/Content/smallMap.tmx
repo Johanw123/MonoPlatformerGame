@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="Tiles" tilewidth="16" tileheight="16">
+  <image source="../../../../MonoPlatformerGame - Copy/MonoPlatformerGame/MonoPlatformerGame/Content/Sprites/null.png" width="16" height="16"/>
+ </tileset>
+ <layer name="Blocks" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2EEKgDAMRcH2/pf2BEX720CQGXDpJg+tZo4xZtHFvoq56ZHToxc9ekne/W/36JHzfPSiRy+ruZ18w+qRO52b8+Ouiv83PXLOj152z4Qv+xE9crd3T/ZXZ6p2iXpk9OhFDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+I8HEvwApg==
+  </data>
+ </layer>
+ <objectgroup name="players" width="100" height="100">
+  <object name="player" x="15" y="45" width="16" height="17"/>
+ </objectgroup>
+</map>
