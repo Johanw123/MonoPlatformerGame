@@ -1,18 +1,21 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|Mixed Platforms" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MonoPlatformerGame/Game1.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MonoPlatformerGame/Entities/Spike.cs">
     <Files>
       <File FileName="DedicatedServerConsole/Program.cs" Line="1" Column="1" />
-      <File FileName="DedicatedServerConsole/Server.cs" Line="9" Column="2" />
-      <File FileName="MonoPlatformerGame/NetStuff/NetManager.cs" Line="141" Column="10" />
+      <File FileName="DedicatedServerConsole/Server.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/NetStuff/NetManager.cs" Line="1" Column="1" />
       <File FileName="DedicatedServerConsole/NetStuff/DedicatedServerNetComponent.cs" Line="1" Column="1" />
       <File FileName="MonoPlatformerGame/NetStuff/ConnectionInfo.cs" Line="1" Column="1" />
       <File FileName="MonoPlatformerGame/Mods/ModManager.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/NetStuff/HostGameplayNetComponent.cs" Line="25" Column="42" />
-      <File FileName="MonoPlatformerGame/Game1.cs" Line="126" Column="5" />
-      <File FileName="MonoPlatformerGame/Entities/EntityManager.cs" Line="36" Column="1" />
-      <File FileName="MonoPlatformerGame/Level.cs" Line="39" Column="1" />
-      <File FileName="MonoPlatformerGame/NetStuff/GameplayNetComponent.cs" Line="28" Column="34" />
+      <File FileName="MonoPlatformerGame/NetStuff/HostGameplayNetComponent.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/Game1.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/Entities/EntityManager.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/Level.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/NetStuff/GameplayNetComponent.cs" Line="37" Column="21" />
+      <File FileName="MonoPlatformerGame/Tiled.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/NetStuff/ClientGameplayNetComponent.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/Entities/Spike.cs" Line="14" Column="15" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

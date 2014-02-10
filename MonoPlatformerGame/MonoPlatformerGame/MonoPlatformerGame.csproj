@@ -77,10 +77,6 @@
     <Compile Include="Entities\EntityManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dlls\MonoGame.Framework.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\..\Dlls\Linux\OpenTK.dll</HintPath>
     </Reference>
@@ -93,6 +89,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\Dlls\MonoGame.Framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\123.png">
@@ -197,12 +196,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Thumbs.db" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Content\Content\Content.csproj">
-      <Project>{90B70EC3-B4A4-4098-B8EB-10691BA290E7}</Project>
-      <Name>Content</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
