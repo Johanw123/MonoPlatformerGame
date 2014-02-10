@@ -99,6 +99,7 @@ namespace MonoPlatformerGame
             level = new Level(Content);
             //level.LoadLevel("Level10.tmx");
             
+
             JapeLog.WriteLine("IsHost: " + isHost);
 
             NetManager.Init(isHost);
