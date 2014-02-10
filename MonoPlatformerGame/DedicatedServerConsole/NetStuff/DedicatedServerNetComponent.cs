@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DedicatedServerConsole
 {
@@ -13,27 +14,48 @@ namespace DedicatedServerConsole
         {
             switch (type)
             {
-                case DataType.GameState:
-                    IncomingGameState(msg);
-                    return true;
-                case DataType.NewPlayer:
-                    NewPlayer(msg);
-                    return true;
-                case DataType.NewPlayerResponse:
-                    NewPlayerResponse(msg);
-                    return true;
-                case DataType.BroadcastMessage:
-                    RedirectBroadcast(type, msg);
-                    return true;
-                case DataType.PlayerFinish:
-                    PlayerFinish(msg);
-                    return true;
-                case DataType.ChatMessage:
-                    JapeLog.WriteLine(msg.ReadString());
-                    return true;
+            case DataType.GameState:
+                IncomingGameState(msg);
+                return true;
+            case DataType.NewPlayer:
+                NewPlayer(msg);
+                return true;
+            case DataType.NewPlayerResponse:
+                NewPlayerResponse(msg);
+                return true;
+            case DataType.BroadcastMessage:
+                RedirectBroadcast(type, msg);
+                return true;
+            case DataType.PlayerFinish:
+                PlayerFinish(msg);
+                return true;
+            case DataType.ChatMessage:
+                JapeLog.WriteLine(msg.ReadString());
+                return true;
+			case DataType.DownloadMapRequest:
+				DownloadRequest (msg);
+				return true;
             }
             return false;
         }
+
+		protected void DownloadRequest(NetIncomingMessage msg)
+		{
+			string mapName = msg.ReadString ();
+			string path = "Maps/" + mapName;
+
+			if (File.Exists (path))
+			{
+				string mapData = File.ReadAllText (path);
+				NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+				                             (int)DataType.DownloadMapResponse,
+				                             mapName,
+				                             mapData
+				                             );
+			}
+
+
+		}
 
         protected void PlayerFinish(NetIncomingMessage msg)
         {
@@ -92,6 +114,7 @@ namespace DedicatedServerConsole
             clientInfo.Name = name;
             clientInfo.X = 0;
             clientInfo.Y = 0;
+			clientInfo.ClientNetConnection = msg.SenderConnection;
             clientInfo.UID = uid;
             NetManager.connectedClients.Add(clientInfo.UID, clientInfo);
 

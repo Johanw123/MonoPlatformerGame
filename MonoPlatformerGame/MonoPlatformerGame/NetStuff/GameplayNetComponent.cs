@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 public delegate void ChangeLevelEventHandler(string levelName);
 
@@ -25,7 +26,7 @@ namespace MonoPlatformerGame
                     NewPlayerResponse(msg);
                     return true;
                 case DataType.StartGame:
-                    StartGame();
+                    IncomingStartGame(msg);
                     return true;
                 case DataType.BroadcastMessage:
                     RedirectBroadcast(type, msg);
@@ -39,9 +40,22 @@ namespace MonoPlatformerGame
                 case DataType.ChangeLevel:
                     ChangeLevel(msg);
                     return true;
+			case DataType.DownloadMapResponse:
+				IncomingDownloadMapResponse (msg);
+				return true;
             }
             return false;
         }
+
+		protected void IncomingDownloadMapResponse (NetIncomingMessage msg)
+		{
+			string mapName = msg.ReadString ();
+			string mapData = msg.ReadString ();
+
+			StreamWriter writer = File.CreateText ("Content/" + mapName);
+			writer.Write (mapData);
+			writer.Close ();
+		}
 
         protected void PlayerFinish(NetIncomingMessage msg)
         {
@@ -66,6 +80,26 @@ namespace MonoPlatformerGame
             NetManager.RedirectBroadcast(msg);
             IncomingData((DataType)msg.ReadInt32(), msg);
         }
+
+		protected void IncomingStartGame(NetIncomingMessage msg)
+		{
+			string map = msg.ReadString();
+
+			if (Level.MapExist (map))
+				ChangeLevel (msg);
+			else
+			{
+				//TODO download map from server
+				NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+				                             (int)DataType.DownloadMapRequest,
+				                             map
+				                             );
+
+			}
+
+
+			StartGame ();
+		}
 
         public override void StartGame()
         {

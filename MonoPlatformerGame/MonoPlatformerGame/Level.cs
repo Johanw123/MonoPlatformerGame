@@ -13,6 +13,9 @@ namespace MonoPlatformerGame
         ContentManager mContent;
         Map mCurrentMap;
         public Map Map { get { return mCurrentMap; } }
+		public bool LevelLoaded { get; set; }
+		public string LevelName { get; set; }
+
 
         public Level(ContentManager content)
         {
@@ -33,8 +36,27 @@ namespace MonoPlatformerGame
 
                 LoadCurrentLevel();
 				ParseMapProperties ();
+				LevelName = level;
+				LevelLoaded = true;
             }
         }
+
+		public static bool MapExist(string level)
+		{
+			//string path = System.IO.Path.Combine(mContent.RootDirectory, level);
+			string path = System.IO.Path.Combine ("Content/", level);
+
+			if (File.Exists (path))
+			{
+				return true;
+			}
+			return false;
+		}
+
+		public void UnloadLevel()
+		{
+			LevelLoaded = false;
+		}
 
 		private void ParseMapProperties()
 		{

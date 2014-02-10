@@ -15,12 +15,15 @@ namespace MonoPlatformerGame
     public enum GameMode
     {
         //You have a cerain time to finish the course and the best time wins (track-mania style).
+		//several tries, dying and reaching goal will put player back at start to try again
         TimeTrial,
 
-        //First to the goal is the winner.
+        //First to the goal is the winner. Also if all dies, next map will be loaded
+		//A fast pased game with high tempo
         Race,
 
-        //Screen scrolls the same for all players. One life only, survivers that reach the goal are rewarded.
+        //Screen scrolls the same for all players. One life only, survivers that reach the goal are rewarded with a point.
+		//Most point at end of certain ammount of levels will win.
         //(Coop/Versus?)
         Survival,
     }
@@ -43,9 +46,10 @@ namespace MonoPlatformerGame
         {
 			_graphics = new GraphicsDeviceManager(this)
             {
-                //PreferredBackBufferHeight = 720,
-                //PreferredBackBufferWidth = 1280,
-                IsFullScreen = false
+				IsFullScreen = false
+               //PreferredBackBufferHeight = 720,
+                //PreferredBackBufferWidth = 1280
+                
 			};
 
             if (args.GetLength(0) > 0)
@@ -54,13 +58,21 @@ namespace MonoPlatformerGame
                     isHost = true;
             }
         }
+
 		protected override void Initialize ()
 		{
 			base.Initialize();
 
 			//_graphics.PreferredBackBufferHeight = 720;
 			//_graphics.PreferredBackBufferWidth = 1280;
-			_graphics.IsFullScreen = true;
+			//_graphics.IsFullScreen = false;
+			//_graphics = new GraphicsDeviceManager(this)
+			//{
+				//PreferredBackBufferHeight = 720,
+				//PreferredBackBufferWidth = 1280,
+			//	IsFullScreen = true
+			//};
+
 		}
 		protected override void BeginRun ()
 		{
@@ -85,7 +97,7 @@ namespace MonoPlatformerGame
             PauseTexture.SetData(new Color[] { Color.White });
             EntityManager.Init(GraphicsDevice);
             level = new Level(Content);
-            level.LoadLevel("Level10.tmx");
+            //level.LoadLevel("Level10.tmx");
             
             JapeLog.WriteLine("IsHost: " + isHost);
 
@@ -110,12 +122,17 @@ namespace MonoPlatformerGame
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
-            if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed(Keys.S)) && !NetManager.GameStarted)
-                NetManager.StartGame();
+			if ((GamePad.GetState (PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed (Keys.S)) && !NetManager.GameStarted)
+			{
+				if (!level.LevelLoaded)
+					level.LoadLevel ("Level10.tmx");
 
-
+				NetManager.StartGame (level.LevelName);
+			}
             if (!NetManager.GameStarted)
                 return;
+			if (!level.LevelLoaded)
+				return;
             
             EntityManager.Update(deltaTime);
             ParticleSystem.Update(deltaTime);
@@ -130,13 +147,16 @@ namespace MonoPlatformerGame
 		{
 			// GraphicsDevice.Clear(Color.FromNonPremultiplied(51, 51, 51, 255));
 			GraphicsDevice.Clear (Color.Gray);
+			if (level.LevelLoaded)
+			{
 				EntityManager.Draw (_spriteBatch);
 				ParticleSystem.Draw (_spriteBatch);
-
+			}
 				if (!NetManager.GameStarted) {
                 
 					_spriteBatch.Begin ();
 					_spriteBatch.Draw (PauseTexture, new Rectangle (0, 0, 1280, 720), Color.Black * 0.5f);
+					_spriteBatch.DrawString (ResourceManager.GetFont ("Verdana"), "Waiting for game to start", new Vector2 (_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
 					_spriteBatch.End ();
 				}
 				log.Draw ();

@@ -323,7 +323,7 @@ namespace MonoPlatformerGame
             foreach (NetPlayer entity in netPlayers)
             {
                 entity.Draw(spriteBatch);
-                spriteBatch.DrawString(ResourceManager.GetFont("japelog"), NetManager.GetClientFromID(entity.UID).Name, entity.Position + new Vector2(0, -20), Color.YellowGreen);
+                spriteBatch.DrawString(ResourceManager.GetFont("japelog"), NetManager.GetClient(entity.UID).Name, entity.Position + new Vector2(0, -20), Color.YellowGreen);
             }
 
             spriteBatch.End();

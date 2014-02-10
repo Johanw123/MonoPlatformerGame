@@ -33,6 +33,10 @@ namespace DedicatedServerConsole
             while (run)
             {
                 string input = Console.ReadLine();
+
+				if (input == null)
+					continue;
+
                 string[] seperatedInput = input.Split(' ');
                 string command = "";
                 List<string> commandArgs = new List<string>();
@@ -56,10 +60,13 @@ namespace DedicatedServerConsole
 				case "BAN":
 					BanCommand (commandArgs);
 					break;
+				case "CONNECTEDPLAYERS":
+				case "LISTPLAYERS":
+				case "PLAYERS":
 				case "CLIENTS":
 				case "LISTCLIENTS":
 				case "CONNECTEDCLIENTS":
-
+					ListClientsCommand (commandArgs);
 					break;
 				case "/T":
 				case "/W":
@@ -102,11 +109,19 @@ namespace DedicatedServerConsole
 		{
 			if (commandArgs.Count > 0)
 			{
-				string playerName = commandArgs [0];
+				string playerNameOrId = commandArgs [0];
 
-				var client = NetManager.GetClientFromName (playerName);
-				//NetManager.KickPlayer(playerName);
-				//NetManager.KickPlayer(client);
+				int value;
+				if (int.TryParse(playerNameOrId, out value))
+				{
+					// Parse successful, value can be id.
+					//TODO check if id is valid (connected etc).
+					NetManager.KickPlayer (value);
+				}
+				else
+				{
+					NetManager.KickPlayer(playerNameOrId);
+				}
 			}
 		}
 
@@ -141,7 +156,6 @@ namespace DedicatedServerConsole
 			{
 				string name = client.Value.Name;
 				string id = client.Value.UID.ToString();
-
 
 				Console.WriteLine ("{0} : {1}", name, id);
 			}

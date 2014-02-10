@@ -37,7 +37,7 @@ Global
 		{B455E267-ADD0-4C9B-B5C1-83095F226BF9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = MonoPlatformerGame\MonoPlatformerGame.csproj
+		StartupItem = DedicatedServerConsole\DedicatedServerConsole.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,6 +22,8 @@ namespace MonoPlatformerGame
         ChatMessage,
         PlayerFinish,
         ChangeLevel,
+		DownloadMapRequest,
+		DownloadMapResponse,
 
         PeerInfo = 5000,
         
@@ -63,6 +65,7 @@ namespace MonoPlatformerGame
                 config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
                 netPeer = new NetServer(config);
                 netPeer.Start();
+				JapeLog.WriteLine("Server Started");
             }
             else
             {
@@ -76,10 +79,10 @@ namespace MonoPlatformerGame
                 netPeer.Start();
                 netPeer.Connect(DataStorage.GetLocalPlayerInfo().ServerIP, DataStorage.GetLocalPlayerInfo().ServerPort, hailMessage);
             }
-            JapeLog.WriteLine("Connected to Server");
+            //JapeLog.WriteLine("Connected to Server");
         }
 
-        public static ClientInfo GetClientFromID(int id)
+        public static ClientInfo GetClient(int id)
         {
             ClientInfo clientInfo;
 
@@ -88,7 +91,7 @@ namespace MonoPlatformerGame
             return clientInfo;
         }
 
-		public static ClientInfo GetClientFromName(string name)
+		public static ClientInfo GetClient(string name)
 		{
 			foreach (var item in connectedClients)
 			{
@@ -98,6 +101,17 @@ namespace MonoPlatformerGame
 				}
 			}
 			return null;
+		}
+
+		public static void KickPlayer(string name)
+		{
+			var client = GetClient (name);
+			client.ClientNetConnection.Disconnect ("You were kicked by the host");
+		}
+		public static void KickPlayer(int id)
+		{
+			var client = GetClient (id);
+			client.ClientNetConnection.Disconnect ("You were kicked by the host");
 		}
 
         public static void SendMessageParams(NetDeliveryMethod method, params object[] parameters)
@@ -128,11 +142,14 @@ namespace MonoPlatformerGame
             SendMessage(method, oMsg, reciever);
         }
 
-        public static void StartGame()
+        public static void StartGame(string levelName)
         {
             if(IsHost)
             {
-                SendMessageParams(NetDeliveryMethod.ReliableSequenced, (int)DataType.StartGame);
+                SendMessageParams(NetDeliveryMethod.ReliableSequenced, 
+				                  (int)DataType.StartGame,
+				                  levelName
+				                  );
                 
                 JapeLog.WriteLine(String.Format("Starting the game with {0} number of players", (IsDedicatedHost) ? connectedClients.Count : connectedClients.Count + 1));
 

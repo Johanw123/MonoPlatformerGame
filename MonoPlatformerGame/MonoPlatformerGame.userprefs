@@ -1,49 +1,19 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|Mixed Platforms" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DedicatedServerConsole/Server.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MonoPlatformerGame/Game1.cs">
     <Files>
-      <File FileName="MonoPlatformerGame/Misc/Camera.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/ParticleSystem/ParticleSystem.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/ParticleSystem/Particle.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/ParticleSystem/Emitters/Emitter.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Player.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/ParticleSystem/Emitters/CircleEmitter.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Level.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Game1.cs" Line="43" Column="1" />
-      <File FileName="MonoPlatformerGame/Mods/ModManager.cs" Line="83" Column="3" />
-      <File FileName="MonoPlatformerGame/Entities/EntityManager.cs" Line="182" Column="14" />
-      <File FileName="MonoPlatformerGame/Entities/Entity.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Finish.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Spike.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Start.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/NetPlayer.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Misc/Log.cs" Line="1" Column="1" />
       <File FileName="DedicatedServerConsole/Program.cs" Line="1" Column="1" />
-      <File FileName="DedicatedServerConsole/Server.cs" Line="59" Column="15" />
+      <File FileName="DedicatedServerConsole/Server.cs" Line="9" Column="2" />
+      <File FileName="MonoPlatformerGame/NetStuff/NetManager.cs" Line="141" Column="10" />
+      <File FileName="DedicatedServerConsole/NetStuff/DedicatedServerNetComponent.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/NetStuff/ConnectionInfo.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/Mods/ModManager.cs" Line="1" Column="1" />
+      <File FileName="MonoPlatformerGame/NetStuff/HostGameplayNetComponent.cs" Line="25" Column="42" />
+      <File FileName="MonoPlatformerGame/Game1.cs" Line="126" Column="5" />
+      <File FileName="MonoPlatformerGame/Entities/EntityManager.cs" Line="36" Column="1" />
+      <File FileName="MonoPlatformerGame/Level.cs" Line="39" Column="1" />
+      <File FileName="MonoPlatformerGame/NetStuff/GameplayNetComponent.cs" Line="28" Column="34" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="DedicatedServerConsole" expanded="True">
-            <Node name="Server.cs" selected="True" />
-          </Node>
-          <Node name="MonoPlatformerGame" expanded="True">
-            <Node name="References" expanded="True" />
-            <Node name="Content" expanded="True">
-              <Node name="Fonts" expanded="True" />
-            </Node>
-            <Node name="Entities" expanded="True">
-              <Node name="Blocks" expanded="True" />
-            </Node>
-            <Node name="Misc" expanded="True" />
-            <Node name="Mods" expanded="True" />
-            <Node name="ParticleSystem" expanded="True">
-              <Node name="Emitters" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

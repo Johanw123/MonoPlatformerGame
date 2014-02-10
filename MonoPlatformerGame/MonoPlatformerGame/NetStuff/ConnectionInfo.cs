@@ -32,7 +32,11 @@ namespace MonoPlatformerGame
             get;
             set;
         }
-        
+		public NetConnection ClientNetConnection 
+		{
+			get;
+			set;
+		}
         public ClientInfo()
         {
             
