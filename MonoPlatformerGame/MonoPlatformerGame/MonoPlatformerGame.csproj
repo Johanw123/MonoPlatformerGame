@@ -198,6 +198,12 @@
     </Content>
     <Content Include="Content\Thumbs.db" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Content\Content\Content.csproj">
+      <Project>{90B70EC3-B4A4-4098-B8EB-10691BA290E7}</Project>
+      <Name>Content</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
