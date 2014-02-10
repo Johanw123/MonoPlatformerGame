@@ -178,9 +178,6 @@
   <ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -189,4 +186,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\GameContent\GameContent.csproj">
+      <Project>{587E5E53-D652-4971-B267-993EAA15F31E}</Project>
+      <Name>GameContent</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|Mixed Platforms" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MonoPlatformerGame/Entities/Spike.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MonoPlatformerGame/ResourceManager.cs">
     <Files>
       <File FileName="DedicatedServerConsole/Program.cs" Line="1" Column="1" />
       <File FileName="DedicatedServerConsole/Server.cs" Line="1" Column="1" />
@@ -12,10 +12,11 @@
       <File FileName="MonoPlatformerGame/Game1.cs" Line="1" Column="1" />
       <File FileName="MonoPlatformerGame/Entities/EntityManager.cs" Line="1" Column="1" />
       <File FileName="MonoPlatformerGame/Level.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/NetStuff/GameplayNetComponent.cs" Line="37" Column="21" />
+      <File FileName="MonoPlatformerGame/NetStuff/GameplayNetComponent.cs" Line="1" Column="1" />
       <File FileName="MonoPlatformerGame/Tiled.cs" Line="1" Column="1" />
       <File FileName="MonoPlatformerGame/NetStuff/ClientGameplayNetComponent.cs" Line="1" Column="1" />
-      <File FileName="MonoPlatformerGame/Entities/Spike.cs" Line="14" Column="15" />
+      <File FileName="MonoPlatformerGame/Entities/Spike.cs" Line="16" Column="33" />
+      <File FileName="MonoPlatformerGame/ResourceManager.cs" Line="68" Column="61" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
