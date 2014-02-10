@@ -1,0 +1,9 @@
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\bin\Release\MonoPlatformerGameLinux.exe
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\bin\Release\MonoPlatformerGameLinux.pdb
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\bin\Release\Lidgren.Network.dll
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\bin\Release\MonoGame.Framework.dll
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\bin\Release\OpenTK.dll
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\bin\Release\Tao.Sdl.dll
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\obj\x86\Release\MonoPlatformerGameLinux.csprojResolveAssemblyReference.cache
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\obj\x86\Release\MonoPlatformerGameLinux.exe
+E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGameLinux\obj\x86\Release\MonoPlatformerGameLinux.pdb

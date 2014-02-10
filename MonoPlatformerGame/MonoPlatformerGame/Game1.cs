@@ -52,7 +52,7 @@ namespace MonoPlatformerGame
                 
 			};
 
-            if (args.GetLength(0) > 0)
+            if (args != null && args.GetLength(0) > 0)
             {
                 if (args[0] == "Host")
                     isHost = true;

@@ -77,6 +77,5 @@ E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Re
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\MonoGame.Framework.dll
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\OpenTK.dll
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\bin\WindowsGL\Release\Tao.Sdl.dll
-E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.csprojResolveAssemblyReference.cache
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.exe
 E:\Dev\MonoPlatformerGame\MonoPlatformerGame\MonoPlatformerGame\obj\x86\Release\MonoPlatformerGame.pdb

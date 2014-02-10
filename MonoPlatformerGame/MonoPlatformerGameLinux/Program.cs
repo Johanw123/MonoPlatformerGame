@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 #endregion
 
-namespace MonoPlatformerGameLinux
+namespace MonoPlatformerGame
 {
 #if WINDOWS || LINUX
     /// <summary>
@@ -18,7 +18,7 @@ namespace MonoPlatformerGameLinux
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new Game1(null))
                 game.Run();
         }
     }
