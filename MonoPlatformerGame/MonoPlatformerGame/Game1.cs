@@ -52,7 +52,7 @@ namespace MonoPlatformerGame
                 
 			};
 
-            if (args.GetLength(0) > 0)
+            if (args != null && args.GetLength(0) > 0)
             {
                 if (args[0] == "Host")
                     isHost = true;
@@ -99,6 +99,7 @@ namespace MonoPlatformerGame
             level = new Level(Content);
             //level.LoadLevel("Level10.tmx");
             
+
             JapeLog.WriteLine("IsHost: " + isHost);
 
             NetManager.Init(isHost);

@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{954BD18B-87C8-4075-80BB-EBC2DEF21B85}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MonoPlatformerGameLinux</RootNamespace>
+    <AssemblyName>MonoPlatformerGameLinux</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;LINUX</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\MonoPlatformerGame\CollisionManager.cs">
+      <Link>CollisionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\DataStorage.cs">
+      <Link>DataStorage.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Blocks\Block.cs">
+      <Link>Entities\Blocks\Block.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Blocks\MovingPlatform.cs">
+      <Link>Entities\Blocks\MovingPlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Enemies\Enemy.cs">
+      <Link>Entities\Enemies\Enemy.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Enemies\FlyingEnemy.cs">
+      <Link>Entities\Enemies\FlyingEnemy.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Enemies\WalkingEnemy.cs">
+      <Link>Entities\Enemies\WalkingEnemy.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Entity.cs">
+      <Link>Entities\Entity.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\EntityManager.cs">
+      <Link>Entities\EntityManager.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Finish.cs">
+      <Link>Entities\Finish.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\NetPlayer.cs">
+      <Link>Entities\NetPlayer.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Player.cs">
+      <Link>Entities\Player.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Spike.cs">
+      <Link>Entities\Spike.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Entities\Start.cs">
+      <Link>Entities\Start.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Game1.cs">
+      <Link>Game1.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Input.cs">
+      <Link>Input.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Level.cs">
+      <Link>Level.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\Camera.cs">
+      <Link>Misc\Camera.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\Constants.cs">
+      <Link>Misc\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\JapeLog.cs">
+      <Link>Misc\JapeLog.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\JapeLogMono.cs">
+      <Link>Misc\JapeLogMono.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\Log.cs">
+      <Link>Misc\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\MatrixSpacePartition.cs">
+      <Link>Misc\MatrixSpacePartition.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\RectangleExtensions.cs">
+      <Link>Misc\RectangleExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\RectangleTree.cs">
+      <Link>Misc\RectangleTree.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\Runtime.cs">
+      <Link>Misc\Runtime.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\TimeList.cs">
+      <Link>Misc\TimeList.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Mods\ModManager.cs">
+      <Link>Mods\ModManager.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\NetStuff\ClientGameplayNetComponent.cs">
+      <Link>NetStuff\ClientGameplayNetComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\NetStuff\ConnectionInfo.cs">
+      <Link>NetStuff\ConnectionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\NetStuff\GameplayNetComponent.cs">
+      <Link>NetStuff\GameplayNetComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\NetStuff\HostGameplayNetComponent.cs">
+      <Link>NetStuff\HostGameplayNetComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\NetStuff\NetComponent.cs">
+      <Link>NetStuff\NetComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\NetStuff\NetManager.cs">
+      <Link>NetStuff\NetManager.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\ParticleSystem\Emitters\CircleEmitter.cs">
+      <Link>ParticleSystem\Emitters\CircleEmitter.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\ParticleSystem\Emitters\Emitter.cs">
+      <Link>ParticleSystem\Emitters\Emitter.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\ParticleSystem\Particle.cs">
+      <Link>ParticleSystem\Particle.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\ParticleSystem\ParticleSystem.cs">
+      <Link>ParticleSystem\ParticleSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\ResourceManager.cs">
+      <Link>ResourceManager.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPlatformerGame\Tiled.cs">
+      <Link>Tiled.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\Dlls\Linux\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\..\Dlls\Linux\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Tao.Sdl">
+      <HintPath>..\..\Dlls\Linux\Tao.Sdl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\Dlls\Linux\MonoGame.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\GameContent\GameContent.csproj">
+      <Project>{587E5E53-D652-4971-B267-993EAA15F31E}</Project>
+      <Name>GameContent</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
