@@ -4,6 +4,6 @@
     <StartArguments>Host</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartArguments>Host 195.67.190.174</StartArguments>
+    <StartArguments>aHost 195.67.190.174</StartArguments>
   </PropertyGroup>
 </Project>

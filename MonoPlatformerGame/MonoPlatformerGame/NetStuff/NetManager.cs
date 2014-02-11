@@ -48,6 +48,7 @@ namespace MonoPlatformerGame
         public static bool IsHost { get; set; }
         public static bool IsDedicatedHost { get; set; }
         public static int CreateNewUID() { return ++uID; }
+        public static string CurrentLevelName { get; set; }
         
         private static int uID = 0;
         private static NetPeer netPeer;
@@ -55,6 +56,8 @@ namespace MonoPlatformerGame
         public static Dictionary<int, ClientInfo> connectedClients = new Dictionary<int, ClientInfo>();
        
         private static Thread t = new Thread(DoThreadInit);
+
+        
 
         private static void DoInit()
         {
@@ -155,13 +158,12 @@ namespace MonoPlatformerGame
             SendMessage(method, oMsg, reciever);
         }
 
-        public static void StartGame(string levelName)
+        public static void StartGame()
         {
             if(IsHost)
             {
                 SendMessageParams(NetDeliveryMethod.ReliableSequenced, 
-				                  (int)DataType.StartGame,
-				                  levelName
+				                  (int)DataType.StartGame
 				                  );
                 
                 JapeLog.WriteLine(String.Format("Starting the game with {0} number of players", (IsDedicatedHost) ? connectedClients.Count : connectedClients.Count + 1));

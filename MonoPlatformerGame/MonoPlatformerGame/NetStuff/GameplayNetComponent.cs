@@ -37,9 +37,9 @@ namespace MonoPlatformerGame
                 case DataType.ChangeLevel:
                     ChangeLevel(msg);
                     return true;
-			case DataType.DownloadMapResponse:
-				IncomingDownloadMapResponse (msg);
-				return true;
+                case DataType.DownloadMapResponse:
+                    IncomingDownloadMapResponse(msg);
+                    return true;
             }
             return false;
         }
@@ -61,17 +61,31 @@ namespace MonoPlatformerGame
 
             NetManager.PlayerReachedFinish(who, time);                
         }
+
         protected void ChangeLevel(NetIncomingMessage msg)
         {
             string levelName = msg.ReadString();
 
-            OnChangedLevel(levelName);
+            if (Level.MapExist(levelName))
+                OnChangedLevel(levelName);
+            else
+            {
+                //TODO download map from server
+                NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+                                             (int)DataType.DownloadMapRequest,
+                                             levelName
+                                             );
+
+            }
+            //OnChangedLevel(levelName);
         }
+
         protected virtual void OnChangedLevel(string levelName)
         {
             if (ChangeLevelEvent != null)
                 ChangeLevelEvent(levelName);
         }
+
         protected void RedirectBroadcast(DataType type, NetIncomingMessage msg)
         {
             NetManager.RedirectBroadcast(msg);
@@ -80,19 +94,19 @@ namespace MonoPlatformerGame
 
 		protected void IncomingStartGame(NetIncomingMessage msg)
 		{
-			string map = msg.ReadString();
+            //string map = msg.ReadString();
 
-			if (Level.MapExist (map))
-				ChangeLevel (msg);
-			else
-			{
-				//TODO download map from server
-				NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
-				                             (int)DataType.DownloadMapRequest,
-				                             map
-				                             );
+            //if (Level.MapExist (map))
+            //    ChangeLevel (msg);
+            //else
+            //{
+            //    //TODO download map from server
+            //    NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+            //                                 (int)DataType.DownloadMapRequest,
+            //                                 map
+            //                                 );
 
-			}
+            //}
 
 
 			StartGame ();

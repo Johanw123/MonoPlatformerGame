@@ -38,6 +38,7 @@ namespace MonoPlatformerGame
 				ParseMapProperties ();
 				LevelName = level;
 				LevelLoaded = true;
+                NetManager.CurrentLevelName = LevelName;
             }
         }
 

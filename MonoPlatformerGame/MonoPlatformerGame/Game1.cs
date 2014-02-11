@@ -35,7 +35,7 @@ namespace MonoPlatformerGame
         private Level level;
         Log log;
         private GameplayNetComponent gameplayNetComponent;
-        bool isHost = true;
+        bool isHost = false;
         Texture2D PauseTexture;
 
         public Game1(String[] args)
@@ -123,7 +123,7 @@ namespace MonoPlatformerGame
 				if (!level.LevelLoaded)
 					level.LoadLevel ("Level10.tmx");
 
-				NetManager.StartGame(level.LevelName);
+				NetManager.StartGame();
 			}
             if (!NetManager.GameStarted)
                 return;
