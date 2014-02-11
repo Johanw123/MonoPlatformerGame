@@ -52,13 +52,13 @@ namespace DedicatedServerConsole
                 switch (command.ToUpper())
                 {
 				case "START":
-					StartCommand ();
+					StartCommand();
                     break;
 				case "KICK":
-					KickCommand (commandArgs);
+					KickCommand(commandArgs);
 					break;
 				case "BAN":
-					BanCommand (commandArgs);
+					BanCommand(commandArgs);
 					break;
 				case "CONNECTEDPLAYERS":
 				case "LISTPLAYERS":
@@ -66,7 +66,7 @@ namespace DedicatedServerConsole
 				case "CLIENTS":
 				case "LISTCLIENTS":
 				case "CONNECTEDCLIENTS":
-					ListClientsCommand (commandArgs);
+					ListClientsCommand(commandArgs);
 					break;
 				case "/T":
 				case "/W":
@@ -74,13 +74,13 @@ namespace DedicatedServerConsole
 				case "SPEAK":
 				case "TELL":
 				case "SAY":
-					SayCommand (commandArgs);
+					SayCommand(commandArgs);
 					break;
 				case "CHANGEMAP":
 				case "MAP":
 				case "CHANGELEVEL":
 				case "LEVEL":
-					ChangeLevelCommand (commandArgs);
+					ChangeLevelCommand(commandArgs);
                     break;
                 }
             }
