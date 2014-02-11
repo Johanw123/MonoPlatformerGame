@@ -46,8 +46,8 @@ namespace MonoPlatformerGame
 
         private static void LoadSpecialTextures(GraphicsDevice graphicsDevice)
         {
-            Texture2D tex = new Texture2D(graphicsDevice, 1, 1);
-            tex.SetData(new Color[] { Color.White });
+            Texture2D tex = new Texture2D(graphicsDevice, 2, 2);
+            tex.SetData(new Color[] { Color.White, Color.White, Color.White, Color.White });
             mTextures.Add("pixel", tex);
         }
 
