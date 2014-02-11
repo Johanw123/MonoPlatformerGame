@@ -41,7 +41,7 @@ namespace DedicatedServerConsole
 
 		protected void DownloadRequest(NetIncomingMessage msg)
 		{
-			string mapName = msg.ReadString ();
+			string mapName = msg.ReadString();
 			string path = "Maps/" + mapName;
 
 			if (File.Exists (path))
