@@ -16,7 +16,7 @@ namespace MonoPlatformerGame
         public MovingPlatform(float x, float y, int width, float startOffset = 0, float speed = 10, SortedList<string,string> settings = null)
             : base(x + startOffset, y, settings)
         {
-            mTexture = ResourceManager.GetTexture("Elevator");
+            mTexture = ResourceManager.GetTexture("elevator");
             startPos = new Vector2(x, y);
             endPos = new Vector2(x + width - mTexture.Width, y);
             mAccel.X = 1;

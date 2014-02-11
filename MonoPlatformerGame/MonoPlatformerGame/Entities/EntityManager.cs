@@ -269,14 +269,14 @@ namespace MonoPlatformerGame
                 entity.Update(deltaTime);
                 rectangleTree.UpdatePosition(entity);
             }
-            foreach (NetPlayer player in netPlayers)
+            foreach (NetPlayer netPlayer in netPlayers)
             {
                 foreach (var client in NetManager.connectedClients)
                 {
-                    if (client.Value.UID == player.UID)
+                    if (client.Value.UID == netPlayer.UID)
                     {
-                        player.X = client.Value.X;
-                        player.Y = client.Value.Y;
+                        netPlayer.X = client.Value.X;
+                        netPlayer.Y = client.Value.Y;
                     }
                 }
             }

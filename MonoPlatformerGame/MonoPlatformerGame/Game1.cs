@@ -75,6 +75,7 @@ namespace MonoPlatformerGame
 		}
         void gameplayNetComponent_ChangeLevelEvent(string levelName)
         {
+            level.UnloadLevel();
             level.LoadLevel(levelName);
         }
 
