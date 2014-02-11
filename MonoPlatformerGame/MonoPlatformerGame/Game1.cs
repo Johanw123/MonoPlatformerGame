@@ -36,11 +36,7 @@ namespace MonoPlatformerGame
         Log log;
         private GameplayNetComponent gameplayNetComponent;
         bool isHost = true;
-        
-        
         Texture2D PauseTexture;
-
-    	
 
         public Game1(String[] args)
         {
@@ -59,7 +55,7 @@ namespace MonoPlatformerGame
             }
         }
 
-		protected override void Initialize ()
+		protected override void Initialize()
 		{
 			base.Initialize();
 
@@ -72,11 +68,10 @@ namespace MonoPlatformerGame
 				//PreferredBackBufferWidth = 1280,
 			//	IsFullScreen = true
 			//};
-
 		}
-		protected override void BeginRun ()
+		protected override void BeginRun()
 		{
-			base.BeginRun ();
+			base.BeginRun();
 		}
         void gameplayNetComponent_ChangeLevelEvent(string levelName)
         {
@@ -123,12 +118,12 @@ namespace MonoPlatformerGame
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
-			if ((GamePad.GetState (PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed (Keys.S)) && !NetManager.GameStarted)
+			if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed(Keys.S)) && !NetManager.GameStarted)
 			{
 				if (!level.LevelLoaded)
 					level.LoadLevel ("Level10.tmx");
 
-				NetManager.StartGame (level.LevelName);
+				NetManager.StartGame(level.LevelName);
 			}
             if (!NetManager.GameStarted)
                 return;
@@ -144,23 +139,23 @@ namespace MonoPlatformerGame
             base.Update(gameTime);
         }
 
-        protected override void Draw (GameTime gameTime)
+        protected override void Draw(GameTime gameTime)
 		{
 			// GraphicsDevice.Clear(Color.FromNonPremultiplied(51, 51, 51, 255));
-			GraphicsDevice.Clear (Color.Gray);
+			GraphicsDevice.Clear(Color.Gray);
 			if (level.LevelLoaded)
 			{
-				EntityManager.Draw (_spriteBatch);
-				ParticleSystem.Draw (_spriteBatch);
+				EntityManager.Draw(_spriteBatch);
+				ParticleSystem.Draw(_spriteBatch);
 			}
 				if (!NetManager.GameStarted) {
                 
-					_spriteBatch.Begin ();
-					_spriteBatch.Draw (PauseTexture, new Rectangle (0, 0, 1280, 720), Color.Black * 0.5f);
-					_spriteBatch.DrawString (ResourceManager.GetFont ("Verdana"), "Waiting for game to start", new Vector2 (_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
-					_spriteBatch.End ();
+					_spriteBatch.Begin();
+					_spriteBatch.Draw(PauseTexture, new Rectangle (0, 0, 1280, 720), Color.Black * 0.5f);
+					_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Waiting for game to start", new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
+					_spriteBatch.End();
 				}
-				log.Draw ();
+				log.Draw();
 
             base.Draw(gameTime);
         }

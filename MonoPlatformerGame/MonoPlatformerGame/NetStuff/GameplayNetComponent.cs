@@ -34,9 +34,6 @@ namespace MonoPlatformerGame
                 case DataType.PlayerFinish:
                     PlayerFinish(msg);
                     return true;
-                case DataType.ChatMessage:
-                    JapeLog.WriteLine(msg.ReadString());
-                    return true;
                 case DataType.ChangeLevel:
                     ChangeLevel(msg);
                     return true;

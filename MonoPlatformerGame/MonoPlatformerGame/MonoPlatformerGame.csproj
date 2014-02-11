@@ -75,6 +75,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tiled.cs" />
     <Compile Include="Entities\EntityManager.cs" />
+    <Compile Include="NetStuff\ChatNetComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
@@ -98,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameContent\GameContent.csproj">
-      <Project>{587e5e53-d652-4971-b267-993eaa15f31e}</Project>
+      <Project>{587E5E53-D652-4971-B267-993EAA15F31E}</Project>
       <Name>GameContent</Name>
     </ProjectReference>
   </ItemGroup>

@@ -157,6 +157,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\MonoPlatformerGame\NetStuff\ChatNetComponent.cs">
+      <Link>NetStuff\ChatNetComponent.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

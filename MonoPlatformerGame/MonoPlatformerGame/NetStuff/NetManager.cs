@@ -16,6 +16,8 @@ namespace MonoPlatformerGame
         Login,
         NewPlayer,
         NewPlayerResponse,
+		PlayerDisconnected,
+
         //Gameplay
         GameState,
         BroadcastMessage,
@@ -105,13 +107,24 @@ namespace MonoPlatformerGame
 
 		public static void KickPlayer(string name)
 		{
-			var client = GetClient (name);
-			client.ClientNetConnection.Disconnect ("You were kicked by the host");
+			ClientInfo client = GetClient (name);
+			KickClient(client);
 		}
+
 		public static void KickPlayer(int id)
 		{
-			var client = GetClient (id);
+			ClientInfo client = GetClient (id);
+			KickClient(client);
+		}
+
+		private static void KickClient(ClientInfo client)
+		{
 			client.ClientNetConnection.Disconnect ("You were kicked by the host");
+
+			SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+			                  (int)DataType.PlayerDisconnected,
+			                  client.Name
+			                  );
 		}
 
         public static void SendMessageParams(NetDeliveryMethod method, params object[] parameters)
