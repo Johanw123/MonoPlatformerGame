@@ -264,7 +264,7 @@ namespace MonoPlatformerGame
             }
         }
 
-        public static void RedirectBroadcast(NetIncomingMessage msg)
+        public static void RedirectMessage(NetIncomingMessage msg)
         {
             NetConnection excludeConnection = msg.SenderConnection;
             if (IsHost)

@@ -88,7 +88,7 @@ namespace MonoPlatformerGame
 
         protected void RedirectBroadcast(DataType type, NetIncomingMessage msg)
         {
-            NetManager.RedirectBroadcast(msg);
+            NetManager.RedirectMessage(msg);
             IncomingData((DataType)msg.ReadInt32(), msg);
         }
 
