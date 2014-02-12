@@ -17,7 +17,7 @@ namespace MonoPlatformerGame
         [STAThread]
         static void Main(System.String[] args)
         {
-			Game1 game = new Game1(args);
+			Game1 game = new Game1();
 			game.Run ();
 
         }

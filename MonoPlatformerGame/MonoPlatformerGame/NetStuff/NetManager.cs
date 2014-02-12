@@ -24,8 +24,6 @@ namespace MonoPlatformerGame
         ChatMessage,
         PlayerFinish,
         ChangeLevel,
-		DownloadMapRequest,
-		DownloadMapResponse,
 
         PeerInfo = 5000,
         
@@ -183,14 +181,15 @@ namespace MonoPlatformerGame
             SendMessage(method, oMsg, reciever);
         }
 
-        public static void StartGame(string levelName)
+        public static void StartGame()
         {
             if(IsHost)
             {
-                SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableSequenced, 
-				                  (int)DataType.StartGame,
-                                  levelName
-				                  );
+
+                //SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableSequenced, 
+                //                  (int)DataType.StartGame,
+                //                  levelName
+                //                  );
                 
                 JapeLog.WriteLine(String.Format("Starting the game with {0} number of players", (IsDedicatedHost) ? connectedClients.Count : connectedClients.Count + 1));
 
@@ -249,7 +248,7 @@ namespace MonoPlatformerGame
             components.Remove(component);
         }
 
-        private static void SendMessage(NetDeliveryMethod method, NetOutgoingMessage msg, NetConnection reciever = null)
+        public static void SendMessage(NetDeliveryMethod method, NetOutgoingMessage msg, NetConnection reciever = null)
         {
             if (IsHost)
             {
@@ -282,48 +281,6 @@ namespace MonoPlatformerGame
                     }
                 }
             }
-        }
-
-        public static void AlertOthersNewPlayer(NetConnection excludeConnection, ClientInfo info)
-        {
-            if (!IsHost)
-                return;
-
-            foreach (NetConnection conn in netPeer.Connections)
-            {
-                if (conn != excludeConnection)
-                {
-                    /*SendMessageParams(NetDeliveryMethod.ReliableOrdered, conn,
-                        (int)DataType.NewPlayer,
-                        info.Name,
-                        info.UID
-                        );*/
-					NetOutgoingMessage oMsg = CreateMessage();
-					oMsg.Write((int)DataType.NewPlayer);
-					oMsg.Write(info.Name);
-					oMsg.Write(info.UID);
-
-                    SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg, conn);
-                }
-            }
-
-            NetOutgoingMessage oMsg2 = CreateMessage();
-            oMsg2.Write((int)DataType.NewPlayerResponse);
-            oMsg2.Write(info.UID);
-            oMsg2.Write(NetManager.GameStarted);
-            oMsg2.Write(CurrentLevelName);
-
-            oMsg2.Write(NetManager.connectedClients.Count - 1);
-            foreach (var item in NetManager.connectedClients)
-            {
-                if (info.UID == item.Value.UID)
-                    continue;
-
-                oMsg2.Write(item.Value.Name);
-                oMsg2.Write(item.Value.UID);
-            }
-
-            SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg2, excludeConnection);
         }
 
         public static void SendBroadcast(NetOutgoingMessage msg, NetDeliveryMethod method)

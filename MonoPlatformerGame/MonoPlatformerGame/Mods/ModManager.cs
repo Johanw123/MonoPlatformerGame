@@ -11,7 +11,6 @@ namespace MonoPlatformerGame
         private const bool JumpManiaDefault = false;
         private const bool CantStopDefault = false;
 
-
         public static int DoubleJump = DoubleJumpDefault;
         public static int Gravity = GravityDefault;
         public static bool JumpMania = JumpManiaDefault;

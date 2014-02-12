@@ -37,8 +37,6 @@ namespace MonoPlatformerGame
                 case DataType.ChangeLevel:
                     IncomingChangeLevel(msg);
                     return true;
-                case DataType.DownloadMapResponse:
-                    IncomingDownloadMapResponse(msg);
                     return true;
                 case DataType.PlayerDisconnected:
                     IncomingPlayerDisconnect(msg);
@@ -79,26 +77,19 @@ namespace MonoPlatformerGame
         protected void IncomingChangeLevel(NetIncomingMessage msg)
         {
             string levelName = msg.ReadString();
+            string levelData = msg.ReadString();
 
-            ChangeOrDownloadLevel(levelName);
-            //OnChangedLevel(levelName);
+            DownloadLevel(levelName, levelData);
+            OnChangedLevel(levelName);
         }
 
-        private void ChangeOrDownloadLevel(string levelName)
+        protected void DownloadLevel(string name, string data)
         {
-            if (Level.MapExist(levelName))
-                OnChangedLevel(levelName);
-            else
-            {
-                //TODO download map from server
-                NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-                                             (int)DataType.DownloadMapRequest,
-                                             levelName
-                                             );
-
-            }
-
+            StreamWriter writer = File.CreateText("Content/" + name);
+            writer.Write(data);
+            writer.Close();
         }
+
 
         protected virtual void OnChangedLevel(string levelName)
         {
@@ -127,8 +118,14 @@ namespace MonoPlatformerGame
             //                                 );
 
             //}
+            //string levelName = msg.ReadString();
+            //ChangeOrDownloadLevel(levelName);
+
             string levelName = msg.ReadString();
-            ChangeOrDownloadLevel(levelName);
+            string levelData = msg.ReadString();
+
+            DownloadLevel(levelName, levelData);
+            OnChangedLevel(levelName);
 		}
 
         protected void NewPlayerResponse(NetIncomingMessage msg)
@@ -161,8 +158,8 @@ namespace MonoPlatformerGame
                 }
             }
 
-            if (gameStarted)
-                ChangeOrDownloadLevel(levelName);
+            //if (gameStarted)
+            //    ChangeOrDownloadLevel(levelName);
 
             JapeLog.WriteLine("Remote ID recieved: " + ownUid);
         }

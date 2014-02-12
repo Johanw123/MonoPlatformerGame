@@ -128,9 +128,6 @@
     <Compile Include="..\MonoPlatformerGame\NetStuff\GameplayNetComponent.cs">
       <Link>NetStuff\GameplayNetComponent.cs</Link>
     </Compile>
-    <Compile Include="..\MonoPlatformerGame\NetStuff\HostGameplayNetComponent.cs">
-      <Link>NetStuff\HostGameplayNetComponent.cs</Link>
-    </Compile>
     <Compile Include="..\MonoPlatformerGame\NetStuff\NetComponent.cs">
       <Link>NetStuff\NetComponent.cs</Link>
     </Compile>

@@ -32,9 +32,6 @@ namespace DedicatedServerConsole
 				case DataType.ChatMessage:
 					RedirectChatMessage(msg);
 	                return true;
-				case DataType.DownloadMapRequest:
-					DownloadRequest(msg);
-					return true;
             }
             return false;
         }
@@ -51,24 +48,6 @@ namespace DedicatedServerConsole
 			                             );*/
 
 			NetManager.RedirectMessage(msg);
-
-
-		}
-
-		protected void DownloadRequest(NetIncomingMessage msg)
-		{
-			string mapName = msg.ReadString();
-			string path = "Maps/" + mapName;
-
-			if (File.Exists (path))
-			{
-				string mapData = File.ReadAllText (path);
-				NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-				                             (int)DataType.DownloadMapResponse,
-				                             mapName,
-				                             mapData
-				                             );
-			}
 
 
 		}
@@ -134,9 +113,50 @@ namespace DedicatedServerConsole
             clientInfo.UID = uid;
             NetManager.connectedClients.Add(clientInfo.UID, clientInfo);
 
-            NetManager.AlertOthersNewPlayer(msg.SenderConnection, clientInfo);
+            AlertOthersNewPlayer(msg.SenderConnection, clientInfo);
 
             JapeLog.WriteLine("New Player Added: " + name);
+        }
+
+        protected static void AlertOthersNewPlayer(NetConnection excludeConnection, ClientInfo info)
+        {
+            foreach (var dic in NetManager.connectedClients)
+            {
+                var conn = dic.Value.ClientNetConnection;
+
+                if (conn != excludeConnection)
+                {
+                    /*SendMessageParams(NetDeliveryMethod.ReliableOrdered, conn,
+                        (int)DataType.NewPlayer,
+                        info.Name,
+                        info.UID
+                        );*/
+                    NetOutgoingMessage oMsg = NetManager.CreateMessage();
+                    oMsg.Write((int)DataType.NewPlayer);
+                    oMsg.Write(info.Name);
+                    oMsg.Write(info.UID);
+                    
+                    NetManager.SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg, conn);
+                }
+            }
+
+            NetOutgoingMessage oMsg2 = NetManager.CreateMessage();
+            oMsg2.Write((int)DataType.NewPlayerResponse);
+            oMsg2.Write(info.UID);
+            oMsg2.Write(NetManager.GameStarted);
+            oMsg2.Write(NetManager.CurrentLevelName);
+
+            oMsg2.Write(NetManager.connectedClients.Count - 1);
+            foreach (var item in NetManager.connectedClients)
+            {
+                if (info.UID == item.Value.UID)
+                    continue;
+
+                oMsg2.Write(item.Value.Name);
+                oMsg2.Write(item.Value.UID);
+            }
+
+            NetManager.SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg2, excludeConnection);
         }
 
         protected void SendGameState()
