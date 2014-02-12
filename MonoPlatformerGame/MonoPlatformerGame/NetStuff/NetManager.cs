@@ -290,11 +290,15 @@ namespace MonoPlatformerGame
             {
                 if (conn != excludeConnection)
                 {
-                    SendMessageParams(NetDeliveryMethod.ReliableOrdered, conn,
+                    /*SendMessageParams(NetDeliveryMethod.ReliableOrdered, conn,
                         (int)DataType.NewPlayer,
                         info.Name,
                         info.UID
-                        );
+                        );*/
+					NetOutgoingMessage oMsg = CreateMessage();
+					oMsg.Write((int)DataType.NewPlayer);
+					oMsg.Write(info.Name);
+					oMsg.Write(info.UID);
                 }
             }
 
