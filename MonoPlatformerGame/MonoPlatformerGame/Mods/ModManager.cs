@@ -6,13 +6,20 @@ namespace MonoPlatformerGame
 {
     public class ModManager
     {
-        public static int DoubleJump = 0;
-        public static int Gravity = 3000;
-        public static bool JumpMania = false;
-        public static bool CantStop = false;
+        private const int DoubleJumpDefault = 0;
+        private const int GravityDefault = 3000;
+        private const bool JumpManiaDefault = false;
+        private const bool CantStopDefault = false;
+
+
+        public static int DoubleJump = DoubleJumpDefault;
+        public static int Gravity = GravityDefault;
+        public static bool JumpMania = JumpManiaDefault;
+        public static bool CantStop = CantStopDefault;
 
         public static void SetupMods(Level level)
         {
+            ResetMods();
             foreach (var pair in level.Map.Properties)
 			{
 				string key = pair.Key;
@@ -21,19 +28,27 @@ namespace MonoPlatformerGame
 				switch (key)
                 {
 				case "DoubleJump":
-					DoubleJump = ParseInt(property) ?? DoubleJump;
+					DoubleJump = ParseInt(property) ?? DoubleJumpDefault;
 					break;
 				case "Gravity":
-					Gravity = ParseInt(property) ?? Gravity;
+					Gravity = ParseInt(property) ?? GravityDefault;
 					break;
 				case "JumpMania":
-					JumpMania = ParseBool(property) ?? JumpMania;
+					JumpMania = ParseBool(property) ?? JumpManiaDefault;
 					break;
 				case "CantStop":
-					CantStop = ParseBool(property) ?? CantStop;
+					CantStop = ParseBool(property) ?? CantStopDefault;
                     break;
                 }
             }
+        }
+
+        private static void ResetMods()
+        {
+            DoubleJump = DoubleJumpDefault;
+            Gravity = GravityDefault;
+            JumpMania = JumpManiaDefault;
+            CantStop = CantStopDefault;
         }
 
 		private static bool? ParseBool(string s)

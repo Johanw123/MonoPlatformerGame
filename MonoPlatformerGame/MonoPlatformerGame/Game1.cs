@@ -77,6 +77,7 @@ namespace MonoPlatformerGame
         {
             level.UnloadLevel();
             level.LoadLevel(levelName);
+            NetManager.StartGame(levelName);
         }
 
         protected override void LoadContent()
@@ -120,13 +121,13 @@ namespace MonoPlatformerGame
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
-			if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed(Keys.S)) && !NetManager.GameStarted)
-			{
-				if (!level.LevelLoaded)
-					level.LoadLevel ("Level10.tmx");
+            //if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed(Keys.S)) && !NetManager.GameStarted)
+            //{
+            //    if (!level.LevelLoaded)
+            //        level.LoadLevel ("Level10.tmx");
 
-				NetManager.StartGame();
-			}
+            //    NetManager.StartGame();
+            //}
             if (!NetManager.GameStarted)
                 return;
 			if (!level.LevelLoaded)

@@ -13,9 +13,12 @@ namespace DedicatedServerConsole
         DedicatedServerNetComponent dedicatedServerNetComponent;
         Thread commandsThread;
         Log log;
+        public string CurrentLevelName { get; set; }
 
         public Server()
         {
+            CurrentLevelName = "Level.tmx";
+            NetManager.CurrentLevelName = CurrentLevelName;
             run = true;
             commandsThread = new Thread(ListenForCommands);
             commandsThread.Start();
@@ -88,9 +91,7 @@ namespace DedicatedServerConsole
 
 		private void StartCommand()
 		{
-			NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
-			                             (int)DataType.StartGame
-			                             );
+            NetManager.StartGame(CurrentLevelName);
 		}
 		private void ChangeLevelCommand(List<string> commandArgs)
 		{
@@ -102,6 +103,9 @@ namespace DedicatedServerConsole
 				                             (int)DataType.ChangeLevel,
 				                             levelName
 				                             );
+
+                CurrentLevelName = levelName;
+                NetManager.CurrentLevelName = CurrentLevelName;
 			}
 		}
 

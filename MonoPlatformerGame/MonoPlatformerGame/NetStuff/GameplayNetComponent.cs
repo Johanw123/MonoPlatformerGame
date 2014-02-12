@@ -35,10 +35,13 @@ namespace MonoPlatformerGame
                     PlayerFinish(msg);
                     return true;
                 case DataType.ChangeLevel:
-                    ChangeLevel(msg);
+                    IncomingChangeLevel(msg);
                     return true;
                 case DataType.DownloadMapResponse:
                     IncomingDownloadMapResponse(msg);
+                    return true;
+                case DataType.PlayerDisconnected:
+                    IncomingPlayerDisconnect(msg);
                     return true;
             }
             return false;
@@ -52,7 +55,18 @@ namespace MonoPlatformerGame
 			StreamWriter writer = File.CreateText ("Content/" + mapName);
 			writer.Write (mapData);
 			writer.Close ();
+            OnChangedLevel(mapName);
+            
 		}
+
+        private void IncomingPlayerDisconnect(NetIncomingMessage msg)
+        {
+            string playerName = msg.ReadString();
+            string reason = msg.ReadString();
+
+            JapeLog.WriteLine(playerName + "Disconnected" + " - Reason: " + reason);
+
+        }
 
         protected void PlayerFinish(NetIncomingMessage msg)
         {
@@ -62,22 +76,28 @@ namespace MonoPlatformerGame
             NetManager.PlayerReachedFinish(who, time);                
         }
 
-        protected void ChangeLevel(NetIncomingMessage msg)
+        protected void IncomingChangeLevel(NetIncomingMessage msg)
         {
             string levelName = msg.ReadString();
 
+            ChangeOrDownloadLevel(levelName);
+            //OnChangedLevel(levelName);
+        }
+
+        private void ChangeOrDownloadLevel(string levelName)
+        {
             if (Level.MapExist(levelName))
                 OnChangedLevel(levelName);
             else
             {
                 //TODO download map from server
-                NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+                NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
                                              (int)DataType.DownloadMapRequest,
                                              levelName
                                              );
 
             }
-            //OnChangedLevel(levelName);
+
         }
 
         protected virtual void OnChangedLevel(string levelName)
@@ -107,22 +127,16 @@ namespace MonoPlatformerGame
             //                                 );
 
             //}
-
-
-			StartGame ();
+            string levelName = msg.ReadString();
+            ChangeOrDownloadLevel(levelName);
 		}
-
-        public override void StartGame()
-        {
-            NetManager.GameStarted = true;
-            EntityManager.ResetPlayer();
-        }
 
         protected void NewPlayerResponse(NetIncomingMessage msg)
         {
             int ownUid = msg.ReadInt32();
             NetManager.RemoteUID = ownUid;
             bool gameStarted = msg.ReadBoolean();
+            string levelName = msg.ReadString();
 
             int otherClientsCount = msg.ReadInt32();
 
@@ -148,7 +162,7 @@ namespace MonoPlatformerGame
             }
 
             if (gameStarted)
-                StartGame();
+                ChangeOrDownloadLevel(levelName);
 
             JapeLog.WriteLine("Remote ID recieved: " + ownUid);
         }
@@ -161,5 +175,8 @@ namespace MonoPlatformerGame
         protected abstract void IncomingGameState(NetIncomingMessage msg);
         protected abstract void NewPlayer(NetIncomingMessage msg);
         protected abstract void SendGameState();
+
+       
+
     }
 }

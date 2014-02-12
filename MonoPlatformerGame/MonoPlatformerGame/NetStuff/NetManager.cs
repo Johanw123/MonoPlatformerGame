@@ -124,9 +124,12 @@ namespace MonoPlatformerGame
 		{
 			client.ClientNetConnection.Disconnect ("You were kicked by the host");
 
-			SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+            string reason = "Kicked in the ass";
+
+			SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
 			                  (int)DataType.PlayerDisconnected,
-			                  client.Name
+			                  client.Name,
+                              reason
 			                  );
 		}
 
@@ -180,23 +183,23 @@ namespace MonoPlatformerGame
             SendMessage(method, oMsg, reciever);
         }
 
-        public static void StartGame()
+        public static void StartGame(string levelName)
         {
             if(IsHost)
             {
-                SendMessageParams(NetDeliveryMethod.ReliableSequenced, 
-				                  (int)DataType.StartGame
+                SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableSequenced, 
+				                  (int)DataType.StartGame,
+                                  levelName
 				                  );
                 
                 JapeLog.WriteLine(String.Format("Starting the game with {0} number of players", (IsDedicatedHost) ? connectedClients.Count : connectedClients.Count + 1));
-
-                GameStarted = true;
 
                 foreach (var item in components)
                 {
                     item.StartGame();
                 }
             }
+            GameStarted = true;
         }
 
         public static void Init(bool isHosting)
@@ -299,6 +302,8 @@ namespace MonoPlatformerGame
 					oMsg.Write((int)DataType.NewPlayer);
 					oMsg.Write(info.Name);
 					oMsg.Write(info.UID);
+
+                    SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg, conn);
                 }
             }
 
@@ -306,6 +311,7 @@ namespace MonoPlatformerGame
             oMsg2.Write((int)DataType.NewPlayerResponse);
             oMsg2.Write(info.UID);
             oMsg2.Write(NetManager.GameStarted);
+            oMsg2.Write(CurrentLevelName);
 
             oMsg2.Write(NetManager.connectedClients.Count - 1);
             foreach (var item in NetManager.connectedClients)
@@ -421,7 +427,7 @@ namespace MonoPlatformerGame
                     case NetIncomingMessageType.DebugMessage:
                     case NetIncomingMessageType.WarningMessage:
                     case NetIncomingMessageType.ErrorMessage:
-                        JapeLog.WriteLine(msg.ReadString());
+                        //JapeLog.WriteLine(msg.ReadString());
                         break;
                 }
                 peer.Recycle(msg);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="10" height="50" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="Sheet" tilewidth="64" tileheight="64">
-  <image source="../../../TextureSheets/Sheet.png" width="256" height="256"/>
+  <image source="Sheet.png" width="256" height="256"/>
  </tileset>
  <objectgroup name="Objects" width="10" height="50">
   <object name="MovingPlatform" x="-51" y="2891" width="305" height="51">

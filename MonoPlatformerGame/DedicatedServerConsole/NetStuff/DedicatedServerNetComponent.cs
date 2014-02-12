@@ -33,7 +33,7 @@ namespace DedicatedServerConsole
 					RedirectChatMessage(msg);
 	                return true;
 				case DataType.DownloadMapRequest:
-					DownloadRequest (msg);
+					DownloadRequest(msg);
 					return true;
             }
             return false;
