@@ -50,7 +50,7 @@ namespace MonoPlatformerGame
                 playerInfo.ServerIP = serverIP;
                 playerInfo.ServerPort = serverPort;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 playerInfo.UserName = System.Environment.MachineName;
                 playerInfo.ServerPort = 2300;

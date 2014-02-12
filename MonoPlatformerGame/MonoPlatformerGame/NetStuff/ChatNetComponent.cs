@@ -5,11 +5,6 @@ namespace MonoPlatformerGame
 {
 	public class ChatNetComponent : NetComponent
 	{
-		public ChatNetComponent()
-		{
-				 
-		}
-
 		public override bool IncomingData(DataType type, NetIncomingMessage msg)
 		{
 			switch (type)
@@ -23,7 +18,10 @@ namespace MonoPlatformerGame
 
 		void IncomingChatMessage(NetIncomingMessage msg)
 		{
-			JapeLog.WriteLine(msg.ReadString());
+			string playerName = msg.ReadString();
+			string message = msg.ReadString();
+
+			JapeLog.WriteLine(playerName + " : " + message);
 		}
 
 

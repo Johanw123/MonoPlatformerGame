@@ -218,7 +218,7 @@ namespace MonoPlatformerGame
                 if (absDepthY < absDepthX)
                 {
                     // Ignore platforms, unless we are on the ground.
-                    if (true || isOnGround)
+                    if (true)
                     {
                         //tillräkligt mycket takträff gör att man börjar falla ner
                         if (depth.Y > 3)

@@ -108,6 +108,7 @@ namespace MonoPlatformerGame
             gameplayNetComponent.ChangeLevelEvent += gameplayNetComponent_ChangeLevelEvent;
 
             NetManager.AddComponent(gameplayNetComponent);
+			NetManager.AddComponent(new ChatNetComponent());
         }
 
         protected override void Update(GameTime gameTime)

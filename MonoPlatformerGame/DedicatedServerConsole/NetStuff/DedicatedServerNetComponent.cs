@@ -14,30 +14,46 @@ namespace DedicatedServerConsole
         {
             switch (type)
             {
-            case DataType.GameState:
-                IncomingGameState(msg);
-                return true;
-            case DataType.NewPlayer:
-                NewPlayer(msg);
-                return true;
-            case DataType.NewPlayerResponse:
-                NewPlayerResponse(msg);
-                return true;
-            case DataType.BroadcastMessage:
-                RedirectBroadcast(type, msg);
-                return true;
-            case DataType.PlayerFinish:
-                PlayerFinish(msg);
-                return true;
-            case DataType.ChatMessage:
-                JapeLog.WriteLine(msg.ReadString());
-                return true;
-			case DataType.DownloadMapRequest:
-				DownloadRequest (msg);
-				return true;
+	            case DataType.GameState:
+	                IncomingGameState(msg);
+	                return true;
+	            case DataType.NewPlayer:
+	                NewPlayer(msg);
+	                return true;
+	            case DataType.NewPlayerResponse:
+	                NewPlayerResponse(msg);
+	                return true;
+	            case DataType.BroadcastMessage:
+	                RedirectBroadcast(type, msg);
+	                return true;
+	            case DataType.PlayerFinish:
+	                PlayerFinish(msg);
+	                return true;
+				case DataType.ChatMessage:
+					RedirectChatMessage(msg);
+	                return true;
+				case DataType.DownloadMapRequest:
+					DownloadRequest (msg);
+					return true;
             }
             return false;
         }
+
+		void RedirectChatMessage(NetIncomingMessage msg)
+		{
+			/*string playerName = msg.ReadString();
+			string message = msg.ReadString();
+
+			NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+			                             (int)DataType.ChatMessage,
+			                             playerName,
+			                             message
+			                             );*/
+
+			NetManager.RedirectBroadcast(msg);
+
+
+		}
 
 		protected void DownloadRequest(NetIncomingMessage msg)
 		{
@@ -47,7 +63,7 @@ namespace DedicatedServerConsole
 			if (File.Exists (path))
 			{
 				string mapData = File.ReadAllText (path);
-				NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+				NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
 				                             (int)DataType.DownloadMapResponse,
 				                             mapName,
 				                             mapData

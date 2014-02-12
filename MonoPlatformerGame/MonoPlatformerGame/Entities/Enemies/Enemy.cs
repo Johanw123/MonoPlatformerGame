@@ -110,7 +110,7 @@ namespace MonoPlatformerGame
                 {
 
                     // Ignore platforms, unless we are on the ground.
-                    if (true || isOnGround)
+                    if (true)
                     {
                         if (depth.Y < -10)
                             isOnGround = true;

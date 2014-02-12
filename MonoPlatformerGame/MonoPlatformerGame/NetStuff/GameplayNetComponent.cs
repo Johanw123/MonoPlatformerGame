@@ -44,10 +44,10 @@ namespace MonoPlatformerGame
             return false;
         }
 
-		protected void IncomingDownloadMapResponse (NetIncomingMessage msg)
+		protected void IncomingDownloadMapResponse(NetIncomingMessage msg)
 		{
-			string mapName = msg.ReadString ();
-			string mapData = msg.ReadString ();
+			string mapName = msg.ReadString();
+			string mapData = msg.ReadString();
 
 			StreamWriter writer = File.CreateText ("Content/" + mapName);
 			writer.Write (mapData);

@@ -130,6 +130,28 @@ namespace MonoPlatformerGame
 			                  );
 		}
 
+		public static void SendMessageParamsStringsOnly(NetDeliveryMethod method, int type, NetConnection reciever, params string[] stringParameters)
+		{
+			if(stringParameters.Length <= 0)
+				return;
+
+			NetOutgoingMessage oMsg = CreateMessage();
+
+			oMsg.Write(type);
+
+			foreach (string item in stringParameters)
+			{
+				oMsg.Write(item);
+			}
+
+			SendMessage(method, oMsg, reciever);
+		}
+
+		public static void SendMessageParamsStringsOnly(NetDeliveryMethod method, int type, params string[] stringParameters)
+		{
+			SendMessageParamsStringsOnly(method, type, null, stringParameters);
+		}
+
         public static void SendMessageParams(NetDeliveryMethod method, params object[] parameters)
         {
             SendMessageParams(method, null, parameters);
@@ -137,7 +159,7 @@ namespace MonoPlatformerGame
 
         public static void SendMessageParams(NetDeliveryMethod method, NetConnection reciever, params object[] parameters)
         {
-            if (parameters.Count() <= 0)
+            if (parameters.Length <= 0)
                 return;
 
             NetOutgoingMessage oMsg = CreateMessage();
