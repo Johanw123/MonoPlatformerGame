@@ -50,7 +50,7 @@ namespace DedicatedServerConsole
 			                             message
 			                             );*/
 
-			NetManager.RedirectBroadcast(msg);
+			NetManager.RedirectMessage(msg);
 
 
 		}
@@ -83,7 +83,7 @@ namespace DedicatedServerConsole
 
         protected void RedirectBroadcast(DataType type, NetIncomingMessage msg)
         {
-            NetManager.RedirectBroadcast(msg);
+            NetManager.RedirectMessage(msg);
             IncomingData((DataType)msg.ReadInt32(), msg);
         }
 
