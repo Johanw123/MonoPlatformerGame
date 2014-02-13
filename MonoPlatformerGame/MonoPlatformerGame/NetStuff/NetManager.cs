@@ -47,6 +47,7 @@ namespace MonoPlatformerGame
         public static bool IsDedicatedHost { get; set; }
         public static int CreateNewUID() { return ++uID; }
         public static string CurrentLevelName { get; set; }
+        public static bool Initialized { get; set; }
         
         private static int uID = 0;
         private static NetPeer netPeer;
@@ -59,7 +60,6 @@ namespace MonoPlatformerGame
 
         private static void DoInit()
         {
-
             if (IsHost)
             {
                 NetPeerConfiguration config = new NetPeerConfiguration("MonoPlatformerGame");
@@ -69,6 +69,7 @@ namespace MonoPlatformerGame
                 netPeer = new NetServer(config);
                 netPeer.Start();
 				JapeLog.WriteLine("Server Started");
+                Initialized = true;
             }
             else
             {
@@ -81,6 +82,7 @@ namespace MonoPlatformerGame
                 hailMessage.Write("Hello there");
                 netPeer.Start();
                 netPeer.Connect(DataStorage.GetLocalPlayerInfo().ServerIP, DataStorage.GetLocalPlayerInfo().ServerPort, hailMessage);
+                Initialized = true;
             }
             //JapeLog.WriteLine("Connected to Server");
         }
@@ -138,11 +140,13 @@ namespace MonoPlatformerGame
 
 			SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
 			                  (int)DataType.PlayerDisconnected,
+                              client.UID.ToString(),
 			                  client.Name,
                               reason
 			                  );
 
-			connectedClients.Remove(client);
+			//connectedClients.Remove(client.UID);
+            client.Disconnected = true;
 		}
 
 		public static void SendMessageParamsStringsOnly(NetDeliveryMethod method, int type, NetConnection reciever, params string[] stringParameters)

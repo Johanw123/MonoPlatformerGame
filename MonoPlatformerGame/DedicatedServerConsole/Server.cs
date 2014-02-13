@@ -19,9 +19,10 @@ namespace DedicatedServerConsole
 
         public Server()
         {
+            run = true;
             CurrentLevelName = "Level.tmx";
             NetManager.CurrentLevelName = CurrentLevelName;
-            run = true;
+            
             commandsThread = new Thread(ListenForCommands);
             commandsThread.Start();
 
@@ -31,7 +32,7 @@ namespace DedicatedServerConsole
             NetManager.Init(true);
             NetManager.AddComponent(dedicatedServerNetComponent = new DedicatedServerNetComponent());
             NetManager.IsDedicatedHost = true;
-
+            
         }
 
         private void ListenForCommands()
@@ -230,8 +231,6 @@ namespace DedicatedServerConsole
 
         public void Run()
         {
-			float timeElapsed = 0.0f;
-			float deltaTime = 0.0f;
 			int framesElapsed = 0;
 
             while (run)

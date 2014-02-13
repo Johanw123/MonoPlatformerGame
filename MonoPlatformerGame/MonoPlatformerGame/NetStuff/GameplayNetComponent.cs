@@ -37,23 +37,32 @@ namespace MonoPlatformerGame
                 case DataType.ChangeLevel:
                     IncomingChangeLevel(msg);
                     return true;
-                    return true;
                 case DataType.PlayerDisconnected:
                     IncomingPlayerDisconnect(msg);
+                    return true;
+                case DataType.Ping:
+                    IncomingPing(msg);
                     return true;
             }
             return false;
         }
 
+        private void IncomingPing(NetIncomingMessage msg)
+        {
+            NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+                                        (int)DataType.Pong
+                                        );
+        }
 
         private void IncomingPlayerDisconnect(NetIncomingMessage msg)
         {
+            int uID = int.Parse(msg.ReadString());
             string playerName = msg.ReadString();
             string reason = msg.ReadString();
 
 			//int id = msg.ReadInt32();
 			//TODO send id
-			//NetManager.connectedClients.Remove(id);s
+            EntityManager.RemoveNetPlayer(uID);
 
             JapeLog.WriteLine(playerName + "Disconnected" + " - Reason: " + reason);
         }
@@ -164,6 +173,8 @@ namespace MonoPlatformerGame
         protected abstract void IncomingGameState(NetIncomingMessage msg);
         protected abstract void NewPlayer(NetIncomingMessage msg);
         protected abstract void SendGameState();
+
+        
 
        
 

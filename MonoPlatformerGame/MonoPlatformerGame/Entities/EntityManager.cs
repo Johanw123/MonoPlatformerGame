@@ -282,6 +282,7 @@ namespace MonoPlatformerGame
             }
             //JapeLog.WriteLine(bigList.Count());
             RemoveDeadEntities(bigList);
+            RemoveDisconnectedNetPlayers(netPlayers.ToArray());
         }
 
         private static void RemoveDeadEntities(Entity[] list)
@@ -292,6 +293,19 @@ namespace MonoPlatformerGame
                 {
                     EntityManager.rectangleTree.Remove(list[i]);
                     dynamicEntities.Remove(list[i]);
+                }
+            }
+
+        }
+
+        private static void RemoveDisconnectedNetPlayers(NetPlayer[] list)
+        {
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (list[i].Disconnected)
+                {
+                    netPlayers.Remove(list[i]);
+                    NetManager.connectedClients.Remove(list[i].UID);
                 }
             }
 
@@ -345,7 +359,13 @@ namespace MonoPlatformerGame
         }
 		public static void RemoveNetPlayer(int UID)
 		{
-
+            foreach (var item in netPlayers)
+            {
+                if (item.UID == UID)
+                {
+                    item.Disconnected = true;
+                }
+            }
 		}
         public static void AddDynamicEntity(Entity e)
         {

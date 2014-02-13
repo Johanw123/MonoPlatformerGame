@@ -13,6 +13,7 @@ namespace MonoPlatformerGame
         }
 
         public int UID { get; set; }
+        public bool Disconnected { get; set; }
 
         public override void Update(float deltaTime)
         {

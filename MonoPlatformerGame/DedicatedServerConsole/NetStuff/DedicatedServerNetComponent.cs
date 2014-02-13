@@ -43,29 +43,49 @@ namespace DedicatedServerConsole
 
 		public void Update()
 		{
+            if (!NetManager.Initialized)
+                return;
+
 			SendGameState();
 			PingPlayers();
+            RemoveDisconnectedClients();
 		}
 
 		void IncomingPong(NetIncomingMessage msg)
 		{
 			NetManager.GetClient(msg.SenderConnection).TimeSinceLastPing = 0;
-
-
 		}
+
+        private static void RemoveDisconnectedClients()
+        {
+            List<ClientInfo> list = new List<ClientInfo>();
+            foreach (var item in NetManager.connectedClients.Values)
+	        {
+                list.Add(item);
+	        }
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Disconnected)
+                {
+                    NetManager.connectedClients.Remove(list[i].UID);
+                }
+            }
+        }
 
 		void PingPlayers()
 		{
 			foreach(var pair in NetManager.connectedClients)
 			{
-				if(++pair.Value.TimeSinceLastPing > 5000)
+				if(++pair.Value.TimeSinceLastPing > 500000)
 				{
-					NetManager.KickPlayer(pair.Value.Name);
+                    pair.Value.ClientNetConnection.Disconnect("you are not responding");
+                    pair.Value.Disconnected = true;
 				}
 			}
 
 			++pingDelay;
-			if(pingDelay % 15 == 0)
+			if(pingDelay % 150 == 0)
 			{
 				NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
 				                             (int)DataType.Ping

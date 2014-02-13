@@ -17,7 +17,8 @@ namespace MonoPlatformerGame
             get;
             set;
         }
-		public int TimeSinceLastPing { get; set; }
+        public int TimeSinceLastPing { get; set; }
+        public bool Disconnected { get; set; }
         //public NetPlayer NetPlayer
         //{
         //    get;
