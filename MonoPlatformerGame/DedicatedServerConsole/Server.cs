@@ -230,10 +230,15 @@ namespace DedicatedServerConsole
 
         public void Run()
         {
+			float timeElapsed = 0.0f;
+			float deltaTime = 0.0f;
+			int framesElapsed = 0;
+
             while (run)
             {
                 NetManager.Listen();
                 dedicatedServerNetComponent.Update();
+				++framesElapsed;
             }
         }
 

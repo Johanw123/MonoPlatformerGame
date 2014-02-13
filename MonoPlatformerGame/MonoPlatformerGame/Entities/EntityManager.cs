@@ -343,6 +343,10 @@ namespace MonoPlatformerGame
         {
             netPlayers.Add(player);
         }
+		public static void RemoveNetPlayer(int UID)
+		{
+
+		}
         public static void AddDynamicEntity(Entity e)
         {
             dynamicEntities.Add(e);

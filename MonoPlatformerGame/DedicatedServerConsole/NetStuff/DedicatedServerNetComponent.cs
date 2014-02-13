@@ -10,6 +10,8 @@ namespace DedicatedServerConsole
 {
     class DedicatedServerNetComponent : NetComponent
     {
+		private int pingDelay = 0;
+
         public override bool IncomingData(DataType type, NetIncomingMessage msg)
         {
             switch (type)
@@ -32,9 +34,44 @@ namespace DedicatedServerConsole
 				case DataType.ChatMessage:
 					RedirectChatMessage(msg);
 	                return true;
+				case DataType.Pong:
+					IncomingPong(msg);
+					return true;
             }
             return false;
         }
+
+		public void Update()
+		{
+			SendGameState();
+			PingPlayers();
+		}
+
+		void IncomingPong(NetIncomingMessage msg)
+		{
+			NetManager.GetClient(msg.SenderConnection).TimeSinceLastPing = 0;
+
+
+		}
+
+		void PingPlayers()
+		{
+			foreach(var pair in NetManager.connectedClients)
+			{
+				if(++pair.Value.TimeSinceLastPing > 5000)
+				{
+					NetManager.KickPlayer(pair.Value.Name);
+				}
+			}
+
+			++pingDelay;
+			if(pingDelay % 15 == 0)
+			{
+				NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+				                             (int)DataType.Ping
+				                             );
+			}
+		}
 
 		void RedirectChatMessage(NetIncomingMessage msg)
 		{
@@ -94,10 +131,7 @@ namespace DedicatedServerConsole
             JapeLog.WriteLine("Remote ID recieved: " + ownUid);
         }
 
-        public void Update()
-        {
-            SendGameState();
-        }
+        
 
         protected void NewPlayer(NetIncomingMessage msg)
         {

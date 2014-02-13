@@ -106,6 +106,18 @@ namespace MonoPlatformerGame
 			return null;
 		}
 
+		public static ClientInfo GetClient(NetConnection connection)
+		{
+			foreach (var item in connectedClients)
+			{
+				if (item.Value.ClientNetConnection == connection)
+				{
+					return item.Value;
+				}
+			}
+			return null;
+		}
+
 		public static void KickPlayer(string name)
 		{
 			ClientInfo client = GetClient (name);
@@ -120,7 +132,7 @@ namespace MonoPlatformerGame
 
 		private static void KickClient(ClientInfo client)
 		{
-			client.ClientNetConnection.Disconnect ("You were kicked by the host");
+			client.ClientNetConnection.Disconnect("You were kicked by the host");
 
             string reason = "Kicked in the ass";
 
@@ -129,6 +141,8 @@ namespace MonoPlatformerGame
 			                  client.Name,
                               reason
 			                  );
+
+			connectedClients.Remove(client);
 		}
 
 		public static void SendMessageParamsStringsOnly(NetDeliveryMethod method, int type, NetConnection reciever, params string[] stringParameters)

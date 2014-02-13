@@ -45,25 +45,17 @@ namespace MonoPlatformerGame
             return false;
         }
 
-		protected void IncomingDownloadMapResponse(NetIncomingMessage msg)
-		{
-			string mapName = msg.ReadString();
-			string mapData = msg.ReadString();
-
-			StreamWriter writer = File.CreateText ("Content/" + mapName);
-			writer.Write (mapData);
-			writer.Close ();
-            OnChangedLevel(mapName);
-            
-		}
 
         private void IncomingPlayerDisconnect(NetIncomingMessage msg)
         {
             string playerName = msg.ReadString();
             string reason = msg.ReadString();
 
-            JapeLog.WriteLine(playerName + "Disconnected" + " - Reason: " + reason);
+			//int id = msg.ReadInt32();
+			//TODO send id
+			//NetManager.connectedClients.Remove(id);s
 
+            JapeLog.WriteLine(playerName + "Disconnected" + " - Reason: " + reason);
         }
 
         protected void PlayerFinish(NetIncomingMessage msg)
