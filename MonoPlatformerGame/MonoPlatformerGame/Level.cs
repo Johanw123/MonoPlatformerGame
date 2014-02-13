@@ -15,7 +15,7 @@ namespace MonoPlatformerGame
         public Map Map { get { return mCurrentMap; } }
 		public bool LevelLoaded { get; set; }
 		public string LevelName { get; set; }
-
+		public static GameMode CurrentGameMode { get; set; }
 
         public Level(ContentManager content)
         {
@@ -39,6 +39,8 @@ namespace MonoPlatformerGame
 				LevelName = level;
 				LevelLoaded = true;
                 NetManager.CurrentLevelName = LevelName;
+				//CurrentGameMode = GameMode.TimeTrial;
+				CurrentGameMode = GameMode.Race;
             }
         }
 

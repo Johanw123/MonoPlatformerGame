@@ -6,11 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+public delegate void NextLevelEventHandler();
+
 namespace DedicatedServerConsole
 {
     class DedicatedServerNetComponent : NetComponent
     {
 		private int pingDelay = 0;
+		public event NextLevelEventHandler NextLevelEvent;
 
         public override bool IncomingData(DataType type, NetIncomingMessage msg)
         {
@@ -47,9 +50,32 @@ namespace DedicatedServerConsole
                 return;
 
 			SendGameState();
+			CheckPlayersDead();
 			PingPlayers();
             RemoveDisconnectedClients();
 		}
+
+		private void CheckPlayersDead()
+		{	
+			if(Server.CurrentGameMode == GameMode.TimeTrial)
+				return;
+
+			bool allDead = true;
+			foreach(var item in  NetManager.connectedClients.Values)
+			{
+				if(item.X != 3000)
+				{
+					allDead = false;
+				}
+			}
+
+			if(allDead)
+			{
+				if(NextLevelEvent != null)
+					NextLevelEvent();
+			}
+		}
+		
 
 		void IncomingPong(NetIncomingMessage msg)
 		{
@@ -114,7 +140,13 @@ namespace DedicatedServerConsole
             int who = msg.ReadInt32();
             int time = msg.ReadInt32();
 
-            NetManager.PlayerReachedFinish(who, time);
+
+			if(NextLevelEvent != null)
+				NextLevelEvent();
+
+
+
+            //NetManager.PlayerReachedFinish(who, time);
         }
 
         protected void RedirectBroadcast(DataType type, NetIncomingMessage msg)

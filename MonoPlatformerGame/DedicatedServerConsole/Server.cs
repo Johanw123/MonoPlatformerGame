@@ -9,31 +9,71 @@ using Lidgren.Network;
 
 namespace DedicatedServerConsole
 {
+	public enum GameMode
+	{
+		//You have a cerain time to finish the course and the best time wins (track-mania style).
+		//several tries, dying and reaching goal will put player back at start to try again
+		TimeTrial,
+
+		//First to the goal is the winner. Also if all dies, next map will be loaded
+		//A fast pased game with high tempo
+		Race,
+
+		//Screen scrolls the same for all players. One life only, survivers that reach the goal are rewarded with a point.
+		//Most point at end of certain ammount of levels will win.
+		//(Coop/Versus?)
+		Survival
+	}
+
     class Server
     {
+		public static GameMode CurrentGameMode { get; set; }
         bool run;
+		int curr = 0;
         DedicatedServerNetComponent dedicatedServerNetComponent;
         Thread commandsThread;
         Log log;
         public string CurrentLevelName { get; set; }
+		List<string> mapRotation = new List<string>{
+			"Race1.tmx",
+			"Race2.tmx",
+			"Race3.tmx",
+			"Race4.tmx",
+			"Race5.tmx"
+		};
 
         public Server()
         {
             run = true;
-            CurrentLevelName = "Level.tmx";
+            //CurrentLevelName = "Level.tmx";
+			CurrentLevelName = mapRotation[0];
             NetManager.CurrentLevelName = CurrentLevelName;
-            
+			CurrentGameMode = GameMode.Race;
             commandsThread = new Thread(ListenForCommands);
             commandsThread.Start();
 
             log = new JapeLog();
             Log.Init(log);
 
+			dedicatedServerNetComponent = new DedicatedServerNetComponent();
+			dedicatedServerNetComponent.NextLevelEvent += NextLevel;
+
             NetManager.Init(true);
-            NetManager.AddComponent(dedicatedServerNetComponent = new DedicatedServerNetComponent());
-            NetManager.IsDedicatedHost = true;
-            
+			NetManager.AddComponent(dedicatedServerNetComponent);
+            NetManager.IsDedicatedHost = true;    
         }
+
+
+		private void NextLevel()
+		{
+			++curr;
+			if(curr >= mapRotation.Count)
+				curr = 0;
+
+			string levelName = mapRotation[curr];
+
+			ChangeLevel(levelName);
+		}
 
         private void ListenForCommands()
         {
@@ -101,18 +141,7 @@ namespace DedicatedServerConsole
 
 		private void StartCommand()
 		{
-            string path = "Maps/" + CurrentLevelName;
-
-            if (File.Exists(path))
-            {
-                string levelData = File.ReadAllText(path);
-
-                NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-                                             (int)DataType.ChangeLevel,
-                                             CurrentLevelName,
-                                             levelData
-                                             );
-            }
+			ChangeLevel(CurrentLevelName);
 
             NetManager.StartGame();
 		}
@@ -122,18 +151,25 @@ namespace DedicatedServerConsole
 			if (commandArgs.Count > 0)
 			{
                 string levelName = commandArgs[0] + ".tmx";
-                string path = "Maps/" + levelName;
 
-                if (File.Exists(path))
-                {
-                    string levelData = File.ReadAllText(path);
-                    NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-                                                 (int)DataType.ChangeLevel,
-                                                 levelName,
-                                                 levelData
-                                                 );
-                }
+				ChangeLevel(levelName);
+			}
+		}
 
+		private void ChangeLevel(string levelName)
+		{
+			string path = "Maps/" + levelName;
+
+			if (File.Exists(path))
+			{
+				//TODO
+				//Läsa in och kolla game-mode...
+				string levelData = File.ReadAllText(path);
+				NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+				                                        (int)DataType.ChangeLevel,
+				                                        levelName,
+				                                        levelData
+				                                        );
 			}
 		}
 

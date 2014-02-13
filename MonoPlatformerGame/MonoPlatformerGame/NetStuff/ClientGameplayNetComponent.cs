@@ -28,14 +28,26 @@ namespace MonoPlatformerGame
             }
         }
 
+		float previousX;
+		float previousY;
         protected override void SendGameState()
         {
-            NetManager.SendMessageParams(NetDeliveryMethod.UnreliableSequenced,
-                   (int)DataType.GameState,
-                   NetManager.RemoteUID,
-                   EntityManager.GetPlayer().Position.X,
-                   EntityManager.GetPlayer().Position.Y
-                   );
+			float currentX = EntityManager.GetPlayer().Position.X;
+			float currentY = EntityManager.GetPlayer().Position.Y;
+
+			if(previousX == currentX && previousY == currentY)
+				return;
+
+			NetManager.SendMessageParams(NetDeliveryMethod.UnreliableSequenced,
+			                                     (int)DataType.GameState,
+			                                     NetManager.RemoteUID,
+			                                     currentX,
+			                                     currentY
+												 );
+			
+
+			previousX = currentX;
+			previousY = currentY;
         }
 
         protected override void IncomingGameState(NetIncomingMessage msg)

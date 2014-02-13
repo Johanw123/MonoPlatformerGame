@@ -89,7 +89,6 @@ namespace MonoPlatformerGame
             PauseTexture.SetData(new Color[] { Color.White });
             EntityManager.Init(GraphicsDevice);
             level = new Level(Content);
-            //level.LoadLevel("Level10.tmx");
            
             NetManager.Init(false);
 
@@ -152,5 +151,4 @@ namespace MonoPlatformerGame
             base.Draw(gameTime);
         }
     }
-
 }

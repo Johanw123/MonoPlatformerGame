@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace MonoPlatformerGame
@@ -14,15 +13,17 @@ namespace MonoPlatformerGame
         static Dictionary<string, Texture2D> mTextures;
         static Dictionary<string, SpriteFont> mFonts;
 
+		private static Texture2D defaultTexture;
+
         public static Texture2D GetTexture(string name)
         {
             Texture2D texture;
 
             mTextures.TryGetValue(name, out texture);
 
-            return texture;
-
+			return texture ?? defaultTexture;
         }
+
         public static SpriteFont GetFont(string name)
         {
             SpriteFont font;
@@ -48,6 +49,7 @@ namespace MonoPlatformerGame
         {
             Texture2D tex = new Texture2D(graphicsDevice, 2, 2);
             tex.SetData(new Color[] { Color.White, Color.White, Color.White, Color.White });
+			defaultTexture = tex;
             mTextures.Add("pixel", tex);
         }
 
@@ -59,7 +61,7 @@ namespace MonoPlatformerGame
             {
 				string fileName;
 
-                if (file.Contains('\\'))
+                if (file.Contains("\\"))
                     fileName = file.Substring(file.LastIndexOf('\\') + 1);
                 else
                     fileName = file.Substring(file.LastIndexOf('/') + 1);
@@ -80,7 +82,7 @@ namespace MonoPlatformerGame
             {
 				string fileName;
 
-                if(file.Contains('\\'))
+                if(file.Contains("\\"))
                     fileName = file.Substring(file.LastIndexOf('\\') + 1);
                 else
                     fileName = file.Substring(file.LastIndexOf('/') + 1);
