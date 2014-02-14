@@ -55,9 +55,7 @@ namespace MonoPlatformerGame
         public static Dictionary<int, ClientInfo> connectedClients = new Dictionary<int, ClientInfo>();
        
         private static Thread t = new Thread(DoThreadInit);
-
-        
-
+		
         private static void DoInit()
         {
             if (IsHost)
@@ -66,7 +64,9 @@ namespace MonoPlatformerGame
                 config.Port = DataStorage.GetLocalPlayerInfo().ServerPort;
                 config.MaximumConnections = 32;
                 config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+				config.EnableUPnP = true;
                 netPeer = new NetServer(config);
+				netPeer.UPnP.ForwardPort(2300, DataStorage.GetLocalPlayerInfo().ServerPort);
                 netPeer.Start();
 				JapeLog.WriteLine("Server Started");
                 Initialized = true;
@@ -203,12 +203,12 @@ namespace MonoPlatformerGame
         {
             if(IsHost)
             {
-
-                //SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableSequenced, 
-                //                  (int)DataType.StartGame,
-                //                  levelName
-                //                  );
-                
+				/*
+                SendMessageParams(NetDeliveryMethod.ReliableSequenced, 
+                                  (int)DataType.StartGame,
+				                  CurrentLevelName
+                                  );
+                */
                 JapeLog.WriteLine(String.Format("Starting the game with {0} number of players", (IsDedicatedHost) ? connectedClients.Count : connectedClients.Count + 1));
 
                 foreach (var item in components)

@@ -60,19 +60,24 @@ namespace DedicatedServerConsole
 			if(Server.CurrentGameMode == GameMode.TimeTrial)
 				return;
 
-			bool allDead = true;
-			foreach(var item in  NetManager.connectedClients.Values)
+			if(NetManager.connectedClients.Values.Count >= 1)
 			{
-				if(item.X != 3000)
-				{
-					allDead = false;
-				}
-			}
 
-			if(allDead)
-			{
-				if(NextLevelEvent != null)
-					NextLevelEvent();
+				bool allDead = true;
+				foreach(var item in  NetManager.connectedClients.Values)
+				{
+					if(item.X != 3000)
+					{
+						allDead = false;
+					}
+				}
+
+				if(allDead)
+				{
+					Console.WriteLine("ALl players dead");
+					if(NextLevelEvent != null)
+						NextLevelEvent();
+				}
 			}
 		}
 		

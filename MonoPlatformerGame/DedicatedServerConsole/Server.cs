@@ -44,13 +44,11 @@ namespace DedicatedServerConsole
 
         public Server()
         {
-            run = true;
             //CurrentLevelName = "Level.tmx";
 			CurrentLevelName = mapRotation[0];
             NetManager.CurrentLevelName = CurrentLevelName;
 			CurrentGameMode = GameMode.Race;
-            commandsThread = new Thread(ListenForCommands);
-            commandsThread.Start();
+           
 
             log = new JapeLog();
             Log.Init(log);
@@ -60,7 +58,12 @@ namespace DedicatedServerConsole
 
             NetManager.Init(true);
 			NetManager.AddComponent(dedicatedServerNetComponent);
-            NetManager.IsDedicatedHost = true;    
+            NetManager.IsDedicatedHost = true;
+
+			run = true;
+
+			commandsThread = new Thread(ListenForCommands);
+			commandsThread.Start();
         }
 
 
@@ -141,9 +144,22 @@ namespace DedicatedServerConsole
 
 		private void StartCommand()
 		{
-			ChangeLevel(CurrentLevelName);
+			string path = "Maps/" + CurrentLevelName;
 
-            NetManager.StartGame();
+				if(File.Exists(path))
+				{
+					//TODO
+					//Läsa in och kolla game-mode...
+					string levelData = File.ReadAllText(path);
+					NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+					                                       (int)DataType.StartGame,
+				                                           CurrentLevelName,
+					                                       levelData
+					);
+				Console.WriteLine("Game started");
+				}
+				NetManager.StartGame();
+
 		}
 
 		private void ChangeLevelCommand(List<string> commandArgs)
@@ -170,6 +186,8 @@ namespace DedicatedServerConsole
 				                                        levelName,
 				                                        levelData
 				                                        );
+
+				Console.WriteLine("Level Changed to: " + path);
 			}
 		}
 

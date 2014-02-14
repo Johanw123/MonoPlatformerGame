@@ -89,12 +89,19 @@
     <Content Include="Maps\Level32.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Maps\Race1.tmx" />
-    <None Include="Maps\Race2.tmx" />
-    <None Include="Maps\Race3.tmx" />
-    <None Include="Maps\Race4.tmx" />
-    <None Include="Maps\Race5.tmx" />
-    <Content Include="Server.cs">
+    <Content Include="Maps\Race1.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Race2.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Race3.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Race4.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Race5.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
