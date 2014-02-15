@@ -78,7 +78,7 @@ namespace Moose
 			switch (status)
 			{
 				case NetConnectionStatus.Connected:
-					Program.Print("Client connected: " + incoming.SenderConnection + " (" + incoming.SenderEndPoint.Address + ":" + incoming.SenderEndPoint.Port + ")");
+					Program.Print("Client connected: " + incoming.SenderConnection + " (" + incoming.SenderEndpoint.Address + ":" + incoming.SenderEndpoint.Port + ")");
 					break;
 				default:
 					Program.Print(incoming.SenderConnection + ": " + status + " {" + incoming.ReadString() + "}");
