@@ -101,6 +101,7 @@ namespace DedicatedServerConsole
 
                 switch (command.ToUpper())
                 {
+                    case "RESTART":
                     case "START":
                         StartCommand();
                         break;
@@ -137,6 +138,10 @@ namespace DedicatedServerConsole
                     case "CHANGELEVEL":
                     case "LEVEL":
                         ChangeLevelCommand(commandArgs);
+                        break;
+                    case "CRASH":
+                    case "SIMULATECRASH":
+                        SimulateCrashCommand(commandArgs);
                         break;
                 }
             }
@@ -293,6 +298,11 @@ namespace DedicatedServerConsole
                 dedicatedServerNetComponent.Update();
 				++framesElapsed;
             }
+        }
+
+        private void SimulateCrashCommand(List<string> commandArgs)
+        {
+            throw new ExecutionEngineException("This is a simulated crash exception");
         }
 
         

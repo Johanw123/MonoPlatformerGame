@@ -66,8 +66,8 @@ namespace MonoPlatformerGame
                 config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
 				config.EnableUPnP = true;
                 netPeer = new NetServer(config);
-				netPeer.UPnP.ForwardPort(2300, DataStorage.GetLocalPlayerInfo().ServerPort);
                 netPeer.Start();
+                netPeer.UPnP.ForwardPort(DataStorage.GetLocalPlayerInfo().ServerPort, "Server port");
 				JapeLog.WriteLine("Server Started");
                 Initialized = true;
             }
@@ -396,6 +396,16 @@ namespace MonoPlatformerGame
                             }
                             else
                                 JapeLog.WriteLine("This server is Dedicated (Not sending a new player message)");
+                        }
+                        if (msg.SenderConnection.Status == NetConnectionStatus.Disconnected)
+                        {
+                            JapeLog.WriteLine("Player Disconnected");
+                            //if player is in connected => remove from play
+                        }
+                        if (msg.SenderConnection.Status == NetConnectionStatus.Disconnecting)
+                        {
+                            JapeLog.WriteLine("Player Disconnecting");
+                            //if player is in connected => remove from play
                         }
                         break;
                     case NetIncomingMessageType.VerboseDebugMessage:
