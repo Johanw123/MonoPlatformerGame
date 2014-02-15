@@ -6,10 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+public delegate void NextLevelEventHandler();
+
 namespace DedicatedServerConsole
 {
     class DedicatedServerNetComponent : NetComponent
     {
+		private int pingDelay = 0;
+		public event NextLevelEventHandler NextLevelEvent;
+
         public override bool IncomingData(DataType type, NetIncomingMessage msg)
         {
             switch (type)
@@ -32,12 +37,92 @@ namespace DedicatedServerConsole
 				case DataType.ChatMessage:
 					RedirectChatMessage(msg);
 	                return true;
-				case DataType.DownloadMapRequest:
-					DownloadRequest(msg);
+				case DataType.Pong:
+					IncomingPong(msg);
 					return true;
             }
             return false;
         }
+
+		public void Update()
+		{
+            if (!NetManager.Initialized)
+                return;
+
+			SendGameState();
+			CheckPlayersDead();
+			PingPlayers();
+            RemoveDisconnectedClients();
+		}
+
+		private void CheckPlayersDead()
+		{	
+			if(Server.CurrentGameMode == GameMode.TimeTrial)
+				return;
+
+			if(NetManager.connectedClients.Values.Count >= 1)
+			{
+
+				bool allDead = true;
+				foreach(var item in  NetManager.connectedClients.Values)
+				{
+					if(item.X != 3000)
+					{
+						allDead = false;
+					}
+				}
+
+				if(allDead)
+				{
+					Console.WriteLine("ALl players dead");
+					if(NextLevelEvent != null)
+						NextLevelEvent();
+				}
+			}
+		}
+		
+
+		void IncomingPong(NetIncomingMessage msg)
+		{
+			NetManager.GetClient(msg.SenderConnection).TimeSinceLastPing = 0;
+		}
+
+        private static void RemoveDisconnectedClients()
+        {
+            List<ClientInfo> list = new List<ClientInfo>();
+            foreach (var item in NetManager.connectedClients.Values)
+	        {
+                list.Add(item);
+	        }
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Disconnected)
+                {
+                    NetManager.connectedClients.Remove(list[i].UID);
+                }
+            }
+        }
+
+		void PingPlayers()
+		{
+			foreach(var pair in NetManager.connectedClients)
+			{
+				if(++pair.Value.TimeSinceLastPing > 500000)
+				{
+                    pair.Value.ClientNetConnection.Disconnect("you are not responding");
+                    pair.Value.Disconnected = true;
+				}
+			}
+
+			++pingDelay;
+			if(pingDelay % 150 == 0)
+			{
+				NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+				                             (int)DataType.Ping
+				                             );
+			}
+		}
 
 		void RedirectChatMessage(NetIncomingMessage msg)
 		{
@@ -55,30 +140,18 @@ namespace DedicatedServerConsole
 
 		}
 
-		protected void DownloadRequest(NetIncomingMessage msg)
-		{
-			string mapName = msg.ReadString();
-			string path = "Maps/" + mapName;
-
-			if (File.Exists (path))
-			{
-				string mapData = File.ReadAllText (path);
-				NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-				                             (int)DataType.DownloadMapResponse,
-				                             mapName,
-				                             mapData
-				                             );
-			}
-
-
-		}
-
         protected void PlayerFinish(NetIncomingMessage msg)
         {
             int who = msg.ReadInt32();
             int time = msg.ReadInt32();
 
-            NetManager.PlayerReachedFinish(who, time);
+
+			if(NextLevelEvent != null)
+				NextLevelEvent();
+
+
+
+            //NetManager.PlayerReachedFinish(who, time);
         }
 
         protected void RedirectBroadcast(DataType type, NetIncomingMessage msg)
@@ -115,10 +188,7 @@ namespace DedicatedServerConsole
             JapeLog.WriteLine("Remote ID recieved: " + ownUid);
         }
 
-        public void Update()
-        {
-            SendGameState();
-        }
+        
 
         protected void NewPlayer(NetIncomingMessage msg)
         {
@@ -134,9 +204,50 @@ namespace DedicatedServerConsole
             clientInfo.UID = uid;
             NetManager.connectedClients.Add(clientInfo.UID, clientInfo);
 
-            NetManager.AlertOthersNewPlayer(msg.SenderConnection, clientInfo);
+            AlertOthersNewPlayer(msg.SenderConnection, clientInfo);
 
             JapeLog.WriteLine("New Player Added: " + name);
+        }
+
+        protected static void AlertOthersNewPlayer(NetConnection excludeConnection, ClientInfo info)
+        {
+            foreach (var dic in NetManager.connectedClients)
+            {
+                var conn = dic.Value.ClientNetConnection;
+
+                if (conn != excludeConnection)
+                {
+                    /*SendMessageParams(NetDeliveryMethod.ReliableOrdered, conn,
+                        (int)DataType.NewPlayer,
+                        info.Name,
+                        info.UID
+                        );*/
+                    NetOutgoingMessage oMsg = NetManager.CreateMessage();
+                    oMsg.Write((int)DataType.NewPlayer);
+                    oMsg.Write(info.Name);
+                    oMsg.Write(info.UID);
+                    
+                    NetManager.SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg, conn);
+                }
+            }
+
+            NetOutgoingMessage oMsg2 = NetManager.CreateMessage();
+            oMsg2.Write((int)DataType.NewPlayerResponse);
+            oMsg2.Write(info.UID);
+            oMsg2.Write(NetManager.GameStarted);
+            oMsg2.Write(NetManager.CurrentLevelName);
+
+            oMsg2.Write(NetManager.connectedClients.Count - 1);
+            foreach (var item in NetManager.connectedClients)
+            {
+                if (info.UID == item.Value.UID)
+                    continue;
+
+                oMsg2.Write(item.Value.Name);
+                oMsg2.Write(item.Value.UID);
+            }
+
+            NetManager.SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg2, excludeConnection);
         }
 
         protected void SendGameState()

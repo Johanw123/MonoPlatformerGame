@@ -35,10 +35,9 @@ namespace MonoPlatformerGame
         private Level level;
         Log log;
         private GameplayNetComponent gameplayNetComponent;
-        bool isHost = false;
         Texture2D PauseTexture;
 
-        public Game1(String[] args)
+        public Game1()
         {
 			_graphics = new GraphicsDeviceManager(this)
             {
@@ -47,12 +46,6 @@ namespace MonoPlatformerGame
                 //PreferredBackBufferWidth = 1280
                 
 			};
-
-            if (args != null && args.GetLength(0) > 0)
-            {
-                if (args[0] == "Host")
-                    isHost = true;
-            }
         }
 
 		protected override void Initialize()
@@ -69,15 +62,17 @@ namespace MonoPlatformerGame
 			//	IsFullScreen = true
 			//};
 		}
+
 		protected override void BeginRun()
 		{
 			base.BeginRun();
 		}
+
         void gameplayNetComponent_ChangeLevelEvent(string levelName)
         {
             level.UnloadLevel();
             level.LoadLevel(levelName);
-            NetManager.StartGame(levelName);
+            NetManager.StartGame();
         }
 
         protected override void LoadContent()
@@ -94,17 +89,10 @@ namespace MonoPlatformerGame
             PauseTexture.SetData(new Color[] { Color.White });
             EntityManager.Init(GraphicsDevice);
             level = new Level(Content);
-            //level.LoadLevel("Level10.tmx");
-            
+           
+            NetManager.Init(false);
 
-            JapeLog.WriteLine("IsHost: " + isHost);
-
-            NetManager.Init(isHost);
-
-            if (isHost)
-                gameplayNetComponent = new HostGameplayNetComponent();
-            else
-                gameplayNetComponent = new ClientGameplayNetComponent();
+            gameplayNetComponent = new ClientGameplayNetComponent();
 
             gameplayNetComponent.ChangeLevelEvent += gameplayNetComponent_ChangeLevelEvent;
 
@@ -163,5 +151,4 @@ namespace MonoPlatformerGame
             base.Draw(gameTime);
         }
     }
-
 }

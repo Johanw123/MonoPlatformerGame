@@ -4,33 +4,80 @@ using System.Text;
 using System.Threading.Tasks;
 using MonoPlatformerGame;
 using System.Threading;
+using System.IO;
+using Lidgren.Network;
 
 namespace DedicatedServerConsole
 {
+	public enum GameMode
+	{
+		//You have a cerain time to finish the course and the best time wins (track-mania style).
+		//several tries, dying and reaching goal will put player back at start to try again
+		TimeTrial,
+
+		//First to the goal is the winner. Also if all dies, next map will be loaded
+		//A fast pased game with high tempo
+		Race,
+
+		//Screen scrolls the same for all players. One life only, survivers that reach the goal are rewarded with a point.
+		//Most point at end of certain ammount of levels will win.
+		//(Coop/Versus?)
+		Survival
+	}
+
     class Server
     {
+		public static GameMode CurrentGameMode { get; set; }
         bool run;
+		int curr = 0;
         DedicatedServerNetComponent dedicatedServerNetComponent;
         Thread commandsThread;
         Log log;
         public string CurrentLevelName { get; set; }
+		List<string> mapRotation = new List<string>{
+			"Race1.tmx",
+			"Race2.tmx",
+			"Race3.tmx",
+			"Race4.tmx",
+			"Race5.tmx"
+		};
 
         public Server()
         {
-            CurrentLevelName = "Level.tmx";
+            //CurrentLevelName = "Level.tmx";
+			CurrentLevelName = mapRotation[0];
             NetManager.CurrentLevelName = CurrentLevelName;
-            run = true;
-            commandsThread = new Thread(ListenForCommands);
-            commandsThread.Start();
+			CurrentGameMode = GameMode.Race;
+           
 
             log = new JapeLog();
             Log.Init(log);
 
+			dedicatedServerNetComponent = new DedicatedServerNetComponent();
+			dedicatedServerNetComponent.NextLevelEvent += NextLevel;
+
             NetManager.Init(true);
-            NetManager.AddComponent(dedicatedServerNetComponent = new DedicatedServerNetComponent());
+			NetManager.AddComponent(dedicatedServerNetComponent);
             NetManager.IsDedicatedHost = true;
 
+			run = true;
+
+			commandsThread = new Thread(ListenForCommands);
+			commandsThread.Start();
         }
+
+
+		private void NextLevel()
+		{
+			++curr;
+			if(curr >= mapRotation.Count)
+				curr = 0;
+
+			string levelName = mapRotation[curr];
+
+			ChangeLevel(levelName);
+		}
+
         private void ListenForCommands()
         {
             while (run)
@@ -54,58 +101,93 @@ namespace DedicatedServerConsole
 
                 switch (command.ToUpper())
                 {
-				case "START":
-					StartCommand();
-                    break;
-				case "KICK":
-					KickCommand(commandArgs);
-					break;
-				case "BAN":
-					BanCommand(commandArgs);
-					break;
-				case "CONNECTEDPLAYERS":
-				case "LISTPLAYERS":
-				case "PLAYERS":
-				case "CLIENTS":
-				case "LISTCLIENTS":
-				case "CONNECTEDCLIENTS":
-					ListClientsCommand(commandArgs);
-					break;
-				case "/T":
-				case "/W":
-				case "CHAT":
-				case "SPEAK":
-				case "TELL":
-				case "SAY":
-					SayCommand(commandArgs);
-					break;
-				case "CHANGEMAP":
-				case "MAP":
-				case "CHANGELEVEL":
-				case "LEVEL":
-					ChangeLevelCommand(commandArgs);
-                    break;
+                    case "START":
+                        StartCommand();
+                        break;
+                    case "KICK":
+                        KickCommand(commandArgs);
+                        break;
+                    case "BAN":
+                        BanCommand(commandArgs);
+					    break;
+                    case "LISTLEVELS":
+                    case "LEVELS":
+                    case "LISTMAPS":
+                    case "MAPS":
+                        ListLevelsCommand(commandArgs);
+                        break;
+                    case "CONNECTEDPLAYERS":
+                    case "LISTPLAYERS":
+                    case "PLAYERS":
+                    case "CLIENTS":
+                    case "LISTCLIENTS":
+                    case "CONNECTEDCLIENTS":
+                        ListClientsCommand(commandArgs);
+                        break;
+                    case "/T":
+                    case "/W":
+                    case "CHAT":
+                    case "SPEAK":
+                    case "TELL":
+                    case "SAY":
+                        SayCommand(commandArgs);
+                        break;
+                    case "CHANGEMAP":
+                    case "MAP":
+                    case "CHANGELEVEL":
+                    case "LEVEL":
+                        ChangeLevelCommand(commandArgs);
+                        break;
                 }
             }
         }
 
 		private void StartCommand()
 		{
-            NetManager.StartGame(CurrentLevelName);
+			string path = "Maps/" + CurrentLevelName;
+
+				if(File.Exists(path))
+				{
+					//TODO
+					//Läsa in och kolla game-mode...
+					string levelData = File.ReadAllText(path);
+					NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+					                                       (int)DataType.StartGame,
+				                                           CurrentLevelName,
+					                                       levelData
+					);
+				Console.WriteLine("Game started");
+				}
+				NetManager.StartGame();
+
 		}
+
 		private void ChangeLevelCommand(List<string> commandArgs)
 		{
 			if (commandArgs.Count > 0)
 			{
-				string levelName = commandArgs[0] + ".tmx";
+                string levelName = commandArgs[0] + ".tmx";
 
-				NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
-				                             (int)DataType.ChangeLevel,
-				                             levelName
-				                             );
+				ChangeLevel(levelName);
+			}
+		}
 
-                CurrentLevelName = levelName;
-                NetManager.CurrentLevelName = CurrentLevelName;
+		private void ChangeLevel(string levelName)
+		{
+			string path = "Maps/" + levelName;
+
+			if (File.Exists(path))
+			{
+				//TODO
+				//Läsa in och kolla game-mode...
+				string levelData = File.ReadAllText(path);
+				NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+				                                        (int)DataType.ChangeLevel,
+				                                        levelName,
+				                                        levelData
+				                                        );
+
+				Console.WriteLine("Level Changed to: " + path);
 			}
 		}
 
@@ -120,7 +202,7 @@ namespace DedicatedServerConsole
 				{
 					// Parse successful, value can be id.
 					//TODO check if id is valid (connected etc).
-					NetManager.KickPlayer (value);
+					NetManager.KickPlayer(value);
 				}
 				else
 				{
@@ -133,7 +215,7 @@ namespace DedicatedServerConsole
 		{
 			if (commandArgs.Count > 0)
 			{
-				string playerName = commandArgs [0];
+				string playerName = commandArgs[0];
 
 
 
@@ -182,13 +264,38 @@ namespace DedicatedServerConsole
 			}
 		}
 
+        private void ListLevelsCommand(List<string> commandArgs)
+        {
+            string[] files = Directory.GetFiles("Maps/");
+            string fileName;
+            int id = -1;
+
+            foreach (string file in files)
+            {
+                if (file.Contains("\\"))
+                    fileName = file.Substring(file.LastIndexOf('\\') + 1);
+                else
+                    fileName = file.Substring(file.LastIndexOf('/') + 1);
+
+                fileName = fileName.Remove(fileName.LastIndexOf('.'));
+
+                Console.WriteLine(++id + " - " + "'" + fileName + "'");
+            }
+        }
+
         public void Run()
         {
+			int framesElapsed = 0;
+
             while (run)
             {
                 NetManager.Listen();
                 dedicatedServerNetComponent.Update();
+				++framesElapsed;
             }
         }
+
+        
+
     }
 }

@@ -24,8 +24,6 @@ namespace MonoPlatformerGame
         ChatMessage,
         PlayerFinish,
         ChangeLevel,
-		DownloadMapRequest,
-		DownloadMapResponse,
 
         PeerInfo = 5000,
         
@@ -49,6 +47,7 @@ namespace MonoPlatformerGame
         public static bool IsDedicatedHost { get; set; }
         public static int CreateNewUID() { return ++uID; }
         public static string CurrentLevelName { get; set; }
+        public static bool Initialized { get; set; }
         
         private static int uID = 0;
         private static NetPeer netPeer;
@@ -56,21 +55,21 @@ namespace MonoPlatformerGame
         public static Dictionary<int, ClientInfo> connectedClients = new Dictionary<int, ClientInfo>();
        
         private static Thread t = new Thread(DoThreadInit);
-
-        
-
+		
         private static void DoInit()
         {
-
             if (IsHost)
             {
                 NetPeerConfiguration config = new NetPeerConfiguration("MonoPlatformerGame");
                 config.Port = DataStorage.GetLocalPlayerInfo().ServerPort;
                 config.MaximumConnections = 32;
                 config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+				config.EnableUPnP = true;
                 netPeer = new NetServer(config);
+				netPeer.UPnP.ForwardPort(2300, DataStorage.GetLocalPlayerInfo().ServerPort);
                 netPeer.Start();
 				JapeLog.WriteLine("Server Started");
+                Initialized = true;
             }
             else
             {
@@ -83,6 +82,7 @@ namespace MonoPlatformerGame
                 hailMessage.Write("Hello there");
                 netPeer.Start();
                 netPeer.Connect(DataStorage.GetLocalPlayerInfo().ServerIP, DataStorage.GetLocalPlayerInfo().ServerPort, hailMessage);
+                Initialized = true;
             }
             //JapeLog.WriteLine("Connected to Server");
         }
@@ -108,6 +108,18 @@ namespace MonoPlatformerGame
 			return null;
 		}
 
+		public static ClientInfo GetClient(NetConnection connection)
+		{
+			foreach (var item in connectedClients)
+			{
+				if (item.Value.ClientNetConnection == connection)
+				{
+					return item.Value;
+				}
+			}
+			return null;
+		}
+
 		public static void KickPlayer(string name)
 		{
 			ClientInfo client = GetClient (name);
@@ -122,15 +134,19 @@ namespace MonoPlatformerGame
 
 		private static void KickClient(ClientInfo client)
 		{
-			client.ClientNetConnection.Disconnect ("You were kicked by the host");
+			client.ClientNetConnection.Disconnect("You were kicked by the host");
 
             string reason = "Kicked in the ass";
 
 			SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
 			                  (int)DataType.PlayerDisconnected,
+                              client.UID.ToString(),
 			                  client.Name,
                               reason
 			                  );
+
+			//connectedClients.Remove(client.UID);
+            client.Disconnected = true;
 		}
 
 		public static void SendMessageParamsStringsOnly(NetDeliveryMethod method, int type, NetConnection reciever, params string[] stringParameters)
@@ -183,15 +199,16 @@ namespace MonoPlatformerGame
             SendMessage(method, oMsg, reciever);
         }
 
-        public static void StartGame(string levelName)
+        public static void StartGame()
         {
             if(IsHost)
             {
-                SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableSequenced, 
-				                  (int)DataType.StartGame,
-                                  levelName
-				                  );
-                
+				/*
+                SendMessageParams(NetDeliveryMethod.ReliableSequenced, 
+                                  (int)DataType.StartGame,
+				                  CurrentLevelName
+                                  );
+                */
                 JapeLog.WriteLine(String.Format("Starting the game with {0} number of players", (IsDedicatedHost) ? connectedClients.Count : connectedClients.Count + 1));
 
                 foreach (var item in components)
@@ -249,7 +266,7 @@ namespace MonoPlatformerGame
             components.Remove(component);
         }
 
-        private static void SendMessage(NetDeliveryMethod method, NetOutgoingMessage msg, NetConnection reciever = null)
+        public static void SendMessage(NetDeliveryMethod method, NetOutgoingMessage msg, NetConnection reciever = null)
         {
             if (IsHost)
             {
@@ -282,48 +299,6 @@ namespace MonoPlatformerGame
                     }
                 }
             }
-        }
-
-        public static void AlertOthersNewPlayer(NetConnection excludeConnection, ClientInfo info)
-        {
-            if (!IsHost)
-                return;
-
-            foreach (NetConnection conn in netPeer.Connections)
-            {
-                if (conn != excludeConnection)
-                {
-                    /*SendMessageParams(NetDeliveryMethod.ReliableOrdered, conn,
-                        (int)DataType.NewPlayer,
-                        info.Name,
-                        info.UID
-                        );*/
-					NetOutgoingMessage oMsg = CreateMessage();
-					oMsg.Write((int)DataType.NewPlayer);
-					oMsg.Write(info.Name);
-					oMsg.Write(info.UID);
-
-                    SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg, conn);
-                }
-            }
-
-            NetOutgoingMessage oMsg2 = CreateMessage();
-            oMsg2.Write((int)DataType.NewPlayerResponse);
-            oMsg2.Write(info.UID);
-            oMsg2.Write(NetManager.GameStarted);
-            oMsg2.Write(CurrentLevelName);
-
-            oMsg2.Write(NetManager.connectedClients.Count - 1);
-            foreach (var item in NetManager.connectedClients)
-            {
-                if (info.UID == item.Value.UID)
-                    continue;
-
-                oMsg2.Write(item.Value.Name);
-                oMsg2.Write(item.Value.UID);
-            }
-
-            SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg2, excludeConnection);
         }
 
         public static void SendBroadcast(NetOutgoingMessage msg, NetDeliveryMethod method)

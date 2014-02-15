@@ -64,7 +64,6 @@
     <Compile Include="NetStuff\ConnectionInfo.cs" />
     <Compile Include="NetStuff\ClientGameplayNetComponent.cs" />
     <Compile Include="NetStuff\GameplayNetComponent.cs" />
-    <Compile Include="NetStuff\HostGameplayNetComponent.cs" />
     <Compile Include="NetStuff\NetComponent.cs" />
     <Compile Include="NetStuff\NetManager.cs" />
     <Compile Include="ParticleSystem\Emitters\CircleEmitter.cs" />

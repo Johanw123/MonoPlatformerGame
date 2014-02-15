@@ -37,35 +37,34 @@ namespace MonoPlatformerGame
                 case DataType.ChangeLevel:
                     IncomingChangeLevel(msg);
                     return true;
-                case DataType.DownloadMapResponse:
-                    IncomingDownloadMapResponse(msg);
-                    return true;
                 case DataType.PlayerDisconnected:
                     IncomingPlayerDisconnect(msg);
+                    return true;
+                case DataType.Ping:
+                    IncomingPing(msg);
                     return true;
             }
             return false;
         }
 
-		protected void IncomingDownloadMapResponse(NetIncomingMessage msg)
-		{
-			string mapName = msg.ReadString();
-			string mapData = msg.ReadString();
-
-			StreamWriter writer = File.CreateText ("Content/" + mapName);
-			writer.Write (mapData);
-			writer.Close ();
-            OnChangedLevel(mapName);
-            
-		}
+        private void IncomingPing(NetIncomingMessage msg)
+        {
+            NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+                                        (int)DataType.Pong
+                                        );
+        }
 
         private void IncomingPlayerDisconnect(NetIncomingMessage msg)
         {
+            int uID = int.Parse(msg.ReadString());
             string playerName = msg.ReadString();
             string reason = msg.ReadString();
 
-            JapeLog.WriteLine(playerName + "Disconnected" + " - Reason: " + reason);
+			//int id = msg.ReadInt32();
+			//TODO send id
+            EntityManager.RemoveNetPlayer(uID);
 
+            JapeLog.WriteLine(playerName + "Disconnected" + " - Reason: " + reason);
         }
 
         protected void PlayerFinish(NetIncomingMessage msg)
@@ -79,26 +78,19 @@ namespace MonoPlatformerGame
         protected void IncomingChangeLevel(NetIncomingMessage msg)
         {
             string levelName = msg.ReadString();
+            string levelData = msg.ReadString();
 
-            ChangeOrDownloadLevel(levelName);
-            //OnChangedLevel(levelName);
+            DownloadLevel(levelName, levelData);
+            OnChangedLevel(levelName);
         }
 
-        private void ChangeOrDownloadLevel(string levelName)
+        protected void DownloadLevel(string name, string data)
         {
-            if (Level.MapExist(levelName))
-                OnChangedLevel(levelName);
-            else
-            {
-                //TODO download map from server
-                NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-                                             (int)DataType.DownloadMapRequest,
-                                             levelName
-                                             );
-
-            }
-
+            StreamWriter writer = File.CreateText("Content/" + name);
+            writer.Write(data);
+            writer.Close();
         }
+
 
         protected virtual void OnChangedLevel(string levelName)
         {
@@ -127,8 +119,14 @@ namespace MonoPlatformerGame
             //                                 );
 
             //}
+            //string levelName = msg.ReadString();
+            //ChangeOrDownloadLevel(levelName);
+
             string levelName = msg.ReadString();
-            ChangeOrDownloadLevel(levelName);
+            string levelData = msg.ReadString();
+
+            DownloadLevel(levelName, levelData);
+            OnChangedLevel(levelName);
 		}
 
         protected void NewPlayerResponse(NetIncomingMessage msg)
@@ -161,8 +159,8 @@ namespace MonoPlatformerGame
                 }
             }
 
-            if (gameStarted)
-                ChangeOrDownloadLevel(levelName);
+            //if (gameStarted)
+            //    ChangeOrDownloadLevel(levelName);
 
             JapeLog.WriteLine("Remote ID recieved: " + ownUid);
         }
@@ -175,6 +173,8 @@ namespace MonoPlatformerGame
         protected abstract void IncomingGameState(NetIncomingMessage msg);
         protected abstract void NewPlayer(NetIncomingMessage msg);
         protected abstract void SendGameState();
+
+        
 
        
 

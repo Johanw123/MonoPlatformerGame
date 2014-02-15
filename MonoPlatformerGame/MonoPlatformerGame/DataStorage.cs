@@ -54,7 +54,7 @@ namespace MonoPlatformerGame
             {
                 playerInfo.UserName = System.Environment.MachineName;
                 playerInfo.ServerPort = 2300;
-                playerInfo.ServerIP = "90.224.75.79";
+                playerInfo.ServerIP = "127.0.0.1";
                 SavePlayerData(playerInfo);
             }
             mPlayerInfo = playerInfo;

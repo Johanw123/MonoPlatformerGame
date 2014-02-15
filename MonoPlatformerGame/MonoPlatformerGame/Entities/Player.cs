@@ -81,11 +81,26 @@ namespace MonoPlatformerGame
                     EntityManager.LocalPlayerFinish(mElapsedTimer.Elapsed);
                     break;
 
-                case "Spike":
-                    EntityManager.ResetPlayer();
+				case "Spike":
+					PlayerDied();
                     break;
             }
         }
+		private void PlayerDied()
+		{
+			switch(Level.CurrentGameMode)
+			{
+				case GameMode.Race:
+					X = -3000;
+					break;
+				case GameMode.Survival:
+
+					break;
+				case GameMode.TimeTrial:
+					EntityManager.ResetPlayer();
+					break;
+			}
+		}
 
         private void ApplyPhysics(float deltaTime)
         {
