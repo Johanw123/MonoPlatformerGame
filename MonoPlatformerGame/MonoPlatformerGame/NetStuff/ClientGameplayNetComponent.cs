@@ -35,6 +35,12 @@ namespace MonoPlatformerGame
 			float currentX = EntityManager.GetPlayer().Position.X;
 			float currentY = EntityManager.GetPlayer().Position.Y;
 
+            if (EntityManager.GetPlayer().IsDisabled)
+            {
+                currentX = -1337;
+                currentY = -1337;
+            }
+
 			if(previousX == currentX && previousY == currentY)
 				return;
 

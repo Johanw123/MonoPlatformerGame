@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Squared.Tiled;
 using Lidgren.Network;
+using System.Diagnostics;
 
 namespace MonoPlatformerGame
 {
@@ -36,6 +37,9 @@ namespace MonoPlatformerGame
         Log log;
         private GameplayNetComponent gameplayNetComponent;
         Texture2D PauseTexture;
+        private Stopwatch changingLevelTimer = new Stopwatch();
+        //private bool changingLevel = false;
+        private double changeLevel = -1;
 
         public Game1()
         {
@@ -70,6 +74,7 @@ namespace MonoPlatformerGame
 
         void gameplayNetComponent_ChangeLevelEvent(string levelName)
         {
+            EntityManager.ResetPlayer();
             level.UnloadLevel();
             level.LoadLevel(levelName);
             NetManager.StartGame();
@@ -95,9 +100,18 @@ namespace MonoPlatformerGame
             gameplayNetComponent = new ClientGameplayNetComponent();
 
             gameplayNetComponent.ChangeLevelEvent += gameplayNetComponent_ChangeLevelEvent;
+            gameplayNetComponent.ChangeLevelPrepEvent += gameplayNetComponent_ChangeLevelPrepEvent;
 
             NetManager.AddComponent(gameplayNetComponent);
 			NetManager.AddComponent(new ChatNetComponent());
+        }
+
+        void gameplayNetComponent_ChangeLevelPrepEvent(double delayTime)
+        {
+            changingLevelTimer.Reset();
+            changingLevelTimer.Start();
+            //changingLevel = true;
+            changeLevel = delayTime;
         }
 
         protected override void Update(GameTime gameTime)
@@ -127,6 +141,15 @@ namespace MonoPlatformerGame
             EntityManager.UpdateCamera();
             gameplayNetComponent.Update();
 
+            if(changeLevel != -1)
+            {
+                if (changingLevelTimer.ElapsedMilliseconds >= changeLevel)
+                {
+                    changingLevelTimer.Reset();
+                    changeLevel = -1;
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -139,13 +162,23 @@ namespace MonoPlatformerGame
 				EntityManager.Draw(_spriteBatch);
 				ParticleSystem.Draw(_spriteBatch);
 			}
-				if (!NetManager.GameStarted) {
+				if (!NetManager.GameStarted) 
+                {
                 
 					_spriteBatch.Begin();
 					_spriteBatch.Draw(PauseTexture, new Rectangle (0, 0, 1280, 720), Color.Black * 0.5f);
 					_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Waiting for game to start", new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
 					_spriteBatch.End();
 				}
+
+                if (changeLevel != -1)
+                {
+                    _spriteBatch.Begin();
+                    _spriteBatch.Draw(PauseTexture, new Rectangle(0, 0, 1280, 720), Color.Black * 0.5f);
+                    _spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Next Level Starts In: " + changeLevel, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
+                    _spriteBatch.End();
+                }
+
 				log.Draw();
 
             base.Draw(gameTime);

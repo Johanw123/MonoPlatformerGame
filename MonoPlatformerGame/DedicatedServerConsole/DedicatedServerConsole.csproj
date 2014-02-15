@@ -118,6 +118,7 @@
   <ItemGroup>
     <Content Include="Maps\Level10.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
 </Project>

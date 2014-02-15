@@ -6,6 +6,7 @@ using MonoPlatformerGame;
 using System.Threading;
 using System.IO;
 using Lidgren.Network;
+using System.Diagnostics;
 
 namespace DedicatedServerConsole
 {
@@ -34,6 +35,7 @@ namespace DedicatedServerConsole
         Thread commandsThread;
         Log log;
         public string CurrentLevelName { get; set; }
+        Stopwatch nextLevelTimer = new Stopwatch();
 		List<string> mapRotation = new List<string>{
 			"Race1.tmx",
 			"Race2.tmx",
@@ -49,7 +51,6 @@ namespace DedicatedServerConsole
             NetManager.CurrentLevelName = CurrentLevelName;
 			CurrentGameMode = GameMode.Race;
            
-
             log = new JapeLog();
             Log.Init(log);
 
@@ -66,17 +67,29 @@ namespace DedicatedServerConsole
 			commandsThread.Start();
         }
 
-
 		private void NextLevel()
 		{
-			++curr;
-			if(curr >= mapRotation.Count)
-				curr = 0;
+            nextLevelTimer.Reset();
+            nextLevelTimer.Start();
 
-			string levelName = mapRotation[curr];
+            double delayTime = 3.0;
 
-			ChangeLevel(levelName);
+            NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+                                        (int)DataType.PrepareLevelChange,
+                                        delayTime
+                                        );
 		}
+
+        private void DoNextLevel()
+        {
+            ++curr;
+            if (curr >= mapRotation.Count)
+                curr = 0;
+
+            string levelName = mapRotation[curr];
+
+            ChangeLevel(levelName);
+        }
 
         private void ListenForCommands()
         {
@@ -297,6 +310,12 @@ namespace DedicatedServerConsole
                 NetManager.Listen();
                 dedicatedServerNetComponent.Update();
 				++framesElapsed;
+
+                if (nextLevelTimer.ElapsedMilliseconds >= 3000)
+                {
+                    nextLevelTimer.Reset();
+                    DoNextLevel();
+                }
             }
         }
 

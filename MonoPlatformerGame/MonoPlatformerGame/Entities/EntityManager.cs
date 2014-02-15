@@ -33,10 +33,15 @@ namespace MonoPlatformerGame
 
         public static void ResetPlayer()
         {
-            ParticleSystem.FireEmitterAt("blood", player.Position);
-            player.Position = startPosition;
-            player.UpdateBoundingBox();
-            player.ElapsedTimer.Restart();            
+            if (player != null)
+            {
+                //ParticleSystem.FireEmitterAt("blood", player.Position);
+                player.Velocity = new Vector2(0, 0);
+                player.Position = startPosition;
+                player.UpdateBoundingBox();
+                player.ElapsedTimer.Restart();
+                player.IsDisabled = false;
+            }
         }
 
         public static void LocalPlayerFinish(TimeSpan time)

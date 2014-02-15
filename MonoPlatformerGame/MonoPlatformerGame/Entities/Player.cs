@@ -20,6 +20,12 @@ namespace MonoPlatformerGame
         private Vector2 platformVel;
         protected Stopwatch mElapsedTimer;
 
+        public bool IsDisabled
+        {
+            get;
+            set;
+        }
+
         public Stopwatch ElapsedTimer
         {
             get { return mElapsedTimer; }
@@ -76,7 +82,6 @@ namespace MonoPlatformerGame
 
                     break;
                 case "Finish":
-                    
                     //EntityManager.PlayerReachedFinish(0, mElapsedTimer.Elapsed);
                     EntityManager.LocalPlayerFinish(mElapsedTimer.Elapsed);
                     break;
@@ -91,7 +96,12 @@ namespace MonoPlatformerGame
 			switch(Level.CurrentGameMode)
 			{
 				case GameMode.Race:
-					X = -3000;
+					NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
+                                                (int)DataType.PlayerDied
+
+                                                );
+
+                    IsDisabled = true;
 					break;
 				case GameMode.Survival:
 
@@ -100,17 +110,20 @@ namespace MonoPlatformerGame
 					EntityManager.ResetPlayer();
 					break;
 			}
+
+            ParticleSystem.FireEmitterAt("blood", Position);
 		}
 
         private void ApplyPhysics(float deltaTime)
         {
+            if (IsDisabled)
+                return;
+
             if (onPlatform)
             {
                 X += platformVel.X *deltaTime;
             }
-            
-            
-
+  
             Vector2 previousPosition = Position;
 
             mVelocity.X += mAccel.X * Constants.MOVE_ACC * deltaTime;
@@ -155,7 +168,7 @@ namespace MonoPlatformerGame
                 Facing = eFacing.Right;
             }
             else
-                mVelocity.X *= 0.8f;
+                mVelocity.X *= 0.7f;
 
             if (Input.IsKeyDown(Keys.Space))
             {
@@ -210,6 +223,9 @@ namespace MonoPlatformerGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (IsDisabled)
+                return;
+
             Vector2 origin = new Vector2(mTexture.Width / 2, mTexture.Height / 2);
             origin = Vector2.Zero;
 

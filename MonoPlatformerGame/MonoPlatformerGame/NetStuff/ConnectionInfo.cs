@@ -12,6 +12,7 @@ namespace MonoPlatformerGame
             get;
             set;
         }
+
         public string Name
         {
             get;
@@ -29,20 +30,31 @@ namespace MonoPlatformerGame
             get;
             set;
         }
+
         public float Y
         {
             get;
             set;
         }
+
 		public NetConnection ClientNetConnection 
 		{
 			get;
 			set;
 		}
+
         public ClientInfo()
         {
             
         }
+
+        public sRaceInfo RaceInfo;
+
+        public struct sRaceInfo
+        {
+            public bool IsDead;
+        }
+
 
     }
 }

@@ -34,6 +34,9 @@ namespace DedicatedServerConsole
 	            case DataType.PlayerFinish:
 	                PlayerFinish(msg);
 	                return true;
+                case DataType.PlayerDied:
+                    IncomingPlayerDied(msg);
+                    return true;
 				case DataType.ChatMessage:
 					RedirectChatMessage(msg);
 	                return true;
@@ -66,7 +69,7 @@ namespace DedicatedServerConsole
 				bool allDead = true;
 				foreach(var item in  NetManager.connectedClients.Values)
 				{
-					if(item.X != 3000)
+					if(!item.RaceInfo.IsDead)
 					{
 						allDead = false;
 					}
@@ -77,6 +80,11 @@ namespace DedicatedServerConsole
 					Console.WriteLine("ALl players dead");
 					if(NextLevelEvent != null)
 						NextLevelEvent();
+
+                    foreach (var item in NetManager.connectedClients.Values)
+                    {
+                        item.RaceInfo.IsDead = false;
+                    }
 				}
 			}
 		}
@@ -106,6 +114,8 @@ namespace DedicatedServerConsole
 
 		void PingPlayers()
 		{
+            return;
+
 			foreach(var pair in NetManager.connectedClients)
 			{
 				if(++pair.Value.TimeSinceLastPing > 500000)
@@ -149,9 +159,19 @@ namespace DedicatedServerConsole
 			if(NextLevelEvent != null)
 				NextLevelEvent();
 
-
-
+            foreach (var item in NetManager.connectedClients.Values)
+            {
+                item.RaceInfo.IsDead = false;
+            }
             //NetManager.PlayerReachedFinish(who, time);
+        }
+
+        private void IncomingPlayerDied(NetIncomingMessage msg)
+        {
+            //int id = msg.ReadInt32();
+        
+            //NetManager.GetClient(id).
+            NetManager.GetClient(msg.SenderConnection).RaceInfo.IsDead = true;
         }
 
         protected void RedirectBroadcast(DataType type, NetIncomingMessage msg)
@@ -262,6 +282,7 @@ namespace DedicatedServerConsole
                     );
             }
         }
+
         protected void IncomingGameState(NetIncomingMessage msg)
         {
             int who = msg.ReadInt32();
@@ -274,6 +295,8 @@ namespace DedicatedServerConsole
             NetManager.connectedClients[who].X = x;
             NetManager.connectedClients[who].Y = y;
         }
+
+       
 
     }
 }

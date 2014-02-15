@@ -23,7 +23,9 @@ namespace MonoPlatformerGame
         BroadcastMessage,
         ChatMessage,
         PlayerFinish,
+        PlayerDied,
         ChangeLevel,
+        PrepareLevelChange,
 
         PeerInfo = 5000,
         
@@ -234,7 +236,7 @@ namespace MonoPlatformerGame
         private static void DoThreadInit()
         {
             DoInit();
-            
+
             t.Abort();
         }
 

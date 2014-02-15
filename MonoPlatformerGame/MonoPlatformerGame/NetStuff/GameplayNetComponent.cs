@@ -5,12 +5,16 @@ using System.Text;
 using System.IO;
 
 public delegate void ChangeLevelEventHandler(string levelName);
+public delegate void ChangeLevelPrepEventHandler(double delayTime);
 
 namespace MonoPlatformerGame
 {
     public abstract class GameplayNetComponent : NetComponent
     {
+        //skicka en timed changeLevelDirekt ist.
+        //Kan slås ihop dessa två event förmodligen.
         public event ChangeLevelEventHandler ChangeLevelEvent;
+        public event ChangeLevelPrepEventHandler ChangeLevelPrepEvent;
 
         public override bool IncomingData(DataType type, NetIncomingMessage msg)
         {
@@ -37,6 +41,9 @@ namespace MonoPlatformerGame
                 case DataType.ChangeLevel:
                     IncomingChangeLevel(msg);
                     return true;
+                case DataType.PrepareLevelChange:
+                    IncomingPrepareLevelChange(msg);
+                    return true;
                 case DataType.PlayerDisconnected:
                     IncomingPlayerDisconnect(msg);
                     return true;
@@ -52,6 +59,16 @@ namespace MonoPlatformerGame
             NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
                                         (int)DataType.Pong
                                         );
+        }
+
+        private void IncomingPrepareLevelChange(NetIncomingMessage msg)
+        {
+            double delayTime = msg.ReadDouble();
+            double recieveTime = msg.ReceiveTime;
+            double actualDelayTime = delayTime - recieveTime;
+
+            if (ChangeLevelPrepEvent != null)
+                ChangeLevelPrepEvent(actualDelayTime);
         }
 
         private void IncomingPlayerDisconnect(NetIncomingMessage msg)
