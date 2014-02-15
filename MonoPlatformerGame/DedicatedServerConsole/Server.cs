@@ -36,7 +36,8 @@ namespace DedicatedServerConsole
         Log log;
         public string CurrentLevelName { get; set; }
         Stopwatch nextLevelTimer = new Stopwatch();
-		List<string> mapRotation = new List<string>{
+		List<string> mapRotation = new List<string>
+		{
 			"Race1.tmx",
 			"Race2.tmx",
 			"Race3.tmx",
@@ -169,6 +170,7 @@ namespace DedicatedServerConsole
 					//TODO
 					//Läsa in och kolla game-mode...
 					string levelData = File.ReadAllText(path);
+					ParseLevelData(levelData);
 					NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
 					                                       (int)DataType.StartGame,
 				                                           CurrentLevelName,
@@ -180,6 +182,43 @@ namespace DedicatedServerConsole
 
 		}
 
+		private void ParseLevelData(string levelData)
+		{
+			//<property name="DoubleJump" value="0"/>
+			string s = getBetween(levelData,"<properties>","</properties>");
+			string s2 = getBetween(s, "<property name=\"DoubleJump\" value=\"", "\"/>");
+
+			switch(s2)
+			{
+				case "Race":
+					CurrentGameMode = GameMode.Race;
+					break;
+				case "TimeTrial":
+					CurrentGameMode = GameMode.TimeTrial;
+					break;
+				case "Survival":
+					CurrentGameMode = GameMode.Survival;
+					break;
+				default:
+					CurrentGameMode = GameMode.Race;
+					break;
+			}
+
+		}
+		public static string getBetween(string strSource, string strStart, string strEnd)
+		{
+			int Start, End;
+			if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+			{
+				Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+				End = strSource.IndexOf(strEnd, Start);
+				return strSource.Substring(Start, End - Start);
+			}
+			else
+			{
+				return "";
+			}
+		}
 		private void ChangeLevelCommand(List<string> commandArgs)
 		{
 			if (commandArgs.Count > 0)
@@ -199,10 +238,12 @@ namespace DedicatedServerConsole
 				//TODO
 				//Läsa in och kolla game-mode...
 				string levelData = File.ReadAllText(path);
+				ParseLevelData(levelData);
 				NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
 				                                        (int)DataType.ChangeLevel,
 				                                        levelName,
-				                                        levelData
+				                                        levelData,
+				                                        "3.0"
 				                                        );
 
 				Console.WriteLine("Level Changed to: " + path);

@@ -26,21 +26,43 @@ namespace MonoPlatformerGame
 
 				switch (key)
                 {
-				case "DoubleJump":
-					DoubleJump = ParseInt(property) ?? DoubleJumpDefault;
-					break;
-				case "Gravity":
-					Gravity = ParseInt(property) ?? GravityDefault;
-					break;
-				case "JumpMania":
-					JumpMania = ParseBool(property) ?? JumpManiaDefault;
-					break;
-				case "CantStop":
-					CantStop = ParseBool(property) ?? CantStopDefault;
-                    break;
+					case "GameMode":
+						ParseGameMode(property);
+						break;
+					case "DoubleJump":
+						DoubleJump = ParseInt(property) ?? DoubleJumpDefault;
+						break;
+					case "Gravity":
+						Gravity = ParseInt(property) ?? GravityDefault;
+						break;
+					case "JumpMania":
+						JumpMania = ParseBool(property) ?? JumpManiaDefault;
+						break;
+					case "CantStop":
+						CantStop = ParseBool(property) ?? CantStopDefault;
+	                    break;
                 }
             }
         }
+
+		static void ParseGameMode(string property)
+		{
+			switch(property)
+			{
+				case "Race":
+					Level.CurrentGameMode = GameMode.Race;
+					break;
+				case "TimeTrial":
+					Level.CurrentGameMode = GameMode.TimeTrial;
+					break;
+				case "Survival":
+					Level.CurrentGameMode = GameMode.Survival;
+					break;
+				default:
+					Level.CurrentGameMode = GameMode.Race;
+					break;
+			}
+		}
 
         private static void ResetMods()
         {

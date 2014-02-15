@@ -18,6 +18,8 @@ namespace MonoPlatformerGame
         public string ServerName { get; set; }
         public string GameMode { get; set; }
         public int HostingPort { get; set; }
+		public List<string> LevelRotation { get; set; }
+
 
 
     }
@@ -25,6 +27,7 @@ namespace MonoPlatformerGame
     class DataStorage
     {
         private static PlayerConfig mPlayerConfig;
+		private static ServerConfig mServerConfig;
 
         public static PlayerConfig GetLocalPlayerConfig()
         {
@@ -33,28 +36,78 @@ namespace MonoPlatformerGame
 
             return mPlayerConfig;
         }
+
+		public static ServerConfig GetLocalServerConfig()
+		{
+			if(mServerConfig == null)
+				LoadServerConfig();
+
+			return mServerConfig;
+		}
+
+		private static void LoadServerConfig()
+		{
+			ServerConfig serverConfig = new ServerConfig();
+
+			try
+			{
+				string path = Directory.GetCurrentDirectory() + "/ServerConfig";
+
+				Stream stream = File.OpenRead(path);
+				XDocument xml = XDocument.Load(stream);
+
+				XElement xServer= xml.Document.Element(XName.Get("Server"));
+				XElement xServerConfig = xServer.Element(XName.Get("ServerConfig"));
+				XElement xLevelRotation = xServer.Element(XName.Get("LevelRotation"));
+
+				string serverName = xServerConfig.Element(XName.Get("ServerName")).Value;
+				string gameMode = xServerConfig.Element(XName.Get("GameMode")).Value; 
+
+				if(serverName == "Null")
+					serverName = System.Environment.MachineName + "'s Server";  
+
+				//string serverIP = xServerInfo.Element(XName.Get("ServerIP")).Value;
+				int hostingPort = int.Parse(xServerConfig.Element(XName.Get("HostingPort")).Value);
+
+				serverConfig.ServerName = serverName;
+				serverConfig.HostingPort = hostingPort;
+				serverConfig.GameMode = "";
+
+
+
+			}
+			catch(Exception)
+			{
+				serverConfig.ServerName = System.Environment.MachineName + "'s Server";
+				serverConfig.HostingPort = 2300;
+				serverConfig.GameMode = "Race";
+				//SavePlayerData(playerConfig);
+			}
+			mServerConfig = serverConfig;
+		}
+
         private static void LoadPlayerConfig()
         {
             PlayerConfig playerConfig = new PlayerConfig();
 
             try
             {
-                string path = Directory.GetCurrentDirectory() + "/PlayerInfo";
+                string path = Directory.GetCurrentDirectory() + "/PlayerConfig";
 
                 Stream stream = File.OpenRead(path);
                 XDocument xml = XDocument.Load(stream);
 
                 XElement xPlayer = xml.Document.Element(XName.Get("Player"));
-                XElement xPlayerInfo = xPlayer.Element(XName.Get("PlayerInfo"));
-                XElement xServerInfo = xPlayer.Element(XName.Get("ServerInfo"));
+                XElement xPlayerConfig = xPlayer.Element(XName.Get("PlayerConfig"));
+                XElement xServerConfig = xPlayer.Element(XName.Get("ServerConfig"));
 
-                string userName = xPlayerInfo.Element(XName.Get("UserName")).Value;
+                string userName = xPlayerConfig.Element(XName.Get("UserName")).Value;
 
                 if(userName == "Null")
                     userName = System.Environment.MachineName;
 
-                string serverIP = xServerInfo.Element(XName.Get("ServerIP")).Value;
-                int serverPort = int.Parse(xServerInfo.Element(XName.Get("ServerPort")).Value);
+                string serverIP = xServerConfig.Element(XName.Get("ServerIP")).Value;
+                int serverPort = int.Parse(xServerConfig.Element(XName.Get("ServerPort")).Value);
 
                 playerConfig.UserName = userName;
                 playerConfig.ServerIP = serverIP;

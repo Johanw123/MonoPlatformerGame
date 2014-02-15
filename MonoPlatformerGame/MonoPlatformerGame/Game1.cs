@@ -43,13 +43,13 @@ namespace MonoPlatformerGame
 
         public Game1()
         {
-			_graphics = new GraphicsDeviceManager(this)
-            {
-				IsFullScreen = false,
-               PreferredBackBufferHeight = 720,
-                PreferredBackBufferWidth = 1280
-                
-			};
+			_graphics = new GraphicsDeviceManager(this);
+
+			_graphics.IsFullScreen = false;
+#if WINDOWS
+			_graphics.PreferredBackBufferHeight = 720;
+			_graphics.PreferredBackBufferWidth = 1280;
+#endif
         }
 
 		protected override void Initialize()
@@ -72,12 +72,20 @@ namespace MonoPlatformerGame
 			base.BeginRun();
 		}
 
-        void gameplayNetComponent_ChangeLevelEvent(string levelName)
+        void gameplayNetComponent_ChangeLevelEvent(string levelName, double delayTime)
         {
             EntityManager.ResetPlayer();
             level.UnloadLevel();
             level.LoadLevel(levelName);
-            NetManager.StartGame();
+			if(delayTime > 0)
+			{
+				changeLevel = delayTime;
+				EntityManager.GetPlayer().IsDisabled = true;
+			}
+			else
+			{
+				NetManager.StartGame();
+			}
         }
 
         protected override void LoadContent()
@@ -100,7 +108,7 @@ namespace MonoPlatformerGame
             gameplayNetComponent = new ClientGameplayNetComponent();
 
             gameplayNetComponent.ChangeLevelEvent += gameplayNetComponent_ChangeLevelEvent;
-            gameplayNetComponent.ChangeLevelPrepEvent += gameplayNetComponent_ChangeLevelPrepEvent;
+            //gameplayNetComponent.ChangeLevelPrepEvent += gameplayNetComponent_ChangeLevelPrepEvent;
 
             NetManager.AddComponent(gameplayNetComponent);
 			NetManager.AddComponent(new ChatNetComponent());
@@ -134,22 +142,33 @@ namespace MonoPlatformerGame
                 return;
 			if (!level.LevelLoaded)
 				return;
-            
-            EntityManager.Update(deltaTime);
-            ParticleSystem.Update(deltaTime);
-            EntityManager.Collisions();
-            EntityManager.UpdateCamera();
-            gameplayNetComponent.Update();
 
-           // if(changeLevel != -1)
-          //  {
-                //if (changingLevelTimer.ElapsedMilliseconds >= changeLevel * 1000)
-                //{
-                //    changingLevelTimer.Reset();
-                //    changeLevel = -1;
-                //}
 
-                changeLevel -= deltaTime;
+			if(changeLevel < 0)
+			{
+				changeLevel = 0;
+				EntityManager.GetPlayer().IsDisabled = false;
+				NetManager.StartGame();
+			}
+			else
+			{
+
+				EntityManager.Update(deltaTime);
+				ParticleSystem.Update(deltaTime);
+				EntityManager.Collisions();
+				EntityManager.UpdateCamera();
+				gameplayNetComponent.Update();
+
+				// if(changeLevel != -1)
+				//  {
+				//if (changingLevelTimer.ElapsedMilliseconds >= changeLevel * 1000)
+				//{
+				//    changingLevelTimer.Reset();
+				//    changeLevel = -1;
+				//}
+			}
+			if(changeLevel != 0)
+				changeLevel -= deltaTime;
             //}
 
             base.Update(gameTime);
@@ -164,26 +183,52 @@ namespace MonoPlatformerGame
 				EntityManager.Draw(_spriteBatch);
 				ParticleSystem.Draw(_spriteBatch);
 			}
-				if (!NetManager.GameStarted) 
-                {
-                
-					_spriteBatch.Begin();
-					_spriteBatch.Draw(PauseTexture, new Rectangle (0, 0, 1280, 720), Color.Black * 0.5f);
-					_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Waiting for game to start", new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
-					_spriteBatch.End();
-				}
+			if (!NetManager.GameStarted) 
+            {
+				_spriteBatch.Begin();
+				_spriteBatch.Draw(PauseTexture, new Rectangle (0, 0, 1280, 720), Color.Black * 0.5f);
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Waiting for game to start", new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
+				_spriteBatch.End();
+			}
 
-                if (changeLevel >= 0)
-                {
-                    _spriteBatch.Begin();
-                    _spriteBatch.Draw(PauseTexture, new Rectangle(0, 0, 1280, 720), Color.Black * 0.5f);
-                    _spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Next Level Starts In: " + changeLevel, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), Color.White);
-                    _spriteBatch.End();
-                }
+			DrawLoadingScreen();
 
 				log.Draw();
 
             base.Draw(gameTime);
         }
+		private void DrawLoadingScreen()
+		{
+			if (changeLevel > 0)
+			{
+				_spriteBatch.Begin();
+				_spriteBatch.Draw(PauseTexture, new Rectangle(0, 0, 1280, 720), Color.Black * 0.5f);
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Next Level Starts In: " + changeLevel, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 10), Color.White);
+				DrawModsStrings();
+				_spriteBatch.End();
+			}
+		}
+
+		private void DrawModsStrings()
+		{
+			Vector2 position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 10);
+
+			if(ModManager.CantStop)
+			{
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Cant Stop", position + new Vector2(0,40), Color.White);
+			}
+			if(ModManager.JumpMania)
+			{
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Jump Mania", position+ new Vector2(0,80), Color.White);
+			}
+			if(ModManager.DoubleJump >= 1)
+			{
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Double Jump: " + ModManager.DoubleJump, position+ new Vector2(0,120), Color.White);
+			}
+			if(ModManager.Gravity != 3000)
+			{
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Alternate Gravity", position+ new Vector2(0,160), Color.White);
+			}
+		}
     }
 }

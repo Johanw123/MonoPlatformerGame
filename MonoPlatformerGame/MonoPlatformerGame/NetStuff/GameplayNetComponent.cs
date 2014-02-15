@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-public delegate void ChangeLevelEventHandler(string levelName);
+public delegate void ChangeLevelEventHandler(string levelName, double delayTime);
 public delegate void ChangeLevelPrepEventHandler(double delayTime);
 
 namespace MonoPlatformerGame
@@ -98,9 +98,12 @@ namespace MonoPlatformerGame
         {
             string levelName = msg.ReadString();
             string levelData = msg.ReadString();
+			double delayTime = double.Parse(msg.ReadString());
+			double recieveTime = msg.ReceiveTime / 1000;
+			double actualDelayTime = delayTime - recieveTime;
 
             DownloadLevel(levelName, levelData);
-            OnChangedLevel(levelName);
+            OnChangedLevel(levelName, actualDelayTime);
         }
 
         protected void DownloadLevel(string name, string data)
@@ -111,10 +114,10 @@ namespace MonoPlatformerGame
         }
 
 
-        protected virtual void OnChangedLevel(string levelName)
+        protected virtual void OnChangedLevel(string levelName, double delayTime)
         {
             if (ChangeLevelEvent != null)
-                ChangeLevelEvent(levelName);
+                ChangeLevelEvent(levelName, delayTime);
         }
 
         protected void RedirectBroadcast(DataType type, NetIncomingMessage msg)
@@ -145,7 +148,7 @@ namespace MonoPlatformerGame
             string levelData = msg.ReadString();
 
             DownloadLevel(levelName, levelData);
-            OnChangedLevel(levelName);
+            OnChangedLevel(levelName, 0);
 		}
 
         protected void NewPlayerResponse(NetIncomingMessage msg)
