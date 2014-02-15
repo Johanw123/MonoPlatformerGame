@@ -35,6 +35,10 @@
     <ApplicationIcon>moose-icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\wpf\Turkey\Turkey\bin\Release\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,12 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="moose-icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Users\sipon_000\Desktop\lidgren-network-gen3-2013-05-07\Lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
-      <Name>Lidgren.Network</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

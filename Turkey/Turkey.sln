@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Turkey", "Turkey\Turkey.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moose", "Moose\Moose.csproj", "{CDACC827-7F31-4A29-99B8-CDB6A10EE9D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "..\..\..\Users\sipon_000\Desktop\lidgren-network-gen3-2013-05-07\Lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj", "{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,10 +19,6 @@ Global
 		{CDACC827-7F31-4A29-99B8-CDB6A10EE9D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDACC827-7F31-4A29-99B8-CDB6A10EE9D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDACC827-7F31-4A29-99B8-CDB6A10EE9D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
