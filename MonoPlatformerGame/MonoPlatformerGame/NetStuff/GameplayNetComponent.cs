@@ -67,6 +67,8 @@ namespace MonoPlatformerGame
             double recieveTime = msg.ReceiveTime / 1000;
             double actualDelayTime = delayTime - recieveTime;
 
+            EntityManager.GetPlayer().IsDisabled = true;
+
             if (ChangeLevelPrepEvent != null)
                 ChangeLevelPrepEvent(actualDelayTime);
         }

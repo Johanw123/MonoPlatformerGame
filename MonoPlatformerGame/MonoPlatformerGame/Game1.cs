@@ -45,9 +45,9 @@ namespace MonoPlatformerGame
         {
 			_graphics = new GraphicsDeviceManager(this)
             {
-				IsFullScreen = false
-               //PreferredBackBufferHeight = 720,
-                //PreferredBackBufferWidth = 1280
+				IsFullScreen = false,
+               PreferredBackBufferHeight = 720,
+                PreferredBackBufferWidth = 1280
                 
 			};
         }
