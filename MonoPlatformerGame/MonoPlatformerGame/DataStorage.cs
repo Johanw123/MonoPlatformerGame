@@ -5,27 +5,37 @@ using System.Xml.Linq;
 
 namespace MonoPlatformerGame
 {
-    class PlayerInfo
+    class PlayerConfig
     {
         public string UserName { get; set; }
 
         public string ServerIP { get; set; }
         public int ServerPort { get; set; }
     }
+
+    class ServerConfig
+    {
+        public string ServerName { get; set; }
+        public string GameMode { get; set; }
+        public int HostingPort { get; set; }
+
+
+    }
+
     class DataStorage
     {
-        private static PlayerInfo mPlayerInfo;
+        private static PlayerConfig mPlayerConfig;
 
-        public static PlayerInfo GetLocalPlayerInfo()
+        public static PlayerConfig GetLocalPlayerConfig()
         {
-            if (mPlayerInfo == null)
-                LoadPlayerInfo();
+            if (mPlayerConfig == null)
+                LoadPlayerConfig();
 
-            return mPlayerInfo;
+            return mPlayerConfig;
         }
-        private static void LoadPlayerInfo()
+        private static void LoadPlayerConfig()
         {
-            PlayerInfo playerInfo = new PlayerInfo();
+            PlayerConfig playerConfig = new PlayerConfig();
 
             try
             {
@@ -46,26 +56,26 @@ namespace MonoPlatformerGame
                 string serverIP = xServerInfo.Element(XName.Get("ServerIP")).Value;
                 int serverPort = int.Parse(xServerInfo.Element(XName.Get("ServerPort")).Value);
 
-                playerInfo.UserName = userName;
-                playerInfo.ServerIP = serverIP;
-                playerInfo.ServerPort = serverPort;
+                playerConfig.UserName = userName;
+                playerConfig.ServerIP = serverIP;
+                playerConfig.ServerPort = serverPort;
             }
             catch (Exception)
             {
-                playerInfo.UserName = System.Environment.MachineName;
-                playerInfo.ServerPort = 2300;
-                playerInfo.ServerIP = "127.0.0.1";
-                SavePlayerData(playerInfo);
+                playerConfig.UserName = System.Environment.MachineName;
+                playerConfig.ServerPort = 2300;
+                playerConfig.ServerIP = "127.0.0.1";
+                SavePlayerData(playerConfig);
             }
-            mPlayerInfo = playerInfo;
+            mPlayerConfig = playerConfig;
         }
 
         public static void SaveCurrentPlayerData()
         {
-            SavePlayerData(mPlayerInfo);
+            SavePlayerData(mPlayerConfig);
         }
 
-        private static void SavePlayerData(PlayerInfo playerInfo)
+        private static void SavePlayerData(PlayerConfig playerInfo)
         {
             XElement xmlTree = new XElement("Player");
 

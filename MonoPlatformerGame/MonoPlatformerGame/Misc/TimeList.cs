@@ -18,7 +18,7 @@ namespace MonoPlatformerGame
             if (ci != null)
                 name = ci.Name;
             else if (id == 0 && NetManager.IsHost)
-                name = DataStorage.GetLocalPlayerInfo().UserName;
+                name = DataStorage.GetLocalPlayerConfig().UserName;
 
             //elapsedTimes.Add(id, new KeyValuePair<string, TimeSpan>(name, time));
             //elapsedTimes.OrderBy(pair => pair.Value.Value);

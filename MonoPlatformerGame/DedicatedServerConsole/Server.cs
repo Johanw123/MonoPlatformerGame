@@ -63,7 +63,7 @@ namespace DedicatedServerConsole
 
 			run = true;
 
-			commandsThread = new Thread(ListenForCommands);
+            commandsThread = new Thread(ListenForCommands) { IsBackground = true };
 			commandsThread.Start();
         }
 
@@ -247,21 +247,6 @@ namespace DedicatedServerConsole
 			{
 				string message = commandArgs[0];
 
-				/*
-				  NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
-			                             		(int)DataType.ChatMessage,
-				                             	"Host",
-	                             				message
-				                             	);
-
-
-
-				Lidgren.Network.NetOutgoingMessage msg = NetManager.CreateMessage();
-				msg.Write((int)DataType.ChatMessage);
-				msg.Write("Host");
-				msg.Write(message);
-				NetManager.SendBroadcast(msg, Lidgren.Network.NetDeliveryMethod.ReliableOrdered);
-*/
 				NetManager.SendMessageParamsStringsOnly(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
 				                                        (int)DataType.ChatMessage,
 				                                        "Host",

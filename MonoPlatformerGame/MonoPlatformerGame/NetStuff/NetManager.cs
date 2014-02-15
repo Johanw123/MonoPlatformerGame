@@ -55,21 +55,21 @@ namespace MonoPlatformerGame
         private static NetPeer netPeer;
         private static List<NetComponent> components = new List<NetComponent>();
         public static Dictionary<int, ClientInfo> connectedClients = new Dictionary<int, ClientInfo>();
-       
-        private static Thread t = new Thread(DoThreadInit);
+
+        private static Thread t = new Thread(DoThreadInit) { IsBackground = true };
 		
         private static void DoInit()
         {
             if (IsHost)
             {
                 NetPeerConfiguration config = new NetPeerConfiguration("MonoPlatformerGame");
-                config.Port = DataStorage.GetLocalPlayerInfo().ServerPort;
+                config.Port = DataStorage.GetLocalPlayerConfig().ServerPort;
                 config.MaximumConnections = 32;
                 config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
 				config.EnableUPnP = true;
                 netPeer = new NetServer(config);
                 netPeer.Start();
-                netPeer.UPnP.ForwardPort(DataStorage.GetLocalPlayerInfo().ServerPort, "Server port");
+                netPeer.UPnP.ForwardPort(DataStorage.GetLocalPlayerConfig().ServerPort, "Server port");
 				JapeLog.WriteLine("Server Started");
                 Initialized = true;
             }
@@ -83,7 +83,7 @@ namespace MonoPlatformerGame
                 hailMessage.Write((int)DataType.Login);
                 hailMessage.Write("Hello there");
                 netPeer.Start();
-                netPeer.Connect(DataStorage.GetLocalPlayerInfo().ServerIP, DataStorage.GetLocalPlayerInfo().ServerPort, hailMessage);
+                netPeer.Connect(DataStorage.GetLocalPlayerConfig().ServerIP, DataStorage.GetLocalPlayerConfig().ServerPort, hailMessage);
                 Initialized = true;
             }
             //JapeLog.WriteLine("Connected to Server");
@@ -236,8 +236,6 @@ namespace MonoPlatformerGame
         private static void DoThreadInit()
         {
             DoInit();
-
-            t.Abort();
         }
 
         public static NetOutgoingMessage CreateMessage()
@@ -389,7 +387,7 @@ namespace MonoPlatformerGame
                             {
                                 SendMessageParams(NetDeliveryMethod.ReliableOrdered,
                                     (int)DataType.NewPlayer,
-                                    DataStorage.GetLocalPlayerInfo().UserName,
+                                    DataStorage.GetLocalPlayerConfig().UserName,
                                     (IsHost) ? 0 : -1,
                                     RemoteUID
                                     );
