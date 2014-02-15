@@ -141,14 +141,16 @@ namespace MonoPlatformerGame
             EntityManager.UpdateCamera();
             gameplayNetComponent.Update();
 
-            if(changeLevel != -1)
-            {
-                if (changingLevelTimer.ElapsedMilliseconds >= changeLevel)
-                {
-                    changingLevelTimer.Reset();
-                    changeLevel = -1;
-                }
-            }
+           // if(changeLevel != -1)
+          //  {
+                //if (changingLevelTimer.ElapsedMilliseconds >= changeLevel * 1000)
+                //{
+                //    changingLevelTimer.Reset();
+                //    changeLevel = -1;
+                //}
+
+                changeLevel -= deltaTime;
+            //}
 
             base.Update(gameTime);
         }
@@ -171,7 +173,7 @@ namespace MonoPlatformerGame
 					_spriteBatch.End();
 				}
 
-                if (changeLevel != -1)
+                if (changeLevel >= 0)
                 {
                     _spriteBatch.Begin();
                     _spriteBatch.Draw(PauseTexture, new Rectangle(0, 0, 1280, 720), Color.Black * 0.5f);

@@ -64,7 +64,7 @@ namespace MonoPlatformerGame
         private void IncomingPrepareLevelChange(NetIncomingMessage msg)
         {
             double delayTime = msg.ReadDouble();
-            double recieveTime = msg.ReceiveTime;
+            double recieveTime = msg.ReceiveTime / 1000;
             double actualDelayTime = delayTime - recieveTime;
 
             if (ChangeLevelPrepEvent != null)

@@ -93,6 +93,9 @@ namespace MonoPlatformerGame
         }
 		private void PlayerDied()
 		{
+            if (IsDisabled)
+                return;
+
 			switch(Level.CurrentGameMode)
 			{
 				case GameMode.Race:
