@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 
 public delegate void NextLevelEventHandler();
 
@@ -12,8 +13,14 @@ namespace DedicatedServerConsole
 {
     class DedicatedServerNetComponent : NetComponent
     {
-		private int pingDelay = 0;
+        private Stopwatch pingTimer;
 		public event NextLevelEventHandler NextLevelEvent;
+
+        public DedicatedServerNetComponent()
+        {
+            pingTimer = new Stopwatch();
+            pingTimer.Start();
+        }
 
         public override bool IncomingData(DataType type, NetIncomingMessage msg)
         {
@@ -93,6 +100,7 @@ namespace DedicatedServerConsole
 		void IncomingPong(NetIncomingMessage msg)
 		{
 			NetManager.GetClient(msg.SenderConnection).TimeSinceLastPing = 0;
+            Console.WriteLine("pong");
 		}
 
         private static void RemoveDisconnectedClients()
@@ -114,23 +122,22 @@ namespace DedicatedServerConsole
 
 		void PingPlayers()
 		{
-            return;
-
 			foreach(var pair in NetManager.connectedClients)
 			{
-				if(++pair.Value.TimeSinceLastPing > 500000)
+				if(++pair.Value.TimeSinceLastPing > 5000000)
 				{
                     pair.Value.ClientNetConnection.Disconnect("you are not responding");
                     pair.Value.Disconnected = true;
+                    JapeLog.WriteLine("Player lost connection due to pingpong");
 				}
 			}
 
-			++pingDelay;
-			if(pingDelay % 150 == 0)
+			if(pingTimer.ElapsedMilliseconds > 10000)
 			{
 				NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
 				                             (int)DataType.Ping
 				                             );
+                pingTimer.Restart();
 			}
 		}
 
