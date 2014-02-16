@@ -5,7 +5,6 @@ using System.Text;
 using System.IO;
 
 public delegate void ChangeLevelEventHandler(string levelName, double delayTime);
-public delegate void ChangeLevelPrepEventHandler(double delayTime);
 
 namespace MonoPlatformerGame
 {
@@ -14,7 +13,6 @@ namespace MonoPlatformerGame
         //skicka en timed changeLevelDirekt ist.
         //Kan slås ihop dessa två event förmodligen.
         public event ChangeLevelEventHandler ChangeLevelEvent;
-        public event ChangeLevelPrepEventHandler ChangeLevelPrepEvent;
 
         public override bool IncomingData(DataType type, NetIncomingMessage msg)
         {
@@ -41,14 +39,14 @@ namespace MonoPlatformerGame
                 case DataType.ChangeLevel:
                     IncomingChangeLevel(msg);
                     return true;
-                case DataType.PrepareLevelChange:
-                    IncomingPrepareLevelChange(msg);
-                    return true;
                 case DataType.PlayerDisconnected:
                     IncomingPlayerDisconnect(msg);
                     return true;
                 case DataType.Ping:
                     IncomingPing(msg);
+                    return true;
+                case DataType.PlayerDied:
+                    IncomingPlayerDied(msg);
                     return true;
             }
             return false;
@@ -61,18 +59,6 @@ namespace MonoPlatformerGame
                                         );
         }
 
-        private void IncomingPrepareLevelChange(NetIncomingMessage msg)
-        {
-            double delayTime = msg.ReadDouble();
-            double recieveTime = msg.ReceiveTime / 1000;
-            double actualDelayTime = delayTime - recieveTime;
-
-            EntityManager.GetPlayer().IsDisabled = true;
-
-            if (ChangeLevelPrepEvent != null)
-                ChangeLevelPrepEvent(actualDelayTime);
-        }
-
         private void IncomingPlayerDisconnect(NetIncomingMessage msg)
         {
             int uID = int.Parse(msg.ReadString());
@@ -83,7 +69,17 @@ namespace MonoPlatformerGame
 			//TODO send id
             EntityManager.RemoveNetPlayer(uID);
 
-            JapeLog.WriteLine(playerName + "Disconnected" + " - Reason: " + reason);
+            JapeLog.WriteLine(playerName + " Disconnected" + " - Reason: " + reason);
+        }
+
+        private void IncomingPlayerDied(NetIncomingMessage msg)
+        {
+            string playerName = msg.ReadString();
+            float x = float.Parse(msg.ReadString());
+            float y = float.Parse(msg.ReadString());
+
+            JapeLog.WriteLine(playerName + " Has died... Scrub");
+            ParticleSystem.FireEmitterAt("blood", new Microsoft.Xna.Framework.Vector2(x,y));
         }
 
         protected void PlayerFinish(NetIncomingMessage msg)
@@ -111,6 +107,8 @@ namespace MonoPlatformerGame
             StreamWriter writer = File.CreateText("Content/" + name);
             writer.Write(data);
             writer.Close();
+
+            Runtime.CurrentLevel.Data = data;
         }
 
 
@@ -157,6 +155,7 @@ namespace MonoPlatformerGame
             NetManager.RemoteUID = ownUid;
             bool gameStarted = msg.ReadBoolean();
             string levelName = msg.ReadString();
+            string levelData = msg.ReadString();
 
             int otherClientsCount = msg.ReadInt32();
 
@@ -181,8 +180,11 @@ namespace MonoPlatformerGame
                 }
             }
 
-            //if (gameStarted)
-            //    ChangeOrDownloadLevel(levelName);
+            if (gameStarted)
+            {
+                DownloadLevel(levelName, levelData);
+                OnChangedLevel(levelName, 0);
+            }
 
             JapeLog.WriteLine("Remote ID recieved: " + ownUid);
         }
@@ -195,6 +197,8 @@ namespace MonoPlatformerGame
         protected abstract void IncomingGameState(NetIncomingMessage msg);
         protected abstract void NewPlayer(NetIncomingMessage msg);
         protected abstract void SendGameState();
+
+       
 
         
 

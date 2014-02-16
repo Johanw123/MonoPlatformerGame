@@ -50,16 +50,16 @@ namespace MonoPlatformerGame
 			switch(property)
 			{
 				case "Race":
-					Level.CurrentGameMode = GameMode.Race;
+					Runtime.CurrentLevel.GameMode = GameMode.Race;
 					break;
 				case "TimeTrial":
-					Level.CurrentGameMode = GameMode.TimeTrial;
+                    Runtime.CurrentLevel.GameMode = GameMode.TimeTrial;
 					break;
 				case "Survival":
-					Level.CurrentGameMode = GameMode.Survival;
+                    Runtime.CurrentLevel.GameMode = GameMode.Survival;
 					break;
 				default:
-					Level.CurrentGameMode = GameMode.Race;
+                    Runtime.CurrentLevel.GameMode = GameMode.Race;
 					break;
 			}
 		}

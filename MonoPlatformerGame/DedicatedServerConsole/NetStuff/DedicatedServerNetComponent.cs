@@ -59,8 +59,8 @@ namespace DedicatedServerConsole
 		}
 
 		private void CheckPlayersDead()
-		{	
-			if(Server.CurrentGameMode == GameMode.TimeTrial)
+		{
+            if (Runtime.CurrentLevel.GameMode == GameMode.TimeTrial)
 				return;
 
 			if(NetManager.connectedClients.Values.Count >= 1)
@@ -172,6 +172,10 @@ namespace DedicatedServerConsole
         
             //NetManager.GetClient(id).
             NetManager.GetClient(msg.SenderConnection).RaceInfo.IsDead = true;
+
+            NetManager.RedirectMessage(msg);
+
+
         }
 
         protected void RedirectBroadcast(DataType type, NetIncomingMessage msg)
@@ -255,8 +259,10 @@ namespace DedicatedServerConsole
             oMsg2.Write((int)DataType.NewPlayerResponse);
             oMsg2.Write(info.UID);
             oMsg2.Write(NetManager.GameStarted);
-            oMsg2.Write(NetManager.CurrentLevelName);
-
+            oMsg2.Write(Runtime.CurrentLevel.Name);
+            oMsg2.Write(Runtime.CurrentLevel.Data);
+            //GetlevelData
+            
             oMsg2.Write(NetManager.connectedClients.Count - 1);
             foreach (var item in NetManager.connectedClients)
             {

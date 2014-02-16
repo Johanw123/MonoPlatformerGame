@@ -13,21 +13,7 @@ using System.Diagnostics;
 
 namespace MonoPlatformerGame
 {
-    public enum GameMode
-    {
-        //You have a cerain time to finish the course and the best time wins (track-mania style).
-		//several tries, dying and reaching goal will put player back at start to try again
-        TimeTrial,
-
-        //First to the goal is the winner. Also if all dies, next map will be loaded
-		//A fast pased game with high tempo
-        Race,
-
-        //Screen scrolls the same for all players. One life only, survivers that reach the goal are rewarded with a point.
-		//Most point at end of certain ammount of levels will win.
-        //(Coop/Versus?)
-        Survival,
-    }
+   
 
     public class Game1 : Game
     {
@@ -140,7 +126,7 @@ namespace MonoPlatformerGame
             //}
             if (!NetManager.GameStarted)
                 return;
-			if (!level.LevelLoaded)
+			if (!Runtime.CurrentLevel.Loaded)
 				return;
 
 
@@ -178,7 +164,7 @@ namespace MonoPlatformerGame
 		{
 			// GraphicsDevice.Clear(Color.FromNonPremultiplied(51, 51, 51, 255));
 			GraphicsDevice.Clear(Color.Gray);
-			if (level.LevelLoaded)
+			if (Runtime.CurrentLevel.Loaded)
 			{
 				EntityManager.Draw(_spriteBatch);
 				ParticleSystem.Draw(_spriteBatch);

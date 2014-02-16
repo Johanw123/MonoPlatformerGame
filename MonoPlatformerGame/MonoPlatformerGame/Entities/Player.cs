@@ -46,8 +46,8 @@ namespace MonoPlatformerGame
             ApplyPhysics(deltaTime);
             UpdateBoundingBox();
 
-            if (mPosition.Y > Runtime.LevelHeight)
-                EntityManager.ResetPlayer();
+            if (mPosition.Y > Runtime.CurrentLevel.Height)
+                PlayerDied();
 
             if (isOnGround)
                 currentNumberOfJumps = 0;
@@ -96,12 +96,14 @@ namespace MonoPlatformerGame
             if (IsDisabled)
                 return;
 
-			switch(Level.CurrentGameMode)
+			switch(Runtime.CurrentLevel.GameMode)
 			{
 				case GameMode.Race:
-					NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
-                                                (int)DataType.PlayerDied
-
+					NetManager.SendMessageParamsStringsOnly(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
+                                                (int)DataType.PlayerDied,
+                                                DataStorage.GetLocalPlayerConfig().UserName,
+                                                X.ToString(),
+                                                Y.ToString()
                                                 );
 
                     IsDisabled = true;

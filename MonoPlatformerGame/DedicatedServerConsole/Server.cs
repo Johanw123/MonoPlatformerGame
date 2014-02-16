@@ -10,32 +10,13 @@ using System.Diagnostics;
 
 namespace DedicatedServerConsole
 {
-	public enum GameMode
-	{
-		//You have a cerain time to finish the course and the best time wins (track-mania style).
-		//several tries, dying and reaching goal will put player back at start to try again
-		TimeTrial,
-
-		//First to the goal is the winner. Also if all dies, next map will be loaded
-		//A fast pased game with high tempo
-		Race,
-
-		//Screen scrolls the same for all players. One life only, survivers that reach the goal are rewarded with a point.
-		//Most point at end of certain ammount of levels will win.
-		//(Coop/Versus?)
-		Survival
-	}
-
     class Server
     {
-		public static GameMode CurrentGameMode { get; set; }
         bool run;
 		int curr = 0;
         DedicatedServerNetComponent dedicatedServerNetComponent;
         Thread commandsThread;
         Log log;
-        public string CurrentLevelName { get; set; }
-        Stopwatch nextLevelTimer = new Stopwatch();
 		List<string> mapRotation = new List<string>
 		{
 			"Race1.tmx",
@@ -47,20 +28,17 @@ namespace DedicatedServerConsole
 
         public Server()
         {
-            //CurrentLevelName = "Level.tmx";
-			CurrentLevelName = mapRotation[0];
-            NetManager.CurrentLevelName = CurrentLevelName;
-			CurrentGameMode = GameMode.Race;
-           
+            LoadLevel(mapRotation[0]);
+
             log = new JapeLog();
             Log.Init(log);
 
 			dedicatedServerNetComponent = new DedicatedServerNetComponent();
-			dedicatedServerNetComponent.NextLevelEvent += NextLevel;
+            dedicatedServerNetComponent.NextLevelEvent += NextLevel;
 
             NetManager.Init(true);
 			NetManager.AddComponent(dedicatedServerNetComponent);
-            NetManager.IsDedicatedHost = true;
+            NetManager.IsHost = true;
 
 			run = true;
 
@@ -68,20 +46,7 @@ namespace DedicatedServerConsole
 			commandsThread.Start();
         }
 
-		private void NextLevel()
-		{
-            nextLevelTimer.Reset();
-            nextLevelTimer.Start();
-
-            double delayTime = 3.0;
-
-            NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
-                                        (int)DataType.PrepareLevelChange,
-                                        delayTime
-                                        );
-		}
-
-        private void DoNextLevel()
+        private void NextLevel()
         {
             ++curr;
             if (curr >= mapRotation.Count)
@@ -115,6 +80,10 @@ namespace DedicatedServerConsole
 
                 switch (command.ToUpper())
                 {
+                    case "SHUTDOWN":
+                    case "EXIT":
+                        break;
+
                     case "RESTART":
                     case "START":
                         StartCommand();
@@ -163,23 +132,19 @@ namespace DedicatedServerConsole
 
 		private void StartCommand()
 		{
-			string path = "Maps/" + CurrentLevelName;
+            if (Runtime.CurrentLevel.Loaded)
+            {
+                string levelName = Runtime.CurrentLevel.Name;
+                string levelData = Runtime.CurrentLevel.Data;
 
-				if(File.Exists(path))
-				{
-					//TODO
-					//Läsa in och kolla game-mode...
-					string levelData = File.ReadAllText(path);
-					ParseLevelData(levelData);
-					NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-					                                       (int)DataType.StartGame,
-				                                           CurrentLevelName,
-					                                       levelData
-					);
-				Console.WriteLine("Game started");
-				}
-				NetManager.StartGame();
-
+                NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+                                                               (int)DataType.StartGame,
+                                                               Runtime.CurrentLevel.Name,
+                                                               levelData
+                                                               );
+                NetManager.StartGame();
+                Console.WriteLine("Game started");
+            }
 		}
 
 		private void ParseLevelData(string levelData)
@@ -191,20 +156,21 @@ namespace DedicatedServerConsole
 			switch(s2)
 			{
 				case "Race":
-					CurrentGameMode = GameMode.Race;
+					Runtime.CurrentLevel.GameMode = GameMode.Race;
 					break;
 				case "TimeTrial":
-					CurrentGameMode = GameMode.TimeTrial;
+                    Runtime.CurrentLevel.GameMode = GameMode.TimeTrial;
 					break;
 				case "Survival":
-					CurrentGameMode = GameMode.Survival;
+                    Runtime.CurrentLevel.GameMode = GameMode.Survival;
 					break;
 				default:
-					CurrentGameMode = GameMode.Race;
+                    Runtime.CurrentLevel.GameMode = GameMode.Race;
 					break;
 			}
 
 		}
+
 		public static string getBetween(string strSource, string strStart, string strEnd)
 		{
 			int Start, End;
@@ -219,6 +185,7 @@ namespace DedicatedServerConsole
 				return "";
 			}
 		}
+
 		private void ChangeLevelCommand(List<string> commandArgs)
 		{
 			if (commandArgs.Count > 0)
@@ -231,24 +198,51 @@ namespace DedicatedServerConsole
 
 		private void ChangeLevel(string levelName)
 		{
-			string path = "Maps/" + levelName;
+            if (LoadLevel(levelName))
+            {
+                NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+                                                            (int)DataType.ChangeLevel,
+                                                            Runtime.CurrentLevel.Name,
+                                                            Runtime.CurrentLevel.Data,
+                                                            "3.0" //Timed delay to start next level
+                                                            );
 
-			if (File.Exists(path))
-			{
-				//TODO
-				//Läsa in och kolla game-mode...
-				string levelData = File.ReadAllText(path);
-				ParseLevelData(levelData);
-				NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-				                                        (int)DataType.ChangeLevel,
-				                                        levelName,
-				                                        levelData,
-				                                        "3.0"
-				                                        );
+                Console.WriteLine("Level Changed to: " + Runtime.CurrentLevel.Name);
+            }
 
-				Console.WriteLine("Level Changed to: " + path);
-			}
 		}
+
+        private bool LoadLevel(string levelName)
+        {
+            string path = "Maps/" + levelName;
+            string levelData = GetLevelData(path);
+
+            if (!string.IsNullOrWhiteSpace(levelData) && levelData != "Null")
+            {
+                ParseLevelData(levelData);
+                Runtime.CurrentLevel.Data = levelData;
+                Runtime.CurrentLevel.Name = levelName;
+                Runtime.CurrentLevel.Loaded = true;
+                return true;
+            }
+            return false;
+        }
+
+        private string GetLevelData(string fullPathOrFileName)
+        {
+            string levelData = "Null";
+
+            if (File.Exists(fullPathOrFileName))
+            {
+                levelData = File.ReadAllText(fullPathOrFileName);
+            }
+            else if (File.Exists("Maps/" + fullPathOrFileName))
+            {
+                levelData = File.ReadAllText("Maps/" + fullPathOrFileName);
+            }
+
+            return levelData;
+        }
 
 		private void KickCommand(List<string> commandArgs)
 		{
@@ -336,12 +330,6 @@ namespace DedicatedServerConsole
                 NetManager.Listen();
                 dedicatedServerNetComponent.Update();
 				++framesElapsed;
-
-                if (nextLevelTimer.ElapsedMilliseconds >= 3000)
-                {
-                    nextLevelTimer.Reset();
-                    DoNextLevel();
-                }
             }
         }
 
@@ -349,8 +337,6 @@ namespace DedicatedServerConsole
         {
             throw new ExecutionEngineException("This is a simulated crash exception");
         }
-
-        
 
     }
 }

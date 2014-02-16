@@ -46,9 +46,7 @@ namespace MonoPlatformerGame
         public static int RemoteUID{ get; set; }
         public static bool GameStarted{ get; set; }
         public static bool IsHost { get; set; }
-        public static bool IsDedicatedHost { get; set; }
         public static int CreateNewUID() { return ++uID; }
-        public static string CurrentLevelName { get; set; }
         public static bool Initialized { get; set; }
         
         private static int uID = 0;
@@ -211,7 +209,7 @@ namespace MonoPlatformerGame
 				                  CurrentLevelName
                                   );
                 */
-                JapeLog.WriteLine(String.Format("Starting the game with {0} number of players", (IsDedicatedHost) ? connectedClients.Count : connectedClients.Count + 1));
+                JapeLog.WriteLine(String.Format("Starting the game with {0} number of players", (IsHost) ? connectedClients.Count : connectedClients.Count + 1));
 
                 foreach (var item in components)
                 {
@@ -383,7 +381,7 @@ namespace MonoPlatformerGame
                     case NetIncomingMessageType.StatusChanged:
                         if (msg.SenderConnection.Status == NetConnectionStatus.Connected)
                         {
-                            if (!IsDedicatedHost)
+                            if (!IsHost)
                             {
                                 SendMessageParams(NetDeliveryMethod.ReliableOrdered,
                                     (int)DataType.NewPlayer,

@@ -12,8 +12,8 @@ namespace MonoPlatformerGame
             List<Particle> particles = new List<Particle>();
 
             float Radius = 5;
-            int count = 25;
-            int maxParticleCount = 300;
+            int count = 100;
+            int maxParticleCount = 500;
             int activeParticles = ActiveParticleCount();
 
             if (count +  activeParticles > maxParticleCount)

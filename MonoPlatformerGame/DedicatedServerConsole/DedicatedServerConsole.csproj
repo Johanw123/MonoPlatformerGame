@@ -55,6 +55,9 @@
     <Compile Include="..\MonoPlatformerGame\Misc\Log.cs">
       <Link>Log.cs</Link>
     </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\Runtime.cs">
+      <Link>Runtime.cs</Link>
+    </Compile>
     <Compile Include="..\MonoPlatformerGame\Misc\TimeList.cs">
       <Link>TimeList.cs</Link>
     </Compile>

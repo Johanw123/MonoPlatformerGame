@@ -13,9 +13,6 @@ namespace MonoPlatformerGame
         ContentManager mContent;
         Map mCurrentMap;
         public Map Map { get { return mCurrentMap; } }
-		public bool LevelLoaded { get; set; }
-		public string LevelName { get; set; }
-		public static GameMode CurrentGameMode { get; set; }
 
         public Level(ContentManager content)
         {
@@ -30,35 +27,51 @@ namespace MonoPlatformerGame
             {
                 EntityManager.ClearAll();
                 mCurrentMap = Map.Load(path, mContent);
-                Runtime.LevelHeight = mCurrentMap.Height * mCurrentMap.TileHeight;
-                Runtime.LevelWidth = mCurrentMap.Width * mCurrentMap.TileWidth;
-                Runtime.TileSize = mCurrentMap.TileWidth;
-
+                Runtime.CurrentLevel.Height = mCurrentMap.Height * mCurrentMap.TileHeight;
+                Runtime.CurrentLevel.Width = mCurrentMap.Width * mCurrentMap.TileWidth;
+                Runtime.CurrentLevel.TileSize = mCurrentMap.TileWidth;
+                
                 LoadCurrentLevel();
 				ParseMapProperties ();
-				LevelName = level;
-				LevelLoaded = true;
-                NetManager.CurrentLevelName = LevelName;
-				//CurrentGameMode = GameMode.TimeTrial;
-				CurrentGameMode = GameMode.Race;
+                Runtime.CurrentLevel.Name = level;
+                Runtime.CurrentLevel.Loaded = true;
+                
+                //LevelName = level;
+                //LevelLoaded = true;
+                //NetManager.CurrentLevelName = LevelName;
+                ////CurrentGameMode = GameMode.TimeTrial;
+                //CurrentGameMode = GameMode.Race;
             }
         }
 
-		public static bool MapExist(string level)
-		{
-			//string path = System.IO.Path.Combine(mContent.RootDirectory, level);
-			string path = System.IO.Path.Combine ("Content/", level);
+        //public static bool MapExist(string level)
+        //{
+        //    //string path = System.IO.Path.Combine(mContent.RootDirectory, level);
+        //    string path = System.IO.Path.Combine ("Content/", level);
 
-			if (File.Exists (path))
-			{
-				return true;
-			}
-			return false;
-		}
+        //    if (File.Exists (path))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
+        public static string GetLevelData(string fullPathAndFileName)
+        {
+            string levelData = "Null";
+            if (File.Exists(fullPathAndFileName))
+            {
+                //TODO
+                //Läsa in och kolla game-mode...
+                levelData = File.ReadAllText(fullPathAndFileName);
+
+            }
+            return levelData;
+        }
 
 		public void UnloadLevel()
 		{
-			LevelLoaded = false;
+			Runtime.CurrentLevel.Loaded = false;
 		}
 
 		private void ParseMapProperties()
@@ -78,7 +91,7 @@ namespace MonoPlatformerGame
 		{
 			SortedList<string, string> settings = new SortedList<string, string>();
 			settings.Add("Texture", texture);
-            return new Spike(x * Runtime.TileSize, y * Runtime.TileSize, settings);
+            return new Spike(x * Runtime.CurrentLevel.TileSize, y * Runtime.CurrentLevel.TileSize, settings);
 		}
 
         private void loadMap(Map map)
@@ -102,11 +115,11 @@ namespace MonoPlatformerGame
 							switch (tile) 
 							{
 								case 1:
-									Block block = new Block(x * Runtime.TileSize, y * Runtime.TileSize);
+                                    Block block = new Block(x * Runtime.CurrentLevel.TileSize, y * Runtime.CurrentLevel.TileSize);
 	                            	EntityManager.AddStaticEntity(x, y, block);
 								break;
 								case 2:
-									Finish finish = new Finish(x * Runtime.TileSize, y * Runtime.TileSize);
+                                Finish finish = new Finish(x * Runtime.CurrentLevel.TileSize, y * Runtime.CurrentLevel.TileSize);
 		                            EntityManager.AddStaticEntity(x, y, finish);
 								break;
 								case 3:
@@ -136,10 +149,10 @@ namespace MonoPlatformerGame
 								case 11:
 									//TODO
 	                                //Player is here for now
-	                                Player p = new Player(x * Runtime.TileSize, y * Runtime.TileSize);
+                                Player p = new Player(x * Runtime.CurrentLevel.TileSize, y * Runtime.CurrentLevel.TileSize);
 	                                EntityManager.AddDynamicEntity(p);
 
-	                                Start start = new Start(x * Runtime.TileSize, y * Runtime.TileSize);
+                                    Start start = new Start(x * Runtime.CurrentLevel.TileSize, y * Runtime.CurrentLevel.TileSize);
 	                                EntityManager.AddStaticEntity(x, y, start);
 								break;
 							}

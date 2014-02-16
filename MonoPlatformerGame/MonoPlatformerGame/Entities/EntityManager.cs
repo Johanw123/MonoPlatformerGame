@@ -80,7 +80,7 @@ namespace MonoPlatformerGame
             int width = (map.Width + 2) * map.TileWidth;
             int height = (map.Height + 2) * map.TileHeight;
 
-            rectangleTree = new RectangleTree<Entity>(lol, new Rectangle(-Runtime.TileSize, -Runtime.TileSize, width, height));
+            rectangleTree = new RectangleTree<Entity>(lol, new Rectangle(-Runtime.CurrentLevel.TileSize, -Runtime.CurrentLevel.TileSize, width, height));
 
             foreach (Entity entity in dynamicEntities)
             {
@@ -413,8 +413,8 @@ namespace MonoPlatformerGame
 
         private static Entity[,] GetCloseStatics(Entity e)
         {
-            int x = (int)(e.X / Runtime.TileSize);
-            int y = (int)(e.Y / Runtime.TileSize);
+            int x = (int)(e.X / Runtime.CurrentLevel.TileSize);
+            int y = (int)(e.Y / Runtime.CurrentLevel.TileSize);
 
             return matrix.GetRegion(new Rectangle(x-1, y-1, 3, 3));
         }
