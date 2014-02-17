@@ -46,8 +46,8 @@ namespace MonoPlatformerGame
 
         public static void LocalPlayerFinish(TimeSpan time)
         {
-
-            EntityManager.ResetPlayer();
+			if(Runtime.CurrentLevel.GameMode != GameMode.Race)
+            	EntityManager.ResetPlayer();
 
             NetManager.SendMessageParams(Lidgren.Network.NetDeliveryMethod.ReliableOrdered,
                           (int)DataType.BroadcastMessage,
@@ -62,7 +62,7 @@ namespace MonoPlatformerGame
                         time.TotalMilliseconds
                         );
 
-            NetManager.PlayerReachedFinish(0, (int)time.TotalMilliseconds);
+            //NetManager.PlayerReachedFinish(0, (int)time.TotalMilliseconds);
         }
         
 

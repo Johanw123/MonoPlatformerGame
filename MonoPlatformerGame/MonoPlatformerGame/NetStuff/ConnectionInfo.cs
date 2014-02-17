@@ -53,6 +53,7 @@ namespace MonoPlatformerGame
         public struct sRaceInfo
         {
             public bool IsDead;
+			public int score;
         }
 
 

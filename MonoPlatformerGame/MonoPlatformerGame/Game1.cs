@@ -22,6 +22,7 @@ namespace MonoPlatformerGame
         private Level level;
         Log log;
         private GameplayNetComponent gameplayNetComponent;
+		private ChatNetComponent chatNetComponent;
         Texture2D PauseTexture;
         private Stopwatch changingLevelTimer = new Stopwatch();
         //private bool changingLevel = false;
@@ -97,7 +98,7 @@ namespace MonoPlatformerGame
             //gameplayNetComponent.ChangeLevelPrepEvent += gameplayNetComponent_ChangeLevelPrepEvent;
 
             NetManager.AddComponent(gameplayNetComponent);
-			NetManager.AddComponent(new ChatNetComponent());
+			NetManager.AddComponent(chatNetComponent = new ChatNetComponent());
         }
 
         void gameplayNetComponent_ChangeLevelPrepEvent(double delayTime)
@@ -114,7 +115,7 @@ namespace MonoPlatformerGame
 
             NetManager.Listen();
             Input.Update();
-
+			chatNetComponent.Update();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
             //if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed(Keys.S)) && !NetManager.GameStarted)
@@ -164,10 +165,12 @@ namespace MonoPlatformerGame
 		{
 			// GraphicsDevice.Clear(Color.FromNonPremultiplied(51, 51, 51, 255));
 			GraphicsDevice.Clear(Color.Gray);
+
 			if (Runtime.CurrentLevel.Loaded)
 			{
 				EntityManager.Draw(_spriteBatch);
 				ParticleSystem.Draw(_spriteBatch);
+
 			}
 			if (!NetManager.GameStarted) 
             {
@@ -180,7 +183,7 @@ namespace MonoPlatformerGame
 			DrawLoadingScreen();
 
 				log.Draw();
-
+			chatNetComponent.Draw(_spriteBatch);
             base.Draw(gameTime);
         }
 		private void DrawLoadingScreen()

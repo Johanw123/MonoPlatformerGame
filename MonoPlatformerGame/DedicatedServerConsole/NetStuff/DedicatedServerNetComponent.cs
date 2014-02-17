@@ -162,14 +162,30 @@ namespace DedicatedServerConsole
             int who = msg.ReadInt32();
             int time = msg.ReadInt32();
 
+			switch(Runtime.CurrentLevel.GameMode)
+			{
+				case GameMode.Race:
+					++NetManager.GetClient(msg.SenderConnection).RaceInfo.score;
+					NetManager.RedirectMessage(msg);
 
-			if(NextLevelEvent != null)
-				NextLevelEvent();
+					if(NextLevelEvent != null)
+						NextLevelEvent();
 
-            foreach (var item in NetManager.connectedClients.Values)
-            {
-                item.RaceInfo.IsDead = false;
-            }
+					foreach (var item in NetManager.connectedClients.Values)
+					{
+						item.RaceInfo.IsDead = false;
+					}
+					break;
+				case GameMode.Survival:
+
+					break;
+				case GameMode.TimeTrial:
+
+					break;
+			}
+
+
+
             //NetManager.PlayerReachedFinish(who, time);
         }
 

@@ -28,6 +28,7 @@ namespace DedicatedServerConsole
 
         public Server()
         {
+			mapRotation = DataStorage.GetLocalServerConfig().LevelRotation;
             LoadLevel(mapRotation[0]);
 
             log = new JapeLog();
@@ -209,7 +210,6 @@ namespace DedicatedServerConsole
 
                 Console.WriteLine("Level Changed to: " + Runtime.CurrentLevel.Name);
             }
-
 		}
 
         private bool LoadLevel(string levelName)

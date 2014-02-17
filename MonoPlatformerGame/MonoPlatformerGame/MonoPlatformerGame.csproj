@@ -63,7 +63,9 @@
     <Compile Include="Misc\TimeList.cs" />
     <Compile Include="NetStuff\ConnectionInfo.cs" />
     <Compile Include="NetStuff\ClientGameplayNetComponent.cs" />
-    <Compile Include="NetStuff\GameplayNetComponent.cs" />
+    <Compile Include="NetStuff\GameplayNetComponent.cs">
+      <DependentUpon>NetComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="NetStuff\NetComponent.cs" />
     <Compile Include="NetStuff\NetManager.cs" />
     <Compile Include="ParticleSystem\Emitters\CircleEmitter.cs" />
@@ -74,7 +76,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tiled.cs" />
     <Compile Include="Entities\EntityManager.cs" />
-    <Compile Include="NetStuff\ChatNetComponent.cs" />
+    <Compile Include="NetStuff\ChatNetComponent.cs">
+      <DependentUpon>NetComponent.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

@@ -82,13 +82,24 @@ namespace MonoPlatformerGame
             ParticleSystem.FireEmitterAt("blood", new Microsoft.Xna.Framework.Vector2(x,y));
         }
 
-        protected void PlayerFinish(NetIncomingMessage msg)
-        {
-            int who = msg.ReadInt32();
-            int time = msg.ReadInt32();
+		protected void PlayerFinish(NetIncomingMessage msg)
+		{
+			int who = msg.ReadInt32();
+			int time = msg.ReadInt32();
 
-            NetManager.PlayerReachedFinish(who, time);                
-        }
+			switch(Runtime.CurrentLevel.GameMode)
+			{
+				case GameMode.Race:
+					++NetManager.GetClient(who).RaceInfo.score;
+					break;
+					case GameMode.Survival:
+
+					break;
+					case GameMode.TimeTrial:
+
+					break;
+			}
+		}
 
         protected void IncomingChangeLevel(NetIncomingMessage msg)
         {
