@@ -6,14 +6,14 @@ namespace MonoPlatformerGame
 {
     public class NetPlayer : Player
     {
+		public int UID { get; set; }
+		public bool Disconnected { get; set; }
+
         public NetPlayer(float x, float y) :
             base(x, y)
         {
 
         }
-
-        public int UID { get; set; }
-        public bool Disconnected { get; set; }
 
         public override void Update(float deltaTime)
         {

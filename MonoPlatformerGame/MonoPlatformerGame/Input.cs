@@ -26,6 +26,8 @@ namespace MonoPlatformerGame
         private static GamePadState mNewButton;
         private static GamePadState mOldButton;
 
+		private static Dictionary<string, Keys> mKeybinds;
+
         public static void Init()
         {
             mNewKey = Keyboard.GetState();
@@ -39,6 +41,7 @@ namespace MonoPlatformerGame
             mNewButton = GamePad.GetState(mPlayerIndex);
             mOldButton = GamePad.GetState(mPlayerIndex);
 
+			mKeybinds = new Dictionary<string, Keys>();
         }
 
         public static void Update()
@@ -53,22 +56,43 @@ namespace MonoPlatformerGame
 
         }
 
+		public static void RegisterKeybind(string name, Keys key)
+		{
+			mKeybinds.Add(name, key);
+		}
+
         public static bool IsKeyDown(Keys key)
         {
             return mNewKey.IsKeyDown(key);
         }
+
+		public static bool IsKeyDown(string boundKeyName)
+		{
+			Keys key;
+
+			mKeybinds.TryGetValue(boundKeyName, out key);
+
+			//if(key != null)
+				return IsKeyDown(key);
+
+			return false;
+		}
+
         public static bool IsKeyPressed(Keys key)
         {
             return mNewKey.IsKeyDown(key) && mOldKey.IsKeyUp(key);
         }
+
         public static bool IsButtonDown(Buttons button)
         {
             return mNewButton.IsButtonDown(button);
         }
+
         public static bool IsButtonPressed(Buttons button)
         {
             return mNewButton.IsButtonDown(button) && mOldButton.IsButtonUp(button);
         }
+
         public static bool IsMouseDown(MouseButton button)
         {
             switch (button)
@@ -82,6 +106,7 @@ namespace MonoPlatformerGame
             }
             return false;
         }
+
         public static bool IsMousePressed(MouseButton button)
         {
             switch (button)
@@ -95,10 +120,12 @@ namespace MonoPlatformerGame
             }
             return false;
         }
+
         public static int MouseX()
         {
             return mNewMouse.X;
         }
+
         public static int MouseY()
         {
             return mNewMouse.Y;

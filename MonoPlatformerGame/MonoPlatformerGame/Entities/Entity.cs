@@ -42,6 +42,7 @@ namespace MonoPlatformerGame
 
             BoundingBox = new Rectangle((int)X, (int)Y, width, height);
         }
+
         private SpriteEffects mSpriteEffects;
         public SpriteEffects SpriteEffects
         {
@@ -68,11 +69,13 @@ namespace MonoPlatformerGame
             get { return mPosition; }
             set { mPosition = value; }
         }
+
         public Vector2 Velocity
         {
             get { return mVelocity; }
             set { mVelocity = value; }
         }
+
         public Vector2 Accel
         {
             get { return mAccel; }
@@ -83,10 +86,12 @@ namespace MonoPlatformerGame
         {
             get { return new Point(mTexture.Width, mTexture.Height); }
         }
+
         public int Width
         {
             get { return mTexture.Width; }
         }
+
         public int Height
         {
             get { return mTexture.Height; }
@@ -96,26 +101,31 @@ namespace MonoPlatformerGame
         {
             get { return mTexture; }
         }
+
         public float X
         {
             get { return Position.X; }
             set { Position = new Vector2(value, Position.Y); }
         }
+
         public float Y
         {
             get { return Position.Y; }
             set { Position = new Vector2(Position.X, value); }
         }
+
         public float VelX
         {
             get { return Velocity.X; }
             set { Velocity = new Vector2(Velocity.X, value); }
         }
+
         public float VelY
         {
             get { return Velocity.Y; }
             set { Velocity = new Vector2(value, Velocity.Y); }
         }
+
         public virtual string GetName()
         {
             return "Null";

@@ -21,10 +21,12 @@ namespace MonoPlatformerGame
         {
             get { return dynamicEntities; }
         }
+
         public static List<NetPlayer> NetPlayers
         {
             get { return netPlayers; }
         }
+
         public static Player GetPlayer()
         {
             return player;

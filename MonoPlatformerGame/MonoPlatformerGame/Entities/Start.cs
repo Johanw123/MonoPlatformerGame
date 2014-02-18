@@ -14,23 +14,24 @@ namespace MonoPlatformerGame
 
             mTexture = ResourceManager.GetTexture("Start");
 
-
-
-
             UpdateBoundingBox();
         }
+
         public override string GetName()
         {
             return "Start";
         }
+
         public override void Update(float deltaTime)
         {
 
         }
+
         public override void HandleCollide(Entity other)
         {
             
         }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             Vector2 origin = new Vector2(mTexture.Width / 2, mTexture.Height / 2);

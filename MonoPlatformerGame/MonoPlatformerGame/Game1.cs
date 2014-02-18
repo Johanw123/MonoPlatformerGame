@@ -80,6 +80,7 @@ namespace MonoPlatformerGame
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
             Content.RootDirectory = "Content";
+			Input.Init();
             ResourceManager.Initialize(Content, _graphics.GraphicsDevice);
             ParticleSystem.Init();
             ParticleSystem.AddEmitter("blood", new CircleEmitter());
@@ -116,6 +117,10 @@ namespace MonoPlatformerGame
             NetManager.Listen();
             Input.Update();
 			chatNetComponent.Update();
+
+			if(Input.IsKeyDown("llol"))
+				Exit();
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
             //if ((GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Input.IsKeyPressed(Keys.S)) && !NetManager.GameStarted)

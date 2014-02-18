@@ -25,14 +25,17 @@ namespace MonoPlatformerGame
         {
 
         }
+
         public override string GetName()
         {
             return "Spike";
         }
+
         public override void HandleCollide(Entity other)
         {
             
         }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             Vector2 origin = new Vector2(mTexture.Width / 2, mTexture.Height / 2);

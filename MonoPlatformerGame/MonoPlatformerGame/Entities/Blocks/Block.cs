@@ -37,11 +37,8 @@ namespace MonoPlatformerGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-
             spriteBatch.Draw(mTexture, mPosition, null, Color, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0);
            // spriteBatch.Draw(ResourceManager.GetTexture("BoundingBox"), BoundingBox, null, Color, 0f, origin, SpriteEffects.None, 0);
-
-            Color = Color.White;
         }
 
 
