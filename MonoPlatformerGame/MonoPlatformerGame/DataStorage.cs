@@ -81,6 +81,14 @@ namespace MonoPlatformerGame
 				serverConfig.ServerName = System.Environment.MachineName + "'s Server";
 				serverConfig.HostingPort = 2300;
 				serverConfig.GameMode = "Race";
+                serverConfig.LevelRotation = new List<string>
+		        {
+			        "Race1.tmx",
+			        "Race2.tmx",
+			        "Race3.tmx",
+			        "Race4.tmx",
+			        "Race5.tmx"
+		        };
 				//SavePlayerData(playerConfig);
 			}
 			mServerConfig = serverConfig;

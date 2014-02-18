@@ -18,7 +18,7 @@ namespace MonoPlatformerGame
 		public ChatNetComponent()
 		{
 			inputTimer.Start();
-		}
+        }
 
 		public override bool IncomingData(DataType type, NetIncomingMessage msg)
 		{
@@ -39,29 +39,36 @@ namespace MonoPlatformerGame
 			JapeLog.WriteLine(playerName + " : " + message);
 		}
 
-		public void Update()
+		public void Update(GameTime gameTime, KeyboardManager keyboardManager)
 		{
 			keyOld = keyNew;
 			keyNew = Keyboard.GetState();
 
-			var a = keyNew.GetPressedKeys();
-			if(a.Length > 0 && inputTimer.ElapsedMilliseconds > 150)
-			{
-				chatString += a[0].ToString();
-				inputTimer.Restart();
-			}
+            keyboardManager.Update(gameTime);
+            chatString = keyboardManager.Text;
 
 			if(keyNew.IsKeyDown(Keys.Enter) && keyOld.IsKeyUp(Keys.Enter))
 			{
 				if(ChatMode)
 				{
 					ChatMode = false;
-					chatString = "|";
+                    keyboardManager.Text = ": ";
+                    string chatMessage = chatString.Substring(2);
+
+                    NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+                                                            (int)DataType.ChatMessage,
+                                                            chatMessage
+                                                            );
+
+                    //NetOutgoingMessage oMsg = NetManager.CreateMessage();
+                    //oMsg.Write((int)DataType.ChatMessage);
+                    //oMsg.Write(chatMessage);
+                    //NetManager.SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg);
 				}
 				else
 				{
-					chatString = "|";
 					ChatMode = true;
+                    keyboardManager.Text = ": ";
 				}
 			}
 
@@ -73,6 +80,7 @@ namespace MonoPlatformerGame
 			if(ChatMode)
 			{
 				spriteBatch.Begin();
+                if (chatString != null)
 				spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatString, new Vector2(100,100), Color.White);
 				spriteBatch.End();
 			}

@@ -14,12 +14,12 @@ namespace MonoPlatformerGame
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        [STAThread]
-        static void Main(System.String[] args)
+        static void Main(string[] args)
         {
-			Game1 game = new Game1();
-			game.Run ();
-
+            using (Game1 game = new Game1())
+            {
+                game.Run();
+            }
         }
     }
 

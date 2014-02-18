@@ -100,7 +100,6 @@ namespace DedicatedServerConsole
 		void IncomingPong(NetIncomingMessage msg)
 		{
 			NetManager.GetClient(msg.SenderConnection).TimeSinceLastPing = 0;
-            Console.WriteLine("pong");
 		}
 
         private static void RemoveDisconnectedClients()
@@ -151,9 +150,9 @@ namespace DedicatedServerConsole
 			                             playerName,
 			                             message
 			                             );*/
-
+            
 			NetManager.RedirectMessage(msg);
-
+            Console.WriteLine(msg.ReadString());
 
 		}
 

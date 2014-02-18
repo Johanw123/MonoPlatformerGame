@@ -98,6 +98,9 @@
     <Compile Include="..\MonoPlatformerGame\Misc\JapeLogMono.cs">
       <Link>Misc\JapeLogMono.cs</Link>
     </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\KeyboardManager.cs">
+      <Link>Misc\KeyboardManager.cs</Link>
+    </Compile>
     <Compile Include="..\MonoPlatformerGame\Misc\Log.cs">
       <Link>Misc\Log.cs</Link>
     </Compile>

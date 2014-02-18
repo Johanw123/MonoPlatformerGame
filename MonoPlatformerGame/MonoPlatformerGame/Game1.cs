@@ -27,6 +27,7 @@ namespace MonoPlatformerGame
         private Stopwatch changingLevelTimer = new Stopwatch();
         //private bool changingLevel = false;
         private double changeLevel = -1;
+        KeyboardManager keyboardManager;
 
         public Game1()
         {
@@ -37,6 +38,7 @@ namespace MonoPlatformerGame
 			_graphics.PreferredBackBufferHeight = 720;
 			_graphics.PreferredBackBufferWidth = 1280;
 #endif
+            keyboardManager = new KeyboardManager(this);
         }
 
 		protected override void Initialize()
@@ -90,7 +92,7 @@ namespace MonoPlatformerGame
             PauseTexture.SetData(new Color[] { Color.White });
             EntityManager.Init(GraphicsDevice);
             level = new Level(Content);
-           
+            //this.Components.Add(keyboardManager);
             NetManager.Init(false);
 
             gameplayNetComponent = new ClientGameplayNetComponent();
@@ -116,7 +118,7 @@ namespace MonoPlatformerGame
 
             NetManager.Listen();
             Input.Update();
-			chatNetComponent.Update();
+			chatNetComponent.Update(gameTime, keyboardManager);
 
 			if(Input.IsKeyDown("llol"))
 				Exit();

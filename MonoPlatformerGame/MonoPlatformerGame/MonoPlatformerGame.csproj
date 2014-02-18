@@ -37,6 +37,7 @@
     <Compile Include="DataStorage.cs" />
     <Compile Include="Entities\Blocks\Block.cs" />
     <Compile Include="Entities\Blocks\MovingPlatform.cs" />
+    <Compile Include="Misc\KeyboardManager.cs" />
     <Compile Include="Mods\ModManager.cs" />
     <Compile Include="ResourceManager.cs" />
     <Compile Include="Entities\Enemies\FlyingEnemy.cs" />
@@ -87,6 +88,7 @@
     <Reference Include="Lidgren.Network">
       <HintPath>..\..\Dlls\Linux\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Tao.Sdl">
       <HintPath>..\..\Dlls\Tao.Sdl.dll</HintPath>
