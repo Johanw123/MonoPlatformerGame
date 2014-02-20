@@ -160,6 +160,9 @@
     <Compile Include="..\MonoPlatformerGame\NetStuff\ChatNetComponent.cs">
       <Link>NetStuff\ChatNetComponent.cs</Link>
     </Compile>
+    <Compile Include="..\MonoPlatformerGame\Misc\KeyboardTest.cs">
+      <Link>Misc\KeyboardTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

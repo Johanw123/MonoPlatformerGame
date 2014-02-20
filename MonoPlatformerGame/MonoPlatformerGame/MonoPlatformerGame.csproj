@@ -80,6 +80,7 @@
     <Compile Include="NetStuff\ChatNetComponent.cs">
       <DependentUpon>NetComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Misc\KeyboardTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

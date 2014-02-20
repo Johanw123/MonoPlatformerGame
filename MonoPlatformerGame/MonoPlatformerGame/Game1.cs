@@ -31,20 +31,28 @@ namespace MonoPlatformerGame
 
         public Game1()
         {
-			_graphics = new GraphicsDeviceManager(this);
+			Window.AllowUserResizing = true;
+			Console.WriteLine(Window.ClientBounds);
 
+			_graphics = new GraphicsDeviceManager(this);
+			GraphicsDevice.Viewport = new Viewport(0,0, 1280, 720);
 			_graphics.IsFullScreen = false;
-#if WINDOWS
+//#if WINDOWS
 			_graphics.PreferredBackBufferHeight = 720;
 			_graphics.PreferredBackBufferWidth = 1280;
-#endif
+//#endif	
             keyboardManager = new KeyboardManager(this);
         }
 
 		protected override void Initialize()
 		{
 			base.Initialize();
-
+			Console.WriteLine(Window.ClientBounds);
+			_graphics.PreferredBackBufferHeight = 720;
+			_graphics.PreferredBackBufferWidth = 1280;
+			_graphics.CreateDevice();
+			_graphics.ApplyChanges();
+			Console.WriteLine(Window.ClientBounds);
 			//_graphics.PreferredBackBufferHeight = 720;
 			//_graphics.PreferredBackBufferWidth = 1280;
 			//_graphics.IsFullScreen = false;

@@ -13,6 +13,9 @@ namespace MonoPlatformerGame
 		private string chatString = "|";
 		private KeyboardState keyOld;
 		private KeyboardState keyNew;
+
+
+		private KeyboardTest keyTest = new KeyboardTest();
 		private Stopwatch inputTimer = new Stopwatch();
 
 		public ChatNetComponent()
@@ -43,16 +46,17 @@ namespace MonoPlatformerGame
 		{
 			keyOld = keyNew;
 			keyNew = Keyboard.GetState();
-
+			keyTest.Update();
             keyboardManager.Update(gameTime);
             chatString = keyboardManager.Text;
-
+			chatString = keyTest.output;
 			if(keyNew.IsKeyDown(Keys.Enter) && keyOld.IsKeyUp(Keys.Enter))
 			{
 				if(ChatMode)
 				{
 					ChatMode = false;
                     keyboardManager.Text = ": ";
+					keyTest.output = ": ";
                     string chatMessage = chatString.Substring(2);
 
                     NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
@@ -69,6 +73,7 @@ namespace MonoPlatformerGame
 				{
 					ChatMode = true;
                     keyboardManager.Text = ": ";
+					keyTest.output = ": ";
 				}
 			}
 
