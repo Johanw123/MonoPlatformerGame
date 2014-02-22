@@ -10,11 +10,13 @@ namespace MonoPlatformerGame
         private const int GravityDefault = 3000;
         private const bool JumpManiaDefault = false;
         private const bool CantStopDefault = false;
+        private const bool MirrorManDefault = false;
 
         public static int DoubleJump = DoubleJumpDefault;
         public static int Gravity = GravityDefault;
         public static bool JumpMania = JumpManiaDefault;
         public static bool CantStop = CantStopDefault;
+        public static bool MirrorMan = MirrorManDefault;
 
         public static void SetupMods(Level level)
         {
@@ -41,6 +43,9 @@ namespace MonoPlatformerGame
 					case "CantStop":
 						CantStop = ParseBool(property) ?? CantStopDefault;
 	                    break;
+                    case "MirrorMan":
+                        MirrorMan = ParseBool(property) ?? MirrorManDefault;
+                        break;
                 }
             }
         }
@@ -70,6 +75,7 @@ namespace MonoPlatformerGame
             Gravity = GravityDefault;
             JumpMania = JumpManiaDefault;
             CantStop = CantStopDefault;
+            MirrorMan = MirrorManDefault;
         }
 
 		private static bool? ParseBool(string s)

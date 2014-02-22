@@ -223,16 +223,20 @@ namespace MonoPlatformerGame
 			}
 			if(ModManager.JumpMania)
 			{
-				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Jump Mania", position+ new Vector2(0,80), Color.White);
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Jump Mania", position+ new Vector2(0,70), Color.White);
 			}
 			if(ModManager.DoubleJump >= 1)
 			{
-				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Double Jump: " + ModManager.DoubleJump, position+ new Vector2(0,120), Color.White);
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Double Jump: " + ModManager.DoubleJump, position+ new Vector2(0,100), Color.White);
 			}
 			if(ModManager.Gravity != 3000)
 			{
-				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Alternate Gravity", position+ new Vector2(0,160), Color.White);
+				_spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Alternate Gravity", position+ new Vector2(0,130), Color.White);
 			}
+            if (ModManager.MirrorMan)
+            {
+                _spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), "Mirror Man", position + new Vector2(0, 160), Color.White);
+            }
 		}
     }
 }

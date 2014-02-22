@@ -189,6 +189,12 @@ namespace DedicatedServerConsole
 					++NetManager.GetClient(msg.SenderConnection).RaceInfo.score;
 					NetManager.RedirectMessage(msg);
 
+                    string chatMessage = "Winner! " + NetManager.GetClient(msg.SenderConnection).Name + " score: " + NetManager.GetClient(msg.SenderConnection).RaceInfo.score;
+                    NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+                                                            (int)DataType.ChatMessage,
+                                                            "System",
+                                                            chatMessage
+                                                            );
 					if(NextLevelEvent != null)
 						NextLevelEvent();
 

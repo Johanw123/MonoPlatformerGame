@@ -156,7 +156,20 @@ namespace MonoPlatformerGame
             if (Position.Y == previousPosition.Y)
                 mVelocity.Y = 0;
         }
+
+        private void MoveLeft()
+        {
+            mAccel.X = -1.0f;
+            Facing = eFacing.Left;
         
+        }
+
+        private void MoveRight()
+        {
+            mAccel.X = 1.0f;
+            Facing = eFacing.Right;
+        }
+
         private void HandleInput(float deltaTime)
         {
             if(!ModManager.CantStop)
@@ -164,13 +177,17 @@ namespace MonoPlatformerGame
 
             if (Input.IsKeyDown(Keys.Left) || GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X < -0.5f)
             {
-                mAccel.X = -1.0f;
-                Facing = eFacing.Left;
+                if (ModManager.MirrorMan)
+                    MoveRight();
+                else
+                    MoveLeft();
             }
             else if (Input.IsKeyDown(Keys.Right) || GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X > 0.5f)
             {
-                mAccel.X = 1.0f;
-                Facing = eFacing.Right;
+                if (ModManager.MirrorMan)
+                    MoveLeft();
+                else 
+                    MoveRight();
             }
             else
                 mVelocity.X *= 0.7f;

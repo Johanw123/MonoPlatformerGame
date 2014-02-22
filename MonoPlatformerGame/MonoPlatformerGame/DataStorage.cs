@@ -87,7 +87,11 @@ namespace MonoPlatformerGame
 			        "Race2.tmx",
 			        "Race3.tmx",
 			        "Race4.tmx",
-			        "Race5.tmx"
+			        "Race5.tmx",
+                    "Race6.tmx",
+                    "Race7.tmx",
+                    "Race8.tmx",
+                    "Race9.tmx"
 		        };
 				//SavePlayerData(playerConfig);
 			}
@@ -125,7 +129,7 @@ namespace MonoPlatformerGame
             {
                 playerConfig.UserName = System.Environment.MachineName;
                 playerConfig.ServerPort = 2300;
-                playerConfig.ServerIP = "127.0.0.1";
+                playerConfig.ServerIP = "90.224.75.79";
                 SavePlayerData(playerConfig);
             }
             mPlayerConfig = playerConfig;

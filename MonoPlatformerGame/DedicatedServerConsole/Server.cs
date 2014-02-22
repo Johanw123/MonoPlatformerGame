@@ -23,7 +23,11 @@ namespace DedicatedServerConsole
 			"Race2.tmx",
 			"Race3.tmx",
 			"Race4.tmx",
-			"Race5.tmx"
+			"Race5.tmx",
+            "Race6.tmx",
+            "Race7.tmx",
+            "Race8.tmx",
+            "Race9.tmx"
 		};
 
         public Server()
