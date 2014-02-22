@@ -29,6 +29,9 @@ namespace MonoPlatformerGame
             return random;
         }
 
+        public static int ScreenWidth = 1280;
+        public static int ScreenHeight = 720;
+
         public static sCurrentLevel CurrentLevel;
         public struct sCurrentLevel
         {
