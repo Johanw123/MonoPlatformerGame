@@ -11,11 +11,12 @@ namespace MonoPlatformerGame
 	public class ChatNetComponent : NetComponent
 	{
 		public bool ChatMode{ get; set; }
-		private string chatString = "|";
+		private string chatString = ":";
 		private KeyboardState keyOld;
 		private KeyboardState keyNew;
         private List<string> chatMessages = new List<string>();
         private List<KeyValuePair<string, float>> chatMessagesFade = new List<KeyValuePair<string, float>>();
+		private bool IsAdmin = false;
         
 		private KeyboardTest keyTest = new KeyboardTest();
 		private Stopwatch inputTimer = new Stopwatch();
@@ -50,6 +51,12 @@ namespace MonoPlatformerGame
             chatMessages.Add(playerName + " : " + message);
             JapeLog.WriteLine(playerName + " : " + message);
         }
+		private void AddCommandChatMessage(string message)
+		{
+			chatMessagesFade.Add(new KeyValuePair<string, float>("Command" + " : " + message, 1.0f));
+			chatMessages.Add("Command" + " : " + message);
+			JapeLog.WriteLine("Command" + " : " + message);
+		}
 
 		public void Update(GameTime gameTime, KeyboardManager keyboardManager)
 		{
@@ -64,26 +71,62 @@ namespace MonoPlatformerGame
 				if(ChatMode)
 				{
 					ChatMode = false;
-                    keyboardManager.Text = ": ";
+					keyboardManager.Text = ": ";
 					keyTest.output = ": ";
-                    string chatMessage = chatString.Substring(2);
+					string chatMessage = chatString.Substring(2);
+					if(chatMessage.Length > 0)
+					{
+						if(chatMessage.Substring(0, 1) == ".")
+						{
+							//commands
+							if(chatMessage.Length > 2)
+							{
+								switch(chatMessage.Substring(1).ToUpper())
+								{
+									case "POKEMON":
+										IsAdmin = true;
+										AddCommandChatMessage("Admin mode activated");
+										return;
+									case "START":
+										if(IsAdmin)
+										{
+											AddCommandChatMessage("Starting Game");
+											NetManager.SendMessageParams(NetDeliveryMethod.ReliableOrdered,
+											                            (int)DataType.StartGame
+											);
+										}
+										else
+											AddCommandChatMessage("You are not Admin...");
+									
+										break;
 
-                    NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
-                                                            (int)DataType.ChatMessage,
-                                                            DataStorage.GetLocalPlayerConfig().UserName,
-                                                            chatMessage
-                                                            );
+								}
+							}
 
-                    AddChatMessage(DataStorage.GetLocalPlayerConfig().UserName, chatMessage);
-                    //NetOutgoingMessage oMsg = NetManager.CreateMessage();
-                    //oMsg.Write((int)DataType.ChatMessage);
-                    //oMsg.Write(chatMessage);
-                    //NetManager.SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg);
+
+						}
+						NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+						                                                      (int)DataType.ChatMessage,
+						                                                      DataStorage.GetLocalPlayerConfig().UserName,
+						                                                      chatMessage
+						);
+
+						AddChatMessage(DataStorage.GetLocalPlayerConfig().UserName, chatMessage);
+						//NetOutgoingMessage oMsg = NetManager.CreateMessage();
+						//oMsg.Write((int)DataType.ChatMessage);
+						//oMsg.Write(chatMessage);
+						//NetManager.SendMessage(NetDeliveryMethod.ReliableOrdered, oMsg);
+					}
+					else
+					{
+						keyboardManager.Text = ": ";
+						keyTest.output = ": ";
+					}
 				}
 				else
 				{
 					ChatMode = true;
-                    keyboardManager.Text = ": ";
+					keyboardManager.Text = ": ";
 					keyTest.output = ": ";
 				}
 			}
@@ -100,7 +143,8 @@ namespace MonoPlatformerGame
                 int j = 1;
                 for (int i = chatMessages.Count - 1; i >= 0; --i)
                 {
-                    spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatMessages[i], new Vector2(Runtime.ScreenWidth/2 - 200, (Runtime.ScreenHeight-50) - j * 30), Color.White);
+					spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatMessages[i], new Vector2(Runtime.ScreenWidth/2 - 200, (Runtime.ScreenHeight-50) - j * 30) + new Vector2(1.5f,1.5f), Color.Black);
+                    spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatMessages[i], new Vector2(Runtime.ScreenWidth/2 - 200, (Runtime.ScreenHeight-50) - j * 30), Color.DodgerBlue);
                     ++j;
                 }
                 //for (int i = 0; i < chatMessages.Count; ++i)
@@ -108,8 +152,11 @@ namespace MonoPlatformerGame
                 //    spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatMessages[i], new Vector2(500, 500 - i * 30), Color.White);
                 //}
 
-                if (chatString != null)
-                    spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatString, new Vector2(Runtime.ScreenWidth / 2 - 200, (Runtime.ScreenHeight - 50)), Color.White);
+				if(chatString != null)
+				{
+					spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatString, new Vector2(Runtime.ScreenWidth / 2 - 200, (Runtime.ScreenHeight - 50)) + new Vector2(1.5f,1.5f), Color.Black);
+					spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatString, new Vector2(Runtime.ScreenWidth / 2 - 200, (Runtime.ScreenHeight - 50)), Color.DodgerBlue);
+				}
 				spriteBatch.End();
 			}
             else
@@ -118,7 +165,8 @@ namespace MonoPlatformerGame
                 for (int i = chatMessagesFade.Count - 1; i >= 0; --i)
                 {
                     spriteBatch.Begin();
-                    spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatMessagesFade[i].Key, new Vector2(Runtime.ScreenWidth / 2 - 200, (Runtime.ScreenHeight - 50) - j * 30), Color.White * chatMessagesFade[i].Value);
+					spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatMessagesFade[i].Key, new Vector2(Runtime.ScreenWidth / 2 - 200, (Runtime.ScreenHeight - 50) - j * 30) + new Vector2(1.5f,1.5f), Color.Black * chatMessagesFade[i].Value);
+					spriteBatch.DrawString(ResourceManager.GetFont("Verdana"), chatMessagesFade[i].Key, new Vector2(Runtime.ScreenWidth / 2 - 200, (Runtime.ScreenHeight - 50) - j * 30), Color.DodgerBlue * chatMessagesFade[i].Value);
                     ++j;
                     spriteBatch.End();
                 }

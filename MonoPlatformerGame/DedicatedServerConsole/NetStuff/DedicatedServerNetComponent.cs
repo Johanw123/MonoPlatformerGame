@@ -50,6 +50,9 @@ namespace DedicatedServerConsole
 				case DataType.Pong:
 					IncomingPong(msg);
 					return true;
+				case DataType.StartGame:
+					IncomingStartGameRequest(msg);
+					return true;
             }
             return false;
         }
@@ -63,6 +66,25 @@ namespace DedicatedServerConsole
 			CheckPlayersDead();
 			PingPlayers();
             RemoveDisconnectedClients();
+		}
+
+		void IncomingStartGameRequest(NetIncomingMessage msg)
+		{
+			StartCommand();
+		}
+
+		private void StartCommand()
+		{
+			if (Runtime.CurrentLevel.Loaded)
+			{
+				NetManager.SendMessageParamsStringsOnly(NetDeliveryMethod.ReliableOrdered,
+				                                        (int)DataType.StartGame,
+				                                        Runtime.CurrentLevel.Name,
+				                                        Runtime.CurrentLevel.Data
+				                                        );
+				NetManager.StartGame();
+				Console.WriteLine("Game started");
+			}
 		}
 
 		private void CheckPlayersDead()
