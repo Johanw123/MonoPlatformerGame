@@ -55,7 +55,19 @@ namespace MonoPlatformerGame
 				{
 					//Key was not pressed down
 					dicKeys[currKey] = true;
-					output += Convert(a);
+					string converted = Convert(a);
+					if(converted == "\b")
+					{
+						if(output.Length >= 3)
+						{
+							output = output.Remove(output.Length - 1, 1);
+						}
+					}
+					else
+						output += converted;
+
+
+
 				}
 
 			}
@@ -63,7 +75,16 @@ namespace MonoPlatformerGame
 			{
 				//Key was not found, add it
 				dicKeys.Add(currKey, true);
-				output += Convert(a);
+				string converted = Convert(a);
+				if(converted == "\b")
+				{
+					if(output.Length >= 3)
+					{
+						output = output.Remove(output.Length - 1, 1);
+					}
+				}
+				else
+					output += converted;
 			}
 
 
@@ -165,11 +186,8 @@ namespace MonoPlatformerGame
 					output += "?";
 				else if(key == Keys.Back) //backspace
 				{
-				
-					if(output.Length >= 3)
-					{
-						output = output.Remove(output.Length - 1, 1);
-					}
+					output += "\b";
+
 
 					
 
